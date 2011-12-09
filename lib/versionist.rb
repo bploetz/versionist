@@ -1,10 +1,11 @@
 require 'versionist/railtie' if defined?(Rails) && Rails::VERSION::MAJOR == 3
 
+require 'active_support'
+
 module Versionist
-  class Configuration
-    attr_accessor :vendor_name
-    attr_accessor :default_version
-  end
+  extend ActiveSupport::Autoload
+
+  autoload :Configuration  
 
   def self.configuration
     @@configuration ||= Configuration.new
