@@ -3,6 +3,7 @@ require 'versionist/railtie' if defined?(Rails) && Rails::VERSION::MAJOR == 3
 module Versionist
   class Configuration
     attr_accessor :vendor_name
+    attr_accessor :default_version
   end
 
   def self.configuration
