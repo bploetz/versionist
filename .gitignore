@@ -1,0 +1,46 @@
+# Mac
+.DS_Store
+
+# Textmate
+#.tmproj
+tmtags
+
+# Emacs
+*~
+**/*~
+\#*
+.\#*
+
+# Vim
+**/*.swp
+
+# Test output
+rspec.html
+coverage
+
+# RadRails
+.project
+.loadpath
+
+# Generic
+**/*.tmp*
+*Thumbs.db
+
+# RCov/RDoc
+coverage
+doc
+rdoc
+
+# RubyGem
+pkg
+*.gem
+
+# Rails Projects
+
+.bundle
+bundle
+db/*.sqlite3
+log/*.log
+tmp/**/*
+
+sqlnet.log
