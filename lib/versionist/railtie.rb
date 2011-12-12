@@ -21,13 +21,5 @@ module Versionist
         end
       end
     end
-
-    # TODO:
-    # Need to add app/presenters to the load path in the Railtie's initializer
-
-    generators do
-      # TODO:
-      # Is this needed? Or are the generators picked up from the generators directory automatically?
-    end
   end
 end
