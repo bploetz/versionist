@@ -17,6 +17,7 @@ tmtags
 # Test output
 rspec.html
 coverage
+spec/tmp/**/*
 
 # RadRails
 .project

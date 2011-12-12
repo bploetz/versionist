@@ -17,11 +17,12 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.required_rubygems_version = '>= 1.3.6'
 
-  s.add_dependency('activesupport', '~> 3.0')
-  s.add_dependency('activemodel', '~> 3.0')
+  s.add_dependency('rails', '~> 3.0')
 
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('rspec', '2.7.0')
+  s.add_development_dependency('generator_spec', '0.8.4')
+  s.add_development_dependency('rails', '~> 3.0')
   s.add_development_dependency('rdoc', '>= 3.11')
   s.add_development_dependency('simplecov', '0.5.4')
 end
