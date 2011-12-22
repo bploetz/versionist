@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.authors = ['Brian Ploetz']
   s.summary = "versionist-#{Versionist::VERSION}"
-  s.description = 'A Rails 3 plugin which allows you to easily version your Rails 3 based Web Service APIs'
+  s.description = 'A plugin for versioning Rails 3 based RESTful APIs.'
   s.files = Dir['lib/**/*']
   s.rdoc_options = ['--charset=UTF-8']
   s.require_paths = ['lib']
@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('rspec', '2.7.0')
+  s.add_development_dependency('rspec-rails', '2.7.0')
   s.add_development_dependency('generator_spec', '0.8.4')
   s.add_development_dependency('rails', '~> 3.0')
   s.add_development_dependency('rdoc', '>= 3.11')

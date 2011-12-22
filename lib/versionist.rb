@@ -6,9 +6,11 @@ module Versionist
   extend ActiveSupport::Autoload
 
   autoload :Configuration
-  autoload :NewApiVersionGenerator, "generators/versionist/new_api_version/new_api_version_generator"
-  autoload :NewControllerGenerator, "generators/versionist/new_controller/new_controller_generator"
-  autoload :NewPresenterGenerator, "generators/versionist/new_presenter/new_presenter_generator"
+  autoload :NewApiVersionGenerator, "versionist/generators/new_api_version/new_api_version_generator"
+  autoload :NewControllerGenerator, "versionist/generators/new_controller/new_controller_generator"
+  autoload :NewPresenterGenerator, "versionist/generators/new_presenter/new_presenter_generator"
+  autoload :VersioningStrategy, "versionist/versioning_strategy"
+  autoload :Routing
 
   def self.configuration
     @@configuration ||= Configuration.new

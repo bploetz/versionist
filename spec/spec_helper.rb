@@ -20,9 +20,14 @@ end if File.exist?(gemfile)
 Bundler.setup(:test) if defined?(Bundler)
 
 require 'versionist'
-require 'rspec'
-require 'rails'
+require 'fileutils'
 
 RSpec.configure do |config|
   config.mock_with :rspec
+
+  config.after :each do
+    # delete spec/tmp/
+    tmp_dir = ::File.expand_path('../tmp', __FILE__)
+    ::FileUtils.rm_rf(tmp_dir)
+  end
 end
