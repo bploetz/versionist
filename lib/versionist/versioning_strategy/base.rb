@@ -1,14 +1,15 @@
+require 'active_support/core_ext/hash/keys'
+
 module Versionist
   module VersioningStrategy
     class Base
+      attr_reader :config
 
-      HEADER_STRATEGY = "header"
-      URL_STRATEGY = "url"
-
-      def initialize(version, config={})
-        @version = version
+      def initialize(config={})
+        raise ArgumentError, "you must pass a configuration Hash" if config.nil? || !config.is_a?(Hash)
         @config = config
         @config.symbolize_keys!
+        Versionist.configuration.versioning_strategies << self
       end
     end
   end

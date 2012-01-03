@@ -21,6 +21,7 @@ Bundler.setup(:test) if defined?(Bundler)
 
 require 'versionist'
 require 'fileutils'
+require 'ap'
 
 RSpec.configure do |config|
   config.mock_with :rspec

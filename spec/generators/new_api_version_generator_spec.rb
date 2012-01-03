@@ -30,6 +30,31 @@ end
     it "should create a namespaced presenters directory" do
       assert_directory "app/presenters/v1"
     end
+
+    it "should create a documentation directory" do
+      assert_directory "public/docs/v1"
+    end
+
+    it "should create a documentation index.html" do
+      assert_file "public/docs/v1/index.html", <<-CONTENTS
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>Documentation for v1</title>
+    <link href="default.css" media="screen" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <h1>Documentation for v1</h1>
+  </body>
+</html>
+      CONTENTS
+    end
+
+    it "should create a documentation style.css" do
+      assert_file "public/docs/v1/style.css", <<-CONTENTS
+body {background-color: #fff; color: #000;}
+      CONTENTS
+    end
   end
 
   context "special characters in version name" do
@@ -50,6 +75,10 @@ end
 
     it "should create a namespaced presenters directory" do
       assert_directory "app/presenters/v3.4.2"
+    end
+
+    it "should create a documentation directory" do
+      assert_directory "public/docs/v3.4.2"
     end
   end
 end

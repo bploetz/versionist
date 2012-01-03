@@ -1,6 +1,5 @@
 require 'versionist/railtie' if defined?(Rails) && Rails::VERSION::MAJOR == 3
-
-require 'active_support'
+require 'active_support/dependencies/autoload'
 
 module Versionist
   extend ActiveSupport::Autoload
@@ -10,6 +9,7 @@ module Versionist
   autoload :NewControllerGenerator, "versionist/generators/new_controller/new_controller_generator"
   autoload :NewPresenterGenerator, "versionist/generators/new_presenter/new_presenter_generator"
   autoload :VersioningStrategy, "versionist/versioning_strategy"
+  autoload :Middleware
   autoload :Routing
 
   def self.configuration

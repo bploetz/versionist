@@ -1,7 +1,5 @@
-module V2_1
-  class FoosController < ActionController::Base
-    def index
-      render :text => "v2.1"
-    end
+class V2_1::FoosController < ApplicationController
+  def index
+    render :text => "v2.1"
   end
 end

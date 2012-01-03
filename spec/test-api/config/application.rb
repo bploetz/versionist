@@ -1,5 +1,6 @@
 require "action_controller/railtie"
 require "sprockets/railtie"
+require 'versionist/railtie'
 
 module TestApi
   class Application < Rails::Application
@@ -8,6 +9,8 @@ module TestApi
     config.active_support.deprecation = :log
     config.action_controller.logger = nil
     config.logger = Logger.new(STDOUT)
-    config.log_level = Logger::Severity::FATAL
+    config.log_level = Logger::Severity::UNKNOWN
+    config.action_controller.logger = nil
+    config.middleware.delete Rails::Rack::Logger
   end
 end

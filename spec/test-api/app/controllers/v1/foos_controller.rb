@@ -1,4 +1,4 @@
-class V1::FoosController < ActionController::Base
+class V1::FoosController < ApplicationController
   def index
     render :text => "v1"
   end
