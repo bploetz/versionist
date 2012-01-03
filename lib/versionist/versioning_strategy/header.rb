@@ -13,10 +13,7 @@ module Versionist
       end
 
       def matches?(request)
-        #ap request.env
-        #ap request.accepts
-        #ap request.formats
-        return false
+        return request.headers[config[:header]].include?(config[:value])
       end
     end
   end
