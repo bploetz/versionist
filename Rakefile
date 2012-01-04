@@ -1,5 +1,7 @@
 require 'rspec/core/rake_task'
 
+task :default => [:spec]
+
 task :build do
   system "gem build versionist.gemspec"
 end
