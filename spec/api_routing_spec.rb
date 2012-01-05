@@ -17,7 +17,7 @@ describe Versionist::Routing do
     it "should raise an error when config nil" do
       lambda {
         TestApi::Application.routes.draw do
-          scope :module => "v1", :constraints => api_version(nil)
+          api_version(nil)
         end
       }.should raise_error(ArgumentError, /you must pass a configuration Hash to api_version/)
     end
@@ -25,22 +25,30 @@ describe Versionist::Routing do
     it "should raise an error when config is not a Hash" do
       lambda {
         TestApi::Application.routes.draw do
-          scope :module => "v1", :constraints => api_version(1)
+          api_version(1)
         end
       }.should raise_error(ArgumentError, /you must pass a configuration Hash to api_version/)
+    end
+
+    it "should raise an error when config doesn't contain :module" do
+      lambda {
+        TestApi::Application.routes.draw do
+          api_version({})
+        end
+      }.should raise_error(ArgumentError, /you must specify :module in configuration Hash passed to api_version/)
     end
 
     it "should raise an error when config doesn't contain any supported strategies" do
       lambda {
         TestApi::Application.routes.draw do
-          scope :module => "v1", :constraints => api_version({})
+          api_version({:module => "v1"})
         end
       }.should raise_error(ArgumentError, /you must specify :header, :path, or :parameter in configuration Hash passed to api_version/)
     end
 
     it "should add the middleware" do
       TestApi::Application.routes.draw do
-        scope :module => "v1", :constraints => api_version({:header => "Accept", :value => "application/vnd.mycompany.com-v1"}) do
+        api_version({:module => "v1", :header => "Accept", :value => "application/vnd.mycompany.com-v1"}) do
           match '/foos.(:format)' => 'foos#index', :via => :get
           match '/foos_no_format' => 'foos#index', :via => :get
           resources :bars
@@ -64,7 +72,7 @@ describe Versionist::Routing do
           context "Accept" do
             before :each do
               TestApi::Application.routes.draw do
-                scope :module => mod, :constraints => api_version({:header => "Accept", :value => "application/vnd.mycompany.com-#{ver}"}) do
+                api_version({:module => mod, :header => "Accept", :value => "application/vnd.mycompany.com-#{ver}"}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
                   match '/foos_no_format' => 'foos#index', :via => :get
                   resources :bars
@@ -122,7 +130,7 @@ describe Versionist::Routing do
           context "custom header" do
             before :each do
               TestApi::Application.routes.draw do
-                scope :module => mod, :constraints => api_version({:header => "X-MY-CUSTOM-HEADER", :value => ver}) do
+                api_version({:module => mod, :header => "X-MY-CUSTOM-HEADER", :value => ver}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
                   match '/foos_no_format' => 'foos#index', :via => :get
                   resources :bars
@@ -175,6 +183,53 @@ describe Versionist::Routing do
         end
 
         context ":path" do
+          before :each do
+            TestApi::Application.routes.draw do
+              api_version({:module => mod, :path => "/#{ver}"}) do
+                match '/foos.(:format)' => 'foos#index', :via => :get
+                match '/foos_no_format' => 'foos#index', :via => :get
+                resources :bars
+              end
+              match '/foos(:format)' => 'foos#index', :via => :get
+              match '*a', :to => 'application#not_found'
+            end
+          end
+
+          it "should not route when path isn't present" do
+            get "/foos.json", nil, @headers
+            assert_response 404
+          end
+
+          it "should not route when path doesn't match" do
+            get "/bogus/foos.json", nil, @headers
+            assert_response 404
+          end
+
+          it "should route to the correct controller when path matches" do
+            get "/#{ver}/foos.json", nil, @headers
+            assert_response 200
+            assert_equal 'application/json', response.content_type
+            assert_equal ver, response.body
+
+            get "/#{ver}/foos.xml", nil, @headers
+            assert_response 200
+            assert_equal 'application/xml', response.content_type
+            assert_equal ver, response.body
+          end
+
+          it "should route to the correct controller when path matches and format specified via accept header" do
+            @headers["HTTP_ACCEPT"] = "application/json,application/xml"
+            get "/#{ver}/foos_no_format", nil, @headers
+            assert_response 200
+            assert_equal 'application/json', response.content_type
+            assert_equal ver, response.body
+
+            @headers["HTTP_ACCEPT"] = "application/xml,application/json"
+            get "/#{ver}/foos_no_format", nil, @headers
+            assert_response 200
+            assert_equal 'application/xml', response.content_type
+            assert_equal ver, response.body
+          end
         end
 
         context ":parameter" do

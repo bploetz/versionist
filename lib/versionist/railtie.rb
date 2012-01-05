@@ -8,6 +8,7 @@ module Versionist
       # Versionist.configure do |config|
       #   config.versioning_strategies = Array.new
       # end
+      ActionDispatch::Routing::Mapper.send :include, Versionist::Routing
     end
 
     config.app_middleware.use Versionist::Middleware

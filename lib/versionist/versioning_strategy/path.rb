@@ -12,10 +12,7 @@ module Versionist
       end
 
       def matches?(request)
-        #ap request.env
-        #ap request.accepts
-        #ap request.formats
-        return false
+        return request.fullpath =~ /^#{config[:path]}/
       end
     end
   end
