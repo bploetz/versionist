@@ -13,7 +13,7 @@ module Versionist
       end
 
       def matches?(request)
-        return request.headers[config[:header]].include?(config[:value])
+        return !request.headers[config[:header]].nil? && request.headers[config[:header]].include?(config[:value])
       end
     end
   end

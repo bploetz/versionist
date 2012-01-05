@@ -12,5 +12,6 @@ module TestApi
     config.log_level = Logger::Severity::UNKNOWN
     config.action_controller.logger = nil
     config.middleware.delete Rails::Rack::Logger
+    config.action_dispatch.show_exceptions = false
   end
 end
