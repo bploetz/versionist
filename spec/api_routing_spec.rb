@@ -233,6 +233,53 @@ describe Versionist::Routing do
         end
 
         context ":parameter" do
+          before :each do
+            TestApi::Application.routes.draw do
+              api_version({:module => mod, :parameter => "version", :value => ver}) do
+                match '/foos.(:format)' => 'foos#index', :via => :get
+                match '/foos_no_format' => 'foos#index', :via => :get
+                resources :bars
+              end
+              match '/foos(:format)' => 'foos#index', :via => :get
+              match '*a', :to => 'application#not_found'
+            end
+          end
+
+          it "should not route when parameter isn't present" do
+            get "/foos.json", nil, @headers
+            assert_response 404
+          end
+
+          it "should not route when parameter doesn't match" do
+            get "/foos.json?version=3", nil, @headers
+            assert_response 404
+          end
+
+          it "should route to the correct controller when parameter matches" do
+            get "/foos.json?version=#{ver}", nil, @headers
+            assert_response 200
+            assert_equal 'application/json', response.content_type
+            assert_equal ver, response.body
+
+            get "/foos.xml?version=#{ver}", nil, @headers
+            assert_response 200
+            assert_equal 'application/xml', response.content_type
+            assert_equal ver, response.body
+          end
+
+          it "should route to the correct controller when parameter matches and format specified via accept header" do
+            @headers["HTTP_ACCEPT"] = "application/json,application/xml"
+            get "/foos_no_format?version=#{ver}", nil, @headers
+            assert_response 200
+            assert_equal 'application/json', response.content_type
+            assert_equal ver, response.body
+
+            @headers["HTTP_ACCEPT"] = "application/xml,application/json"
+            get "/foos_no_format?version=#{ver}", nil, @headers
+            assert_response 200
+            assert_equal 'application/xml', response.content_type
+            assert_equal ver, response.body
+          end
         end
       end
     end

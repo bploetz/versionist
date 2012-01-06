@@ -36,8 +36,9 @@ module Versionist
       namespace(config[:path], {:module => config[:module], :as => config[:path].gsub(/\W/, '_')}, &block)
     end
 
-    def configure_parameter(config)
-      # TODO
+    def configure_parameter(config, &block)
+      parameter = Versionist::VersioningStrategy::Parameter.new(config)
+      scope({:module => config[:module], :constraints => parameter}, &block)
     end
   end
 end
