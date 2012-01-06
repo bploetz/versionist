@@ -14,6 +14,10 @@ module Versionist
     end
 
     def call(env)
+      dup._call(env)
+    end
+
+    def _call(env)
       request = ::Rack::Request.new(env)
       strategy = Versionist.configuration.versioning_strategies.detect {|vs| vs.is_a?(Versionist::VersioningStrategy::Header) && vs.config[:header] == ACCEPT && env[HTTP_ACCEPT].include?(vs.config[:value])}
       if !strategy.nil?
