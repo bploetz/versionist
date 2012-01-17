@@ -10,10 +10,6 @@ module Versionist
         raise ArgumentError, "you must specify :path in the configuration Hash" if !config.has_key?(:path)
         super
       end
-
-      def matches?(request)
-        return request.fullpath =~ /^#{config[:path]}/
-      end
     end
   end
 end

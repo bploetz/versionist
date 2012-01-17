@@ -10,10 +10,13 @@ module Versionist
         raise ArgumentError, "you must specify :header in the configuration Hash" if !config.has_key?(:header)
         raise ArgumentError, "you must specify :value in the configuration Hash" if !config.has_key?(:value)
         super
+        Versionist.configuration.header_versions << config[:value]
       end
 
       def matches?(request)
-        return !request.headers[config[:header]].nil? && request.headers[config[:header]].include?(config[:value])
+        header_string = request.headers[config[:header]].to_s
+        return ((!header_string.blank? && header_string.include?(config[:value])) ||
+                (self.default? && (Versionist.configuration.header_versions.none? {|v| header_string.include?(v)})))
       end
     end
   end

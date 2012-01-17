@@ -10,8 +10,11 @@ describe Versionist::Routing do
   include RSpec::Rails::RequestExampleGroup
 
   context "#api_version" do
-    after :each do
+    before :each do
       Versionist.configuration.versioning_strategies.clear
+      Versionist.configuration.default_version = nil
+      Versionist.configuration.header_versions.clear
+      TestApi::Application.routes.clear!
     end
 
     it "should raise an error when config nil" do
@@ -56,10 +59,6 @@ describe Versionist::Routing do
         match '/foos(:format)' => 'foos#index', :via => :get
       end
       TestApi::Application.config.middleware.should include(Versionist::Middleware) 
-    end
-
-    context "default version" do
-      it "should route to the default when no version given"
     end
 
     {"v1" => "v1", "v2" => "v2", "v2.1" => "v2__1"}.each do |ver, mod|
@@ -125,6 +124,46 @@ describe Versionist::Routing do
               assert_equal 'application/xml', response.content_type
               assert_equal ver, response.body
             end
+
+            context ":default => true" do
+              before :each do
+                TestApi::Application.routes.draw do
+                  api_version({:module => mod, :header => "Accept", :value => "application/vnd.mycompany.com-#{ver}", :default => true}) do
+                    match '/foos.(:format)' => 'foos#index', :via => :get
+                  end
+                  api_version({:module => "not_default", :header => "Accept", :value => "application/vnd.mycompany.com-not_default"}) do
+                    match '/foos.(:format)' => 'foos#index', :via => :get
+                  end
+                end
+              end
+
+              it "should route to the default when no version given" do
+                get "/foos.json", nil, @headers
+                assert_response 200
+                assert_equal 'application/json', response.content_type
+                assert_equal ver, response.body
+
+                @headers["HTTP_ACCEPT"] = ""
+                get "/foos.json", nil, @headers
+                assert_response 200
+                assert_equal 'application/json', response.content_type
+                assert_equal ver, response.body
+
+                @headers["HTTP_ACCEPT"] = "   "
+                get "/foos.json", nil, @headers
+                assert_response 200
+                assert_equal 'application/json', response.content_type
+                assert_equal ver, response.body
+              end
+
+              it "should not route to the default when another configured version is given" do
+                @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-not_default"
+                get "/foos.json", nil, @headers
+                assert_response 200
+                assert_equal 'application/json', response.content_type
+                assert_equal "not_default", response.body
+              end
+            end
           end
 
           context "custom header" do
@@ -179,6 +218,46 @@ describe Versionist::Routing do
               assert_equal 'application/xml', response.content_type
               assert_equal ver, response.body
             end
+
+            context ":default => true" do
+              before :each do
+                TestApi::Application.routes.draw do
+                  api_version({:module => mod, :header => "X-MY-CUSTOM-HEADER", :value => ver, :default => true}) do
+                    match '/foos.(:format)' => 'foos#index', :via => :get
+                  end
+                  api_version({:module => "not_default", :header => "X-MY-CUSTOM-HEADER", :value => "not_default"}) do
+                    match '/foos.(:format)' => 'foos#index', :via => :get
+                  end
+                end
+              end
+
+              it "should route to the default when no version given" do
+                get "/foos.json", nil, @headers
+                assert_response 200
+                assert_equal 'application/json', response.content_type
+                assert_equal ver, response.body
+
+                @headers["HTTP_X_MY_CUSTOM_HEADER"] = ""
+                get "/foos.json", nil, @headers
+                assert_response 200
+                assert_equal 'application/json', response.content_type
+                assert_equal ver, response.body
+
+                @headers["HTTP_X_MY_CUSTOM_HEADER"] = "    "
+                get "/foos.xml", nil, @headers
+                assert_response 200
+                assert_equal 'application/xml', response.content_type
+                assert_equal ver, response.body
+              end
+
+              it "should not route to the default when another configured version is given" do
+                @headers["HTTP_X_MY_CUSTOM_HEADER"] = "not_default"
+                get "/foos.json", nil, @headers
+                assert_response 200
+                assert_equal 'application/json', response.content_type
+                assert_equal "not_default", response.body
+              end
+            end
           end
         end
 
@@ -230,6 +309,38 @@ describe Versionist::Routing do
             assert_equal 'application/xml', response.content_type
             assert_equal ver, response.body
           end
+
+          context ":default => true" do
+            before :each do
+              TestApi::Application.routes.draw do
+                api_version({:module => mod, :path => "/#{ver}", :default => true}) do
+                  match '/foos.(:format)' => 'foos#index', :via => :get
+                end
+                api_version({:module => "not_default", :path => "/not_default"}) do
+                  match '/foos.(:format)' => 'foos#index', :via => :get
+                end
+              end
+            end
+
+            it "should route to the default when no version given" do
+              get "/foos.json", nil, @headers
+              assert_response 200
+              assert_equal 'application/json', response.content_type
+              assert_equal ver, response.body
+
+              get "/foos.xml", nil, @headers
+              assert_response 200
+              assert_equal 'application/xml', response.content_type
+              assert_equal ver, response.body
+            end
+
+            it "should not route to the default when another configured version is given" do
+              get "/not_default/foos.json", nil, @headers
+              assert_response 200
+              assert_equal 'application/json', response.content_type
+              assert_equal "not_default", response.body
+            end
+          end
         end
 
         context ":parameter" do
@@ -279,6 +390,38 @@ describe Versionist::Routing do
             assert_response 200
             assert_equal 'application/xml', response.content_type
             assert_equal ver, response.body
+          end
+
+          context ":default => true" do
+            before :each do
+              TestApi::Application.routes.draw do
+                api_version({:module => mod, :parameter => "version", :value => ver, :default => true}) do
+                  match '/foos.(:format)' => 'foos#index', :via => :get
+                end
+                api_version({:module => "not_default", :parameter => "version", :value => "not_default"}) do
+                  match '/foos.(:format)' => 'foos#index', :via => :get
+                end
+              end
+            end
+
+            it "should route to the default when no version given" do
+              get "/foos.json", nil, @headers
+              assert_response 200
+              assert_equal 'application/json', response.content_type
+              assert_equal ver, response.body
+
+              get "/foos.json?version=", nil, @headers
+              assert_response 200
+              assert_equal 'application/json', response.content_type
+              assert_equal ver, response.body
+            end
+
+            it "should not route to the default when another configured version is given" do
+              get "/foos.json?version=not_default", nil, @headers
+              assert_response 200
+              assert_equal 'application/json', response.content_type
+              assert_equal "not_default", response.body
+            end
           end
         end
       end

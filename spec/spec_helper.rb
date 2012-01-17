@@ -4,7 +4,9 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'rubygems'
 require 'simplecov'
 
-SimpleCov.start
+SimpleCov.start do
+  add_filter "spec/test-api"
+end
 
 gemfile = File.expand_path('../../Gemfile', __FILE__)
 begin

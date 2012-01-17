@@ -34,6 +34,9 @@ module Versionist
       # Use the :as option and strip out non-word characters from the path to avoid this:
       # https://github.com/rails/rails/issues/3224
       namespace(config[:path], {:module => config[:module], :as => config[:path].gsub(/\W/, '_')}, &block)
+      if path.default?
+        scope({:module => config[:module], :as => config[:path].gsub(/\W/, '_')}, &block)
+      end
     end
 
     def configure_parameter(config, &block)

@@ -10,10 +10,13 @@ module Versionist
         raise ArgumentError, "you must specify :parameter in the configuration Hash" if !config.has_key?(:parameter)
         raise ArgumentError, "you must specify :value in the configuration Hash" if !config.has_key?(:value)
         super
+        Versionist.configuration.parameter_versions << config[:value]
       end
 
       def matches?(request)
-        return !request.params[config[:parameter]].nil? && request.params[config[:parameter]] == config[:value]
+        parameter_string = request.params[config[:parameter]].to_s
+        return ((!parameter_string.blank? && parameter_string == config[:value]) ||
+                (self.default? && (Versionist.configuration.parameter_versions.none? {|v| parameter_string.include?(v)})))
       end
     end
   end
