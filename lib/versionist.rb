@@ -1,4 +1,3 @@
-require 'versionist/railtie' if defined?(Rails) && Rails::VERSION::MAJOR == 3
 require 'active_support/dependencies/autoload'
 
 module Versionist
@@ -16,3 +15,5 @@ module Versionist
     @@configuration ||= Configuration.new
   end
 end
+
+require 'versionist/railtie' if defined?(Rails) && Rails::VERSION::MAJOR == 3

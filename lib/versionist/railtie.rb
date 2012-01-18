@@ -1,5 +1,4 @@
 require 'rails/railtie'
-require 'versionist/middleware'
 
 module Versionist
   class Railtie < Rails::Railtie
