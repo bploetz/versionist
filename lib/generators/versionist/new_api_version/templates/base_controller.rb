@@ -1,2 +1,2 @@
-class <%= class_name.gsub(/\W/, '_') %>::BaseController < ApplicationController
+class <%= module_name %>::BaseController < ApplicationController
 end

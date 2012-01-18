@@ -1,9 +1,13 @@
 Description:
-    Generates scaffolding for a new API version by creating a new controller namespace and presenter directory for the specified version.
+    Creates the infrastructure for a new API version.
 
 Example:
-    rails generate versionist:new_api_version v3.4
+    rails generate versionist:new_api_version v3.4 V3_4
 
     This will create:
-        app/controllers/v3.4
-        app/presenters/v3.4
+        app/controllers/v3_4/
+        app/controllers/v3_4/base_controller.rb
+        app/presenters/v3_4/
+        public/docs/v3.4/
+        public/docs/v3.4/index.html
+        public/docs/v3.4/style.css
