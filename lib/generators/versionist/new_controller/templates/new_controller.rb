@@ -1,2 +1,2 @@
-class <%= version.camelize.gsub(/\W/, '_') %>::<%= class_name%>Controller < BaseController
+class <%= module_name %>::<%= class_name%>Controller < BaseController
 end
