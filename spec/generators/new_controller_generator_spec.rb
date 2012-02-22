@@ -28,7 +28,7 @@ describe Versionist::NewControllerGenerator do
         context "#{name} => #{mod}" do
           before :each do
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{mod.underscore}", __FILE__))
-            ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{mod}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
+            ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{mod.gsub(/_{1}/, "__")}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
             run_generator [name, mod]
           end
 
@@ -73,7 +73,7 @@ describe Versionist::NewControllerGenerator do
         context "#{name} => #{mod}" do
           before :each do
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{mod.underscore}", __FILE__))
-            ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{mod}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
+            ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{mod.gsub(/_{1}/, "__")}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
             run_generator [name, mod]
           end
 
@@ -81,7 +81,7 @@ describe Versionist::NewControllerGenerator do
             assert_file "config/routes.rb"
             expected = <<-CONTENTS
 Test::Application.routes.draw do
-  api_version(:module => "#{mod}", :header => "Accept", :value => "application/vnd.mycompany.com-v1") do
+  api_version(:module => "#{mod.gsub(/_{1}/, "__")}", :header => "Accept", :value => "application/vnd.mycompany.com-v1") do
     resources :#{name}
   end
 end
