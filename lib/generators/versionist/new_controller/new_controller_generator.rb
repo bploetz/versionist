@@ -1,5 +1,6 @@
 module Versionist
   class NewControllerGenerator < Rails::Generators::NamedBase
+    desc "creates a new controller for an existing API version"
     source_root File.expand_path('../templates', __FILE__)
 
     argument :module_name, :type => :string

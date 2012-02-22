@@ -28,13 +28,13 @@ describe Versionist::NewControllerGenerator do
         context "#{name} => #{mod}" do
           before :each do
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{mod.underscore}", __FILE__))
-            ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version({:module => \"#{mod}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\"}) do\n  end\nend"}
+            ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{mod}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
             run_generator [name, mod]
           end
 
           it "should create a namespaced controller" do
             assert_directory "app/controllers/#{mod.underscore}"
-            assert_file "app/controllers/#{mod.underscore}/#{name.underscore}_controller.rb", "class #{mod}::#{name.camelize}Controller < BaseController\nend\n"
+            assert_file "app/controllers/#{mod.underscore}/#{name.underscore}_controller.rb", "class #{mod}::#{name.camelize}Controller < #{mod}::BaseController\nend\n"
           end
         end
       end
@@ -58,7 +58,7 @@ describe Versionist::NewControllerGenerator do
     context "api version duplicated in config/routes.rb" do
       before :each do
         ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/v1", __FILE__))
-        ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version({:module => \"V1\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\"}) do\n  end\n\n  api_version({:module => \"V1\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\"}) do\n  end\nend"}
+        ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"V1\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\n\n  api_version(:module => \"V1\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
       end
 
       it "should raise an error" do
@@ -73,7 +73,7 @@ describe Versionist::NewControllerGenerator do
         context "#{name} => #{mod}" do
           before :each do
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{mod.underscore}", __FILE__))
-            ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version({:module => \"#{mod}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\"}) do\n  end\nend"}
+            ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{mod}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
             run_generator [name, mod]
           end
 
@@ -81,7 +81,7 @@ describe Versionist::NewControllerGenerator do
             assert_file "config/routes.rb"
             expected = <<-CONTENTS
 Test::Application.routes.draw do
-  api_version({:module => "#{mod}", :header => "Accept", :value => "application/vnd.mycompany.com-v1"}) do
+  api_version(:module => "#{mod}", :header => "Accept", :value => "application/vnd.mycompany.com-v1") do
     resources :#{name}
   end
 end
