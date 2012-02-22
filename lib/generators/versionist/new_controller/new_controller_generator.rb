@@ -7,7 +7,7 @@ module Versionist
 
     def new_controller
       in_root do
-        raise "API module namespace #{module_name} doesn't exist. Please run \'rails generate versionist:new_api_version\' generator first" if !Dir.exists?("app/controllers/#{module_name.underscore}")
+        raise "API module namespace #{module_name} doesn't exist. Please run \'rails generate versionist:new_api_version\' generator first" if !File.exists?("app/controllers/#{module_name.underscore}")
         template 'new_controller.rb', File.join("app", "controllers", "#{module_name.underscore}", "#{file_name}_controller.rb")
 
         api_version_block = /api_version.*:module\s*(=>|:)\s*("|')#{module_name}("|').*do/
