@@ -6,3 +6,5 @@ Example:
 
     This will create:
         app/controllers/V2_0_0/test_controller.rb
+
+    In addition this will create a test for the new controller using the test_framework currently configured in your Rails app.

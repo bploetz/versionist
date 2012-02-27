@@ -4,6 +4,7 @@ module Versionist
     attr_accessor :default_version
     attr_accessor :header_versions
     attr_accessor :parameter_versions
+    attr_accessor :configured_test_framework
 
     def initialize
       @versioning_strategies ||= Array.new

@@ -1,4 +1,4 @@
-class <%= version.camelize.gsub(/\W/, '_') %>::<%= class_name%>Presenter
+class <%= module_name %>::<%= class_name%>Presenter
 
   def initialize(<%= file_name %>)
     @<%= file_name %> = <%= file_name %>

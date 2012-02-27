@@ -3,7 +3,7 @@ module Versionist
   # Rails inspects the `Accept` header to determine the requested format. Since an `Accept` header can have multiple values,
   # Rails uses the first one present to determine the format. If your custom version header happens to be the first value
   # in the `Accept` header, it would incorrectly be interpretted as the format. This middleware moves your custom version header
-  # to the end of the `Accept` header so as to not interfere with this format logic in Rails.
+  # (if found) to the end of the `Accept` header so as to not interfere with this format logic in Rails.
   class Middleware
 
     ACCEPT = "Accept"

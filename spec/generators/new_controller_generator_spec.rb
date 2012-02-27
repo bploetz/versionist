@@ -4,6 +4,7 @@ require 'generator_spec/test_case'
 
 describe Versionist::NewControllerGenerator do
   include GeneratorSpec::TestCase
+  include Versionist::InflectorFixes
 
   destination File.expand_path("../../tmp", __FILE__)
 
@@ -27,14 +28,67 @@ describe Versionist::NewControllerGenerator do
       {"foo" => "V1", "bar" => "V2", "foos" => "V2_1", "bazs" => "Api::V3"}.each do |name, mod|
         context "#{name} => #{mod}" do
           before :each do
-            ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{mod.underscore}", __FILE__))
-            ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{mod.gsub(/_{1}/, "__")}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
+            ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
+            ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
+            Versionist.configuration.configured_test_framework = nil
             run_generator [name, mod]
           end
 
           it "should create a namespaced controller" do
-            assert_directory "app/controllers/#{mod.underscore}"
-            assert_file "app/controllers/#{mod.underscore}/#{name.underscore}_controller.rb", "class #{mod}::#{name.camelize}Controller < #{mod}::BaseController\nend\n"
+            assert_directory "app/controllers/#{module_name_for_path(mod)}"
+            assert_file "app/controllers/#{module_name_for_path(mod)}/#{name.underscore}_controller.rb", "class #{mod}::#{name.camelize}Controller < #{mod}::BaseController\nend\n"
+          end
+
+          context "test_framework: test_unit" do
+            before :each do
+              ::FileUtils.rm(::File.expand_path("../../tmp/config/routes.rb", __FILE__))
+              ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
+              ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
+              Versionist.configuration.configured_test_framework = :test_unit
+              run_generator [name, mod]
+            end
+
+            it "should create a namespaced test/functional directory" do
+              assert_directory "test/functional/#{module_name_for_path(mod)}"
+            end
+
+            it "should create a namespaced controller functional test" do
+              assert_file "test/functional/#{module_name_for_path(mod)}/#{name.underscore}_controller_test.rb", <<-CONTENTS
+require 'test_helper'
+
+class #{mod}::#{name.camelize}Controller < ActionController::TestCase
+
+  # Replace this with your real tests.
+  test "the truth" do
+    assert true
+  end
+end
+              CONTENTS
+            end
+          end
+
+          context "test_framework: rspec" do
+            before :each do
+              ::FileUtils.rm(::File.expand_path("../../tmp/config/routes.rb", __FILE__))
+              ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
+              ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
+              Versionist.configuration.configured_test_framework = :rspec
+              run_generator [name, mod]
+            end
+
+            it "should create a namespaced spec/controllers directory" do
+              assert_directory "spec/controllers/#{module_name_for_path(mod)}"
+            end
+
+            it "should create a namespaced controller spec" do
+              assert_file "spec/controllers/#{module_name_for_path(mod)}/#{name.underscore}_controller_spec.rb", <<-CONTENTS
+require 'spec_helper'
+
+describe #{mod}::#{name.camelize}Controller do
+
+end
+              CONTENTS
+            end
           end
         end
       end
@@ -72,8 +126,8 @@ describe Versionist::NewControllerGenerator do
       {"foo" => "V1", "bar" => "V2", "foos" => "V2_1", "bazs" => "Api::V3"}.each do |name, mod|
         context "#{name} => #{mod}" do
           before :each do
-            ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{mod.underscore}", __FILE__))
-            ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{mod.gsub(/_{1}/, "__")}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
+            ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
+            ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
             run_generator [name, mod]
           end
 
@@ -81,7 +135,7 @@ describe Versionist::NewControllerGenerator do
             assert_file "config/routes.rb"
             expected = <<-CONTENTS
 Test::Application.routes.draw do
-  api_version(:module => "#{mod.gsub(/_{1}/, "__")}", :header => "Accept", :value => "application/vnd.mycompany.com-v1") do
+  api_version(:module => "#{module_name_for_route(mod)}", :header => "Accept", :value => "application/vnd.mycompany.com-v1") do
     resources :#{name}
   end
 end

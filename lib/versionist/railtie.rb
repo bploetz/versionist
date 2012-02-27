@@ -9,5 +9,10 @@ module Versionist
     end
 
     config.app_middleware.use Versionist::Middleware
+
+    config.after_initialize do
+      generators = config.respond_to?(:app_generators) ? config.app_generators : config.generators
+      Versionist.configuration.configured_test_framework = generators.options[:rails][:test_framework]
+    end
   end
 end
