@@ -31,47 +31,6 @@ Versionist provides the method `api_version` that you use in your Rails 3 applic
 The versioning strategy used by the collection of routes constrained by `api_version` is set by specifying either `:header`, `:path`, or `:parameter` (and their supporting values)
 in the configuration Hash passed to `api_version`. You configure the module namespace for your API version by specifying `:module` in the configuration Hash passed to `api_version`.
 
-## Version/Module Naming Convention Gotcha
-
-Note that if your public facing version naming convention uses dots (i.e. v1.2.3), your module names cannot use dots, as you obviously cannot use dots in module names in Ruby.
-If you wish to simply replace dots with underscores, you'll need to use *two* underscores (i.e. `__`) in the module name passed to `api_version` to work around a quirk in Rails' inflector.
-
-For example, if your public facing version is v2.0.0 and you want to map this to the module `V2_0_0`, you would do the following in `api_routes`:
-
-    api_version(:module => "V2__0__0", :header => "Accept", :value => "application/vnd.mycompany.com-v2.0.0") do
-      ...
-    end
-
-If you use the generators provided Versionist (more below) simply pass the module name as is (without this double underscore hack) and Versionist will take care of this detail for you.
-
-    rails generate versionist:new_api_version v2.0.0 V2_0_0 header:Accept value:application/vnd.mycompany.com-v2.0.0
-      route  api_version(:module => "V2__0__0", :header=>"Accept", :value=>"application/vnd.mycompany.com-v2.0.0") do
-      end
-      create  app/controllers/v2_0_0
-      create  app/controllers/v2_0_0/base_controller.rb
-      create  spec/controllers/v2_0_0
-      create  spec/controllers/v2_0_0/base_controller_spec.rb
-      create  app/presenters/v2_0_0
-      create  app/presenters/v2_0_0/base_presenter.rb
-      create  spec/presenters/v2_0_0
-      create  spec/presenters/v2_0_0/base_presenter_spec.rb
-      create  public/docs/v2.0.0
-      create  public/docs/v2.0.0/index.html
-      create  public/docs/v2.0.0/style.css
-
-
-    rails generate versionist:new_controller foos V2_0_0
-      create  app/controllers/v2_0_0/foos_controller.rb
-      create  spec/controllers/v2_0_0/foos_controller_spec.rb
-
-
-    rails generate versionist:new_presenter foos V2_0_0
-      create  app/presenters/v2_0_0/foos_presenter.rb
-      create  spec/presenters/v2_0_0/foos_presenter_spec.rb
-
-
-Don't shoot the messenger. :-)
-
 
 ## Versioning Strategies
 
@@ -86,7 +45,7 @@ You configure the header to be inspected and the header value specifying the ver
 
 Examples:
 
-##### Content negotiation via the `Accept` header:
+###### Content negotiation via the `Accept` header:
 
     MyApi::Application.routes.draw do
       api_version(:module => "V1", :header => "Accept", :value => "application/vnd.mycompany.com-v1") do
@@ -104,7 +63,7 @@ incorrectly try to interpret it as the format. If you use the `Accept` header, V
 Rails' format resolution logic. This is the only case where Versionist will alter the incoming request.
 
 
-##### Custom header:
+###### Custom header:
 
     MyApi::Application.routes.draw do
       api_version(:module => "V20120317", :header => "X-CUSTOM-HEADER", :value => "v20120317") do
@@ -170,6 +129,48 @@ Example.
     end
 
 If you attempt to specify more than one default version, an error will be thrown at startup.
+
+
+## Version/Module Naming Convention Gotcha
+
+Note that if your public facing version naming convention uses dots (i.e. v1.2.3), your module names cannot use dots, as you obviously cannot use dots in module names in Ruby.
+If you wish to simply replace dots with underscores, you'll need to use *two* underscores (i.e. `__`) in the module name passed to `api_version` to work around a quirk in Rails' inflector.
+
+For example, if your public facing version is v2.0.0 and you want to map this to the module `V2_0_0`, you would do the following in `api_routes`:
+
+    api_version(:module => "V2__0__0", :header => "Accept", :value => "application/vnd.mycompany.com-v2.0.0") do
+      ...
+    end
+
+If you use the generators provided Versionist (more below) simply pass the module name as is (without this double underscore hack) and Versionist will take care of this detail for you.
+
+    rails generate versionist:new_api_version v2.0.0 V2_0_0 header:Accept value:application/vnd.mycompany.com-v2.0.0
+      route  api_version(:module => "V2__0__0", :header=>"Accept", :value=>"application/vnd.mycompany.com-v2.0.0") do
+      end
+      create  app/controllers/v2_0_0
+      create  app/controllers/v2_0_0/base_controller.rb
+      create  spec/controllers/v2_0_0
+      create  spec/controllers/v2_0_0/base_controller_spec.rb
+      create  app/presenters/v2_0_0
+      create  app/presenters/v2_0_0/base_presenter.rb
+      create  spec/presenters/v2_0_0
+      create  spec/presenters/v2_0_0/base_presenter_spec.rb
+      create  public/docs/v2.0.0
+      create  public/docs/v2.0.0/index.html
+      create  public/docs/v2.0.0/style.css
+
+
+    rails generate versionist:new_controller foos V2_0_0
+      create  app/controllers/v2_0_0/foos_controller.rb
+      create  spec/controllers/v2_0_0/foos_controller_spec.rb
+
+
+    rails generate versionist:new_presenter foos V2_0_0
+      create  app/presenters/v2_0_0/foos_presenter.rb
+      create  spec/presenters/v2_0_0/foos_presenter_spec.rb
+
+
+Don't shoot the messenger. :-)
 
 
 ## Generators
