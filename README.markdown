@@ -86,7 +86,7 @@ You configure the header to be inspected and the header value specifying the ver
 
 Examples:
 
-Content negotiation via the `Accept` header:
+#### Content negotiation via the `Accept` header:
 
     MyApi::Application.routes.draw do
       api_version(:module => "V1", :header => "Accept", :value => "application/vnd.mycompany.com-v1") do
@@ -96,7 +96,7 @@ Content negotiation via the `Accept` header:
       end
     end
 
-#### Accept Header Gotcha
+`Accept` Header Gotcha
 
 Please note: when your routes do not include an explicit format in the URL (i.e. `match 'foos.(:format)' => foos#index`), Rails inspects the `Accept` header to determine the requested format. Since
 an `Accept` header can have multiple values, Rails uses the *first* one present to determine the format. If your custom version header happens to be the first value in the `Accept` header, Rails would 
@@ -104,7 +104,7 @@ incorrectly try to interpret it as the format. If you use the `Accept` header, V
 Rails' format resolution logic. This is the only case where Versionist will alter the incoming request.
 
 
-Custom header:
+#### Custom header:
 
     MyApi::Application.routes.draw do
       api_version(:module => "V20120317", :header => "X-CUSTOM-HEADER", :value => "v20120317") do
@@ -113,6 +113,7 @@ Custom header:
         resources :bars
       end
     end
+
 
 ### Path
 
