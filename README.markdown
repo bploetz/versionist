@@ -48,13 +48,13 @@ Examples:
 ##### Content negotiation via the `Accept` header:
 
 ```ruby
-    MyApi::Application.routes.draw do
-      api_version(:module => "V1", :header => "Accept", :value => "application/vnd.mycompany.com-v1") do
-        match '/foos.(:format)' => 'foos#index', :via => :get
-        match '/foos_no_format' => 'foos#index', :via => :get
-        resources :bars
-      end
-    end
+MyApi::Application.routes.draw do
+  api_version(:module => "V1", :header => "Accept", :value => "application/vnd.mycompany.com-v1") do
+   match '/foos.(:format)' => 'foos#index', :via => :get
+    match '/foos_no_format' => 'foos#index', :via => :get
+    resources :bars
+  end
+end
 ```
 
 `Accept` Header Gotcha
@@ -68,13 +68,13 @@ Rails' format resolution logic. This is the only case where Versionist will alte
 ##### Custom header:
 
 ```ruby
-    MyApi::Application.routes.draw do
-      api_version(:module => "V20120317", :header => "X-CUSTOM-HEADER", :value => "v20120317") do
-        match '/foos.(:format)' => 'foos#index', :via => :get
-        match '/foos_no_format' => 'foos#index', :via => :get
-        resources :bars
-      end
-    end
+MyApi::Application.routes.draw do
+  api_version(:module => "V20120317", :header => "X-CUSTOM-HEADER", :value => "v20120317") do
+    match '/foos.(:format)' => 'foos#index', :via => :get
+    match '/foos_no_format' => 'foos#index', :via => :get
+    resources :bars
+  end
+end
 ```
 
 ### Path
@@ -88,13 +88,13 @@ You configure the path version prefix to be applied to the routes.
 Example:
 
 ```ruby
-    MyApi::Application.routes.draw do
-      api_version(:module => "V3__5__1", :path => "/v3.5.1") do
-        match '/foos.(:format)' => 'foos#index', :via => :get
-        match '/foos_no_format' => 'foos#index', :via => :get
-        resources :bars
-      end
-    end
+MyApi::Application.routes.draw do
+  api_version(:module => "V3__5__1", :path => "/v3.5.1") do
+    match '/foos.(:format)' => 'foos#index', :via => :get
+    match '/foos_no_format' => 'foos#index', :via => :get
+    resources :bars
+  end
+end
 ```
 
 ### Request Parameter
@@ -108,13 +108,13 @@ You configure the parameter name and value to be applied to the routes.
 Example:
 
 ```ruby
-    MyApi::Application.routes.draw do
-      api_version(:module => "V1__1__3", :parameter => "version", :value => "v1.1.3") do
-        match '/foos.(:format)' => 'foos#index', :via => :get
-        match '/foos_no_format' => 'foos#index', :via => :get
-        resources :bars
-      end
-    end
+MyApi::Application.routes.draw do
+  api_version(:module => "V1__1__3", :parameter => "version", :value => "v1.1.3") do
+    match '/foos.(:format)' => 'foos#index', :via => :get
+    match '/foos_no_format' => 'foos#index', :via => :get
+    resources :bars
+  end
+end
 ```
 
 ### Default Version
@@ -126,13 +126,13 @@ passed to the `api_version` method.
 Example.
 
 ```ruby
-    MyApi::Application.routes.draw do
-      api_version(:module => "V20120317", :header => "X-CUSTOM-HEADER", :value => "v20120317", :default => true) do
-        match '/foos.(:format)' => 'foos#index', :via => :get
-        match '/foos_no_format' => 'foos#index', :via => :get
-        resources :bars
-      end
-    end
+MyApi::Application.routes.draw do
+  api_version(:module => "V20120317", :header => "X-CUSTOM-HEADER", :value => "v20120317", :default => true) do
+    match '/foos.(:format)' => 'foos#index', :via => :get
+    match '/foos_no_format' => 'foos#index', :via => :get
+    resources :bars
+  end
+end
 ```
 
 If you attempt to specify more than one default version, an error will be thrown at startup.
@@ -146,9 +146,9 @@ If you wish to simply replace dots with underscores, you'll need to use *two* un
 For example, if your public facing version is v2.0.0 and you want to map this to the module `V2_0_0`, you would do the following in `api_routes`:
 
 ```ruby
-    api_version(:module => "V2__0__0", :header => "Accept", :value => "application/vnd.mycompany.com-v2.0.0") do
-      ...
-    end
+api_version(:module => "V2__0__0", :header => "Accept", :value => "application/vnd.mycompany.com-v2.0.0") do
+  ...
+end
 ```
 
 If you use the generators provided Versionist (more below) simply pass the module name as is (without this double underscore hack) and Versionist will take care of this detail for you.
