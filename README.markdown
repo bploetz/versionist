@@ -9,6 +9,7 @@ A plugin for versioning Rails 3 based RESTful APIs. Versionist supports three ve
 - Specifying version via a request parameter
 
 A version of your API consists of:
+
 - Namespaced controllers/routes
 - Namespaced presenters
 - Namespaced tests
@@ -28,12 +29,12 @@ Add the following dependency to your Rails 3 application's `Gemfile` file and ru
 
 Versionist provides the method `api_version` that you use in your Rails 3 application's `config/routes.rb` file to constrain a collection of routes to a specific version of your API.
 The versioning strategy used by the collection of routes constrained by `api_version` is set by specifying either `:header`, `:path`, or `:parameter` (and their supporting values)
-in the configuration Hash sent to `api_version`. You configure the module namespace for your versioned controllers by specifying `:module` in the configuration Hash sent to `api_version`.
+in the configuration Hash passed to `api_version`. You configure the module namespace for your API version by specifying `:module` in the configuration Hash passed to `api_version`.
 
 ## Version/Module Naming Convention Gotcha
 
 Note that if your public facing version naming convention uses dots (i.e. v1.2.3), your module names cannot use dots, as you obviously cannot use dots in module names in Ruby.
-If you wish to simply replace dots with underscores, you'll need to use *two* underscores in the module name passed to `api_version` to work around a quirk in Rails' inflector.
+If you wish to simply replace dots with underscores, you'll need to use *two* underscores (i.e. `__`) in the module name passed to `api_version` to work around a quirk in Rails' inflector.
 
 For example, if your public facing version is v2.0.0 and you want to map this to the module `V2_0_0`, you would do the following in `api_routes`:
 
@@ -45,7 +46,7 @@ If you use the generators provided Versionist (more below) simply pass the modul
 
     rails generate versionist:new_api_version v2.0.0 V2_0_0 header:Accept value:application/vnd.mycompany.com-v2.0.0
       route  api_version(:module => "V2__0__0", :header=>"Accept", :value=>"application/vnd.mycompany.com-v2.0.0") do
-  end
+      end
       create  app/controllers/v2_0_0
       create  app/controllers/v2_0_0/base_controller.rb
       create  spec/controllers/v2_0_0
@@ -81,7 +82,7 @@ This strategy uses an HTTP header to request a specific version of your API.
     Accept: application/vnd.mycompany.com-v1,application/json
     GET /foos
 
-You configure the header to be inspected and the header value specifying the version in the configuration Hash sent to `api_version`.
+You configure the header to be inspected and the header value specifying the version in the configuration Hash passed to `api_version`.
 
 Examples:
 
@@ -191,7 +192,7 @@ Example:
 
     rails generate versionist:new_api_version v2.0.0 V2_0_0 header:Accept value:application/vnd.mycompany.com-v2.0.0
       route  api_version(:module => "V2__0__0", :header=>"Accept", :value=>"application/vnd.mycompany.com-v2.0.0") do
-  end
+      end
       create  app/controllers/v2_0_0
       create  app/controllers/v2_0_0/base_controller.rb
       create  spec/controllers/v2_0_0
