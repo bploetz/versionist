@@ -50,7 +50,7 @@ Examples:
 ```ruby
 MyApi::Application.routes.draw do
   api_version(:module => "V1", :header => "Accept", :value => "application/vnd.mycompany.com-v1") do
-   match '/foos.(:format)' => 'foos#index', :via => :get
+    match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
   end
