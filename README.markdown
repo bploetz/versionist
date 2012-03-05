@@ -127,7 +127,7 @@ Example.
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V20120317", :header => "X-CUSTOM-HEADER", :value => "v20120317", :default => true) do
+  api_version(:module => "V20120317", :header => "API-VERSION", :value => "v20120317", :default => true) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
