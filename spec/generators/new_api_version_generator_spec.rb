@@ -94,10 +94,17 @@ end
 <html lang="en-US">
   <head>
     <title>Documentation for #{ver}</title>
-    <link href="default.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="#{ver}/style.css" media="screen" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <h1>Documentation for #{ver}</h1>
+    <div id="container">
+      <div id="operations">
+        <h3>API Operations</h3>
+      </div>
+      <div id="content">
+        <h1>Documentation for #{ver}</h1>
+      </div>
+    </div>
   </body>
 </html>
               CONTENTS
@@ -105,7 +112,11 @@ end
 
             it "should create a documentation style.css" do
               assert_file "public/docs/#{ver}/style.css", <<-CONTENTS
-body {background-color: #fff; color: #000;}
+body {margin: 0; background-color: #fff; color: #000; font-family: Arial,sans-serif;}
+#content {margin-left: 200px;}
+#content h1 {text-align: center;}
+#operations {float: left; width: 200px; border-right: 1px solid #ccc;}
+#operations h3 {text-align: center;}
               CONTENTS
             end
 

@@ -2,9 +2,16 @@
 <html lang="en-US">
   <head>
     <title>Documentation for <%= version%></title>
-    <link href="default.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="<%= version%>/style.css" media="screen" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <h1>Documentation for <%= version%></h1>
+    <div id="container">
+      <div id="operations">
+        <h3>API Operations</h3>
+      </div>
+      <div id="content">
+        <h1>Documentation for <%= version%></h1>
+      </div>
+    </div>
   </body>
 </html>
