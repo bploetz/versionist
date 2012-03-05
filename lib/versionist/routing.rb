@@ -7,7 +7,7 @@ module Versionist
     # api_version(:module => "v20120317", :parameter => "version", :value => "v20120317")
     #
     # Specifying default version:
-    # api_version(:module => "v3__0__0", :header => "X-MY-HEADER", :value => "v3.0.0", :default => true)
+    # api_version(:module => "v3__0__0", :header => "API-VERSION", :value => "v3.0.0", :default => true)
     def api_version(config, &block)
       raise ArgumentError, "you must pass a configuration Hash to api_version" if config.nil? || !config.is_a?(Hash)
       raise ArgumentError, "you must specify :module in configuration Hash passed to api_version" if !config.has_key?(:module)

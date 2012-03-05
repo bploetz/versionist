@@ -169,7 +169,7 @@ describe Versionist::Routing do
           context "custom header" do
             before :each do
               TestApi::Application.routes.draw do
-                api_version({:module => mod, :header => "X-MY-CUSTOM-HEADER", :value => ver}) do
+                api_version({:module => mod, :header => "API-VERSION", :value => ver}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
                   match '/foos_no_format' => 'foos#index', :via => :get
                   resources :bars
@@ -185,13 +185,13 @@ describe Versionist::Routing do
             end
 
             it "should not route when header doesn't match" do
-              @headers["HTTP_X_MY_CUSTOM_HEADER"] = "v3"
+              @headers["API_VERSION"] = "v3"
               get "/foos.json", nil, @headers
               assert_response 404
             end
 
             it "should route to the correct controller when header matches" do
-              @headers["HTTP_X_MY_CUSTOM_HEADER"] = ver
+              @headers["HTTP_API_VERSION"] = ver
               get "/foos.json", nil, @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
@@ -205,14 +205,14 @@ describe Versionist::Routing do
 
             it "should route to the correct controller when format specified via accept header" do
               @headers["HTTP_ACCEPT"] = "application/json,application/xml"
-              @headers["HTTP_X_MY_CUSTOM_HEADER"] = ver
+              @headers["HTTP_API_VERSION"] = ver
               get "/foos_no_format", nil, @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
               assert_equal ver, response.body
 
               @headers["HTTP_ACCEPT"] = "application/xml,application/json"
-              @headers["HTTP_X_MY_CUSTOM_HEADER"] = ver
+              @headers["HTTP_API_VERSION"] = ver
               get "/foos_no_format", nil, @headers
               assert_response 200
               assert_equal 'application/xml', response.content_type
@@ -222,10 +222,10 @@ describe Versionist::Routing do
             context ":default => true" do
               before :each do
                 TestApi::Application.routes.draw do
-                  api_version({:module => mod, :header => "X-MY-CUSTOM-HEADER", :value => ver, :default => true}) do
+                  api_version({:module => mod, :header => "API-VERSION", :value => ver, :default => true}) do
                     match '/foos.(:format)' => 'foos#index', :via => :get
                   end
-                  api_version({:module => "not_default", :header => "X-MY-CUSTOM-HEADER", :value => "not_default"}) do
+                  api_version({:module => "not_default", :header => "API-VERSION", :value => "not_default"}) do
                     match '/foos.(:format)' => 'foos#index', :via => :get
                   end
                 end
@@ -237,13 +237,13 @@ describe Versionist::Routing do
                 assert_equal 'application/json', response.content_type
                 assert_equal ver, response.body
 
-                @headers["HTTP_X_MY_CUSTOM_HEADER"] = ""
+                @headers["HTTP_API_VERSION"] = ""
                 get "/foos.json", nil, @headers
                 assert_response 200
                 assert_equal 'application/json', response.content_type
                 assert_equal ver, response.body
 
-                @headers["HTTP_X_MY_CUSTOM_HEADER"] = "    "
+                @headers["HTTP_API_VERSION"] = "    "
                 get "/foos.xml", nil, @headers
                 assert_response 200
                 assert_equal 'application/xml', response.content_type
@@ -251,7 +251,7 @@ describe Versionist::Routing do
               end
 
               it "should not route to the default when another configured version is given" do
-                @headers["HTTP_X_MY_CUSTOM_HEADER"] = "not_default"
+                @headers["HTTP_API_VERSION"] = "not_default"
                 get "/foos.json", nil, @headers
                 assert_response 200
                 assert_equal 'application/json', response.content_type
