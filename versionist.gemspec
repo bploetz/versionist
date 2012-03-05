@@ -7,6 +7,7 @@ require 'versionist/version'
 
 Gem::Specification.new do |s|
   s.name = 'versionist'
+  s.homepage = 'https://github.com/bploetz/versionist'
   s.version = Versionist::VERSION
   s.platform = Gem::Platform::RUBY
   s.authors = ['Brian Ploetz']
