@@ -11,7 +11,7 @@ module Versionist
         @config = config
         @config.symbolize_keys!
         Versionist.configuration.versioning_strategies << self
-        raise ArgumentError, "attempt set more than one default api version" if !Versionist.configuration.default_version.nil? && @config.has_key?(:default)
+        raise ArgumentError, "[VERSIONIST] attempt to set more than one default api version" if !Versionist.configuration.default_version.nil? && @config.has_key?(:default)
         if @config.has_key?(:default)
           Versionist.configuration.default_version = self
           @default = true

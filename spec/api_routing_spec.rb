@@ -11,9 +11,7 @@ describe Versionist::Routing do
 
   context "#api_version" do
     before :each do
-      Versionist.configuration.versioning_strategies.clear
-      Versionist.configuration.default_version = nil
-      Versionist.configuration.header_versions.clear
+      Versionist.configuration.clear!
       TestApi::Application.routes.clear!
     end
 
@@ -425,6 +423,15 @@ describe Versionist::Routing do
           end
         end
       end
+    end
+  end
+
+  context "route reloading" do
+    it "should clear cached data when calling Rails.application.reload_routes!" do
+      lambda {
+        Versionist.configuration.should_receive(:clear!)
+        Rails.application.reload_routes!
+      }.should_not raise_error
     end
   end
 end

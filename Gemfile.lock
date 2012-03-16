@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    versionist (0.1.1)
+    versionist (0.1.2)
       rails (~> 3.0)
 
 GEM

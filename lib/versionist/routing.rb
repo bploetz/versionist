@@ -45,3 +45,16 @@ module Versionist
     end
   end
 end
+
+# Hook to clear versionist cached data when routes are reloaded
+module Rails
+  class Application #:nodoc:
+    class RoutesReloader #:nodoc:
+      def reload_with_versionist!
+        Versionist.configuration.clear!
+        reload_without_versionist!
+      end
+      alias_method_chain :reload!, :versionist
+    end
+  end
+end

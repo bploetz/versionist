@@ -2,15 +2,11 @@ require 'spec_helper'
 
 describe Versionist::VersioningStrategy::Header do
   before :each do
-    Versionist.configuration.versioning_strategies.clear
-    Versionist.configuration.default_version = nil
-    Versionist.configuration.header_versions.clear
+    Versionist.configuration.clear!
   end
 
   after :each do
-    Versionist.configuration.versioning_strategies.clear
-    Versionist.configuration.default_version = nil
-    Versionist.configuration.header_versions.clear
+    Versionist.configuration.clear!
   end
 
   it "should raise an ArgumentError if :header is not specified" do

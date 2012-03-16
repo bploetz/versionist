@@ -11,5 +11,11 @@ module Versionist
       @header_versions ||= Array.new
       @parameter_versions ||= Array.new
     end
+
+    def clear!
+      @versioning_strategies.clear
+      @default_version = nil
+      @header_versions.clear
+    end
   end
 end

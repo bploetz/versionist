@@ -8,7 +8,7 @@ describe Versionist::Middleware do
   end
 
   after :all do
-    Versionist.configuration.versioning_strategies.clear
+    Versionist.configuration.clear!
   end
 
   context "Accept header" do
