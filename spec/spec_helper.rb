@@ -6,7 +6,7 @@ require 'rspec'
 require 'rspec-rails'
 require 'simplecov'
 SimpleCov.start do
-  add_filter "spec/test-api"
+  add_filter "spec"
 end
 require 'versionist'
 require 'fileutils'

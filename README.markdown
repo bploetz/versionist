@@ -191,6 +191,8 @@ To see the available generators, simply run `rails generate`, and you will see t
 
 The following generators are available:
 
+### `versionist:new_api_version`
+
 `versionist:new_api_version` - creates the infrastructure for a new API version. This will create:
 
 - A new controller namespace, base controller and test
@@ -219,6 +221,8 @@ Example:
       create  public/docs/v2.0.0/style.css
 
 
+### `versionist:new_controller`
+
 `versionist:new_controller` - creates a new controller class with the given name under the given version module.
 
 Usage
@@ -232,6 +236,8 @@ Example:
       create  spec/controllers/v2_0_0/foos_controller_spec.rb
 
 
+### `versionist:new_presenter`
+
 `versionist:new_presenter` - creates a new presenter class with the given name under the given version module.
 
 Usage
@@ -243,3 +249,28 @@ Example:
     rails generate versionist:new_presenter foos V2_0_0
       create  app/presenters/v2_0_0/foos_presenter.rb
       create  spec/presenters/v2_0_0/foos_presenter_spec.rb
+
+
+### `versionist:copy_api_version`
+
+`versionist:copy_api_version` - copies an existing API version to a new API version. This will do the following:
+
+- Copy all existing routes in config/routes.rb from the old API version to routes for the new API version in config/routes.rb
+- Copy all existing controllers and tests from the old API version to the new API version
+- Copy all existing presenters and tests from the old API version to the new API version
+- Copy all documentation from the old API version to the new API version
+
+Usage
+
+    rails generate versionist:copy_api_version <old version> <old module namespace> <new version> <new module namespace>
+
+Example:
+
+    rails generate versionist:copy_api_version v2.0.0 V2_0_0 v3.0.0 V3_0_0
+      route  api_version(:module => "V3__0__0", :header=>"Accept", :value=>"application/vnd.mycompany.com-v3.0.0") do
+      end
+      Copying all files from app/controllers/v2_0_0 to app/controllers/v3_0_0
+      Copying all files from spec/controllers/v2_0_0 to spec/controllers/v3_0_0
+      Copying all files from app/presenters/v2_0_0 to app/presenters/v3_0_0
+      Copying all files from spec/presenters/v2_0_0 to spec/presenters/v3_0_0
+      Copying all files from public/docs/v2.0.0 to public/docs/v3.0.0

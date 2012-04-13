@@ -19,4 +19,5 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = '>= 1.3.6'
 
   s.add_dependency('rails', '~> 3.0')
+  s.add_dependency('yard', "~> 0.7")
 end

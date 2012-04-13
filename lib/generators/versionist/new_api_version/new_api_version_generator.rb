@@ -12,7 +12,7 @@ module Versionist
 
     def add_routes
       in_root do
-        api_version_block = /api_version.*:module\s*(=>|:)\s*("|')#{module_name_for_route(module_name)}("|').*do/
+        api_version_block = /api_version.*:module\s*(=>|:)\s*("|')#{module_name_for_route(module_name)}("|')/
         matching_version_blocks = File.readlines("config/routes.rb").grep(api_version_block)
         raise "API version already exists in config/routes.rb" if !matching_version_blocks.empty?
         versioning_strategy.symbolize_keys!
