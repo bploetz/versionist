@@ -60,6 +60,9 @@ describe Versionist::Routing do
     end
 
     {"v1" => "v1", "v2" => "v2", "v2.1" => "v2__1"}.each do |ver, mod|
+      # Skip module names with underscores in Rails 3.2
+      # https://github.com/rails/rails/issues/5849
+      next if Rails::VERSION::MAJOR == 3 && Rails::VERSION::MINOR == 2 && mod.include?('_')
       context ver do
         before :each do
           @headers = Hash.new
@@ -429,7 +432,7 @@ describe Versionist::Routing do
   context "route reloading" do
     it "should clear cached data when calling Rails.application.reload_routes!" do
       lambda {
-        Versionist.configuration.should_receive(:clear!)
+        Versionist.configuration.should_receive(:clear!) if defined? Rails::Application::RoutesReloader
         Rails.application.reload_routes!
       }.should_not raise_error
     end

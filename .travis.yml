@@ -4,3 +4,7 @@ rvm:
   - 1.9.3
   - jruby
   - ree
+gemfile:
+  - gemfiles/Rails-3.0
+  - gemfiles/Rails-3.1
+  - gemfiles/Rails-3.2

@@ -179,6 +179,8 @@ If you use the generators provided Versionist (more below) simply pass the modul
       create  spec/presenters/v2_0_0/foos_presenter_spec.rb
 
 
+Unfortunately this work around currently only works in Rails 3.0 and 3.1. Rails 3.2 doesn't seem to honor underscores in module names at all (see [https://github.com/rails/rails/issues/5849](https://github.com/rails/rails/issues/5849)).
+
 Don't shoot the messenger. :-)
 
 

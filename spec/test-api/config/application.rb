@@ -1,5 +1,5 @@
 require "action_controller/railtie"
-require "sprockets/railtie"
+#require "sprockets/railtie"
 require 'versionist/railtie'
 
 module TestApi

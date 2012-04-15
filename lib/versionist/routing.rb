@@ -57,4 +57,4 @@ module Rails
       alias_method_chain :reload!, :versionist
     end
   end
-end
+end if defined? Rails::Application::RoutesReloader
