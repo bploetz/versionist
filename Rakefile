@@ -6,7 +6,6 @@ GEMFILE_MAP = {"gemfiles/Rails-3.0" => "Rails 3.0", "gemfiles/Rails-3.1" => "Rai
 
 # To run the tests locally:
 #   gem install bundler
-#   bundle install
 #   rake test:all
 namespace :test do
   desc "Installs all dependencies"
