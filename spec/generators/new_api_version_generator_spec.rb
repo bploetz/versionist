@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'rails/all'
 require 'generator_spec/test_case'
 
 describe Versionist::NewApiVersionGenerator do

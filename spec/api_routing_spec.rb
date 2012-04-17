@@ -1,13 +1,14 @@
 require 'spec_helper'
-
-ENV["RAILS_ENV"] = 'test'
-require File.expand_path("../test-api/config/application", __FILE__)
-TestApi::Application.initialize!
-
 require 'rspec/rails'
 
 describe Versionist::Routing do
   include RSpec::Rails::RequestExampleGroup
+  
+  before :all do
+    ENV["RAILS_ENV"] = 'test'
+    require File.expand_path("../test-api/config/application", __FILE__)
+    TestApi::Application.initialize!
+  end
 
   context "#api_version" do
     before :each do
