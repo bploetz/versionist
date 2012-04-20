@@ -255,10 +255,13 @@ Example:
 
 `versionist:copy_api_version` - copies an existing API version to a new API version. This will do the following:
 
-- Copy all existing routes in config/routes.rb from the old API version to routes for the new API version in config/routes.rb
+- Copy all existing routes in config/routes.rb from the old API version to routes for the new API version in config/routes.rb (see note below)
 - Copy all existing controllers and tests from the old API version to the new API version
 - Copy all existing presenters and tests from the old API version to the new API version
 - Copy all documentation from the old API version to the new API version
+
+*Note*: routes can only be copied with Ruby 1.9 and above, as this feature relies on Ripper which is only available 
+in stdlib in Ruby 1.9 and above. Outside of routes copying, the other copy steps will work just fine in Ruby 1.8.
 
 Usage
 
