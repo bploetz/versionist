@@ -35,8 +35,8 @@ module Versionist
 
     def copy_routes
       in_root do
-        if RUBY_VERSION =~ /1.8/
-          log "ERROR: Cannot copy routes as this feature relies on the Ripper library, which is only available in Ruby 1.9. You are running Ruby #{RUBY_VERSION}"
+        if RUBY_VERSION =~ /1.8/ || RUBY_ENGINE != "ruby"
+          log "ERROR: Cannot copy routes as this feature relies on the Ripper library, which is only available in MRI 1.9. You are running #{RUBY_ENGINE} #{RUBY_VERSION}."
           return
         end
         parser = YARD::Parser::SourceParser.parse_string(File.read("config/routes.rb"))
