@@ -129,7 +129,7 @@ describe Versionist::CopyApiVersionGenerator do
         end
 
         it "should copy correct api_version to config/routes.rb" do
-          if RUBY_VERSION =~ /1.9/ && RUBY_ENGINE == "ruby"
+          if RUBY_VERSION =~ /1.9/ && defined?(RUBY_ENGINE) && RUBY_ENGINE == "ruby"
             assert_file "config/routes.rb"
             expected = <<-CONTENTS
 Test::Application.routes.draw do
