@@ -2,7 +2,8 @@ language: ruby
 rvm:
   - 1.9.2
   - 1.9.3
-  - jruby
+  - jruby-18mode
+  - jruby-19mode
   - ree
 gemfile:
   - gemfiles/Rails-3.0
