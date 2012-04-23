@@ -191,7 +191,7 @@ To see the available generators, simply run `rails generate`, and you will see t
 
 The following generators are available:
 
-### **`versionist:new_api_version`**
+### `versionist:new_api_version`
 
 creates the infrastructure for a new API version. This will create:
 
@@ -221,7 +221,7 @@ Example:
       create  public/docs/v2.0.0/style.css
 
 
-### **`versionist:new_controller`**
+### `versionist:new_controller`
 
 creates a new controller class with the given name under the given version module.
 
@@ -236,7 +236,7 @@ Example:
       create  spec/controllers/v2_0_0/foos_controller_spec.rb
 
 
-### **`versionist:new_presenter`**
+### `versionist:new_presenter`
 
 creates a new presenter class with the given name under the given version module.
 
@@ -251,7 +251,7 @@ Example:
       create  spec/presenters/v2_0_0/foos_presenter_spec.rb
 
 
-### **`versionist:copy_api_version`**
+### `versionist:copy_api_version`
 
 copies an existing API version to a new API version. This will do the following:
 
