@@ -1,4 +1,4 @@
-class <%= module_name %>::<%= class_name%>Presenter
+class <%= module_name %>::<%= class_name%>Presenter < <%= module_name %>::BasePresenter
 
   def initialize(<%= file_name %>)
     @<%= file_name %> = <%= file_name %>

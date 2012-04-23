@@ -35,7 +35,7 @@ describe Versionist::NewPresenterGenerator do
         it "should create a namespaced presenter" do
           assert_directory "app/presenters/#{module_name_for_path(mod)}"
           assert_file "app/presenters/#{module_name_for_path(mod)}/#{name.underscore}_presenter.rb", <<-CONTENTS
-class #{mod}::#{name.camelize}Presenter
+class #{mod}::#{name.camelize}Presenter < #{mod}::BasePresenter
 
   def initialize(#{name})
     @#{name} = #{name}
