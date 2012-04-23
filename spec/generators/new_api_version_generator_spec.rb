@@ -152,7 +152,7 @@ end
                 assert_file "test/presenters/#{module_name_for_path(mod)}/base_presenter_test.rb", <<-CONTENTS
 require 'test_helper'
 
-class #{mod}::BaseControllerTest < Test::Unit::TestCase
+class #{mod}::BasePresenterTest < Test::Unit::TestCase
   # Replace this with your real tests.
   test "the truth" do
     assert true
