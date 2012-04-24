@@ -55,7 +55,7 @@ describe Versionist::NewControllerGenerator do
               assert_file "test/functional/#{module_name_for_path(mod)}/#{name.underscore}_controller_test.rb", <<-CONTENTS
 require 'test_helper'
 
-class #{mod}::#{name.camelize}Controller < ActionController::TestCase
+class #{mod}::#{name.camelize}ControllerTest < ActionController::TestCase
 
   # Replace this with your real tests.
   test "the truth" do
