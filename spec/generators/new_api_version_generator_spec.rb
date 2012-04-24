@@ -144,6 +144,19 @@ end
                 CONTENTS
               end
 
+              it "should create a namespaced base controller integration test" do
+                assert_file "test/integration/#{module_name_for_path(mod)}/base_controller_test.rb", <<-CONTENTS
+require 'test_helper'
+
+class #{mod}::BaseControllerTest < ActionDispatch::IntegrationTest
+  # Replace this with your real tests.
+  test "the truth" do
+    assert true
+  end
+end
+                CONTENTS
+              end
+
               it "should create a namespaced test/presenters directory" do
                 assert_directory "test/presenters/#{module_name_for_path(mod)}"
               end
@@ -174,8 +187,18 @@ end
                 assert_directory "spec/controllers/#{module_name_for_path(mod)}"
               end
 
-              it "should create a namespaced base controller controller spec" do
+              it "should create a namespaced base controller spec" do
                 assert_file "spec/controllers/#{module_name_for_path(mod)}/base_controller_spec.rb", <<-CONTENTS
+require 'spec_helper'
+
+describe #{mod}::BaseController do
+
+end
+                CONTENTS
+              end
+
+              it "should create a namespaced base request spec" do
+                assert_file "spec/requests/#{module_name_for_path(mod)}/base_controller_spec.rb", <<-CONTENTS
 require 'spec_helper'
 
 describe #{mod}::BaseController do

@@ -231,6 +231,8 @@ Example:
       create  app/controllers/v2_0_0/base_controller.rb
       create  spec/controllers/v2_0_0
       create  spec/controllers/v2_0_0/base_controller_spec.rb
+      create  spec/requests/v2_0_0
+      create  spec/requests/v2_0_0/base_controller_spec.rb
       create  app/presenters/v2_0_0
       create  app/presenters/v2_0_0/base_presenter.rb
       create  spec/presenters/v2_0_0
@@ -253,6 +255,7 @@ Example:
     rails generate versionist:new_controller foos V2_0_0
       create  app/controllers/v2_0_0/foos_controller.rb
       create  spec/controllers/v2_0_0/foos_controller_spec.rb
+      create  spec/requests/v2_0_0/foos_controller_spec.rb
 
 
 ### `versionist:new_presenter`

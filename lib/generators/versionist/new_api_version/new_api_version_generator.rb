@@ -28,15 +28,19 @@ module Versionist
     end
 
     # due to the inflector quirks we can't use hook_for :test_framework
-    def add_controller_base_test
+    def add_controller_base_tests
       in_root do
         case Versionist.configuration.configured_test_framework
         when :test_unit
           empty_directory "test/functional/#{module_name_for_path(module_name)}"
-          template 'base_controller_test.rb', File.join("test", "functional", "#{module_name_for_path(module_name)}", "base_controller_test.rb")
+          template 'base_controller_functional_test.rb', File.join("test", "functional", "#{module_name_for_path(module_name)}", "base_controller_test.rb")
+          empty_directory "test/integration/#{module_name_for_path(module_name)}"
+          template 'base_controller_integration_test.rb', File.join("test", "integration", "#{module_name_for_path(module_name)}", "base_controller_test.rb")
         when :rspec
           empty_directory "spec/controllers/#{module_name_for_path(module_name)}"
           template 'base_controller_spec.rb', File.join("spec", "controllers", "#{module_name_for_path(module_name)}", "base_controller_spec.rb")
+          empty_directory "spec/requests/#{module_name_for_path(module_name)}"
+          template 'base_controller_spec.rb', File.join("spec", "requests", "#{module_name_for_path(module_name)}", "base_controller_spec.rb")
         else
           say "Unsupported test_framework: #{Versionist.configuration.configured_test_framework}"
         end

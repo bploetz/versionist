@@ -64,6 +64,24 @@ class #{mod}::#{name.camelize}ControllerTest < ActionController::TestCase
 end
               CONTENTS
             end
+
+            it "should create a namespaced test/integration directory" do
+              assert_directory "test/integration/#{module_name_for_path(mod)}"
+            end
+
+            it "should create a namespaced controller integration test" do
+              assert_file "test/integration/#{module_name_for_path(mod)}/#{name.underscore}_controller_test.rb", <<-CONTENTS
+require 'test_helper'
+
+class #{mod}::#{name.camelize}ControllerTest < ActionDispatch::IntegrationTest
+
+  # Replace this with your real tests.
+  test "the truth" do
+    assert true
+  end
+end
+              CONTENTS
+            end
           end
 
           context "test_framework: rspec" do
@@ -81,6 +99,20 @@ end
 
             it "should create a namespaced controller spec" do
               assert_file "spec/controllers/#{module_name_for_path(mod)}/#{name.underscore}_controller_spec.rb", <<-CONTENTS
+require 'spec_helper'
+
+describe #{mod}::#{name.camelize}Controller do
+
+end
+              CONTENTS
+            end
+
+            it "should create a namespaced spec/requests directory" do
+              assert_directory "spec/requests/#{module_name_for_path(mod)}"
+            end
+
+            it "should create a namespaced request spec" do
+              assert_file "spec/requests/#{module_name_for_path(mod)}/#{name.underscore}_controller_spec.rb", <<-CONTENTS
 require 'spec_helper'
 
 describe #{mod}::#{name.camelize}Controller do
