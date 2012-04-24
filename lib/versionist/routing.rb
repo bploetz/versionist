@@ -12,6 +12,7 @@ module Versionist
       raise ArgumentError, "you must pass a configuration Hash to api_version" if config.nil? || !config.is_a?(Hash)
       raise ArgumentError, "you must specify :module in configuration Hash passed to api_version" if !config.has_key?(:module)
       raise ArgumentError, "you must specify :header, :path, or :parameter in configuration Hash passed to api_version" if !config.has_key?(:header) && !config.has_key?(:path) && !config.has_key?(:parameter)
+      raise ArgumentError, ":defaults must be a Hash" if config.has_key?(:defaults) && !config[:defaults].is_a?(Hash)
       if config.has_key?(:header)
         return configure_header(config, &block)
       elsif config.has_key?(:path)
@@ -26,22 +27,28 @@ module Versionist
 
     def configure_header(config, &block)
       header = Versionist::VersioningStrategy::Header.new(config)
-      scope({:module => config[:module], :constraints => header}, &block)
+      route_hash = {:module => config[:module], :constraints => header}
+      route_hash.merge!({:defaults => config[:defaults]}) if config.has_key?(:defaults)
+      scope(route_hash, &block)
     end
 
     def configure_path(config, &block)
       path = Versionist::VersioningStrategy::Path.new(config)
       # Use the :as option and strip out non-word characters from the path to avoid this:
       # https://github.com/rails/rails/issues/3224
-      namespace(config[:path], {:module => config[:module], :as => config[:path].gsub(/\W/, '_')}, &block)
+      route_hash = {:module => config[:module], :as => config[:path].gsub(/\W/, '_')}
+      route_hash.merge!({:defaults => config[:defaults]}) if config.has_key?(:defaults)
+      namespace(config[:path], route_hash, &block)
       if path.default?
-        scope({:module => config[:module], :as => config[:path].gsub(/\W/, '_')}, &block)
+        scope(route_hash, &block)
       end
     end
 
     def configure_parameter(config, &block)
       parameter = Versionist::VersioningStrategy::Parameter.new(config)
-      scope({:module => config[:module], :constraints => parameter}, &block)
+      route_hash = {:module => config[:module], :constraints => parameter}
+      route_hash.merge!({:defaults => config[:defaults]}) if config.has_key?(:defaults)
+      scope(route_hash, &block)
     end
   end
 end

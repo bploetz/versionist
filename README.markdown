@@ -138,6 +138,25 @@ end
 If you attempt to specify more than one default version, an error will be thrown at startup.
 
 
+### Rails Route :defaults Hash
+
+The `api_version` method also supports Rails' [`:defaults`](http://guides.rubyonrails.org/routing.html#defining-defaults) hash (note that this is different than
+the `:default` key which controls the default API version described above). If a `:defaults` hash is passed to `api_version`, it will be applied to the collection
+of routes constrainted by `api_version`.
+
+Example.
+
+```ruby
+MyApi::Application.routes.draw do
+  api_version(:module => "V20120317", :header => "API-VERSION", :value => "v20120317", :defaults => {:format => :json}, :default => true) do
+    match '/foos.(:format)' => 'foos#index', :via => :get
+    match '/foos_no_format' => 'foos#index', :via => :get
+    resources :bars
+  end
+end
+```
+
+
 ## Version/Module Naming Convention Gotcha
 
 Note that if your public facing version naming convention uses dots (i.e. v1.2.3), your module names cannot use dots, as you obviously cannot use dots in module names in Ruby.
