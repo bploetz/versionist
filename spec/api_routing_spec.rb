@@ -190,6 +190,117 @@ describe Versionist::Routing do
             end
           end
 
+          context "Accept with parameters" do
+            before :each do
+              TestApi::Application.routes.draw do
+                api_version({:module => mod, :header => "Accept", :value => "application/vnd.mycompany.com; version=#{ver}"}) do
+                  match '/foos.(:format)' => 'foos#index', :via => :get
+                  match '/foos_no_format' => 'foos#index', :via => :get
+                  resources :bars
+                end
+                match '/foos(:format)' => 'foos#index', :via => :get
+                match '*a', :to => 'application#not_found'
+              end
+            end
+
+            it "should not route when header isn't present" do
+              get "/foos.json", nil, @headers
+              assert_response 404
+            end
+
+            it "should not route when header doesn't match" do
+              @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com; version=v3"
+              get "/foos.json", nil, @headers
+              assert_response 404
+            end
+
+            it "should route to the correct controller when header matches" do
+              @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com; version=#{ver}"
+              get "/foos.json", nil, @headers
+              assert_response 200
+              assert_equal 'application/json', response.content_type
+              assert_equal ver, response.body
+
+              get "/foos.xml", nil, @headers
+              assert_response 200
+              assert_equal 'application/xml', response.content_type
+              assert_equal ver, response.body
+            end
+
+            it "should route to the correct controller when format specified via accept header" do
+              @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com; version=#{ver},application/json"
+              get "/foos_no_format", nil, @headers
+              assert_response 200
+              assert_equal 'application/json', response.content_type
+              assert_equal ver, response.body
+
+              @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com; version=#{ver}"
+              get "/foos_no_format", nil, @headers
+              assert_response 200
+              assert_equal 'application/xml', response.content_type
+              assert_equal ver, response.body
+
+              @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com; version=#{ver}, application/json"
+              get "/foos_no_format", nil, @headers
+              assert_response 200
+              assert_equal 'application/xml', response.content_type
+              assert_equal ver, response.body
+            end
+
+            context ":default => true" do
+              before :each do
+                TestApi::Application.routes.draw do
+                  api_version({:module => mod, :header => "Accept", :value => "application/vnd.mycompany.com; version=#{ver}", :default => true}) do
+                    match '/foos.(:format)' => 'foos#index', :via => :get
+                  end
+                  api_version({:module => "not_default", :header => "Accept", :value => "application/vnd.mycompany.com; version=not_default"}) do
+                    match '/foos.(:format)' => 'foos#index', :via => :get
+                  end
+                end
+              end
+
+              it "should route to the default when no version given" do
+                get "/foos.json", nil, @headers
+                assert_response 200
+                assert_equal 'application/json', response.content_type
+                assert_equal ver, response.body
+
+                @headers["HTTP_ACCEPT"] = ""
+                get "/foos.json", nil, @headers
+                assert_response 200
+                assert_equal 'application/json', response.content_type
+                assert_equal ver, response.body
+
+                @headers["HTTP_ACCEPT"] = "   "
+                get "/foos.json", nil, @headers
+                assert_response 200
+                assert_equal 'application/json', response.content_type
+                assert_equal ver, response.body
+              end
+
+              it "should not route to the default when another configured version is given" do
+                @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com; version=not_default"
+                get "/foos.json", nil, @headers
+                assert_response 200
+                assert_equal 'application/json', response.content_type
+                assert_equal "not_default", response.body
+              end
+            end
+
+            context ":defaults" do
+              it "should pass the :defaults hash on to the scope() call" do
+                ActionDispatch::Routing::Mapper.any_instance.should_receive(:scope).with(hash_including(:defaults => {:format => :json}))
+                TestApi::Application.routes.draw do
+                  api_version({:module => mod, :header => "Accept", :value => "application/vnd.mycompany.com; version=#{ver}", :defaults => {:format => :json}}) do
+                    match '/foos.(:format)' => 'foos#index', :via => :get
+                    match '/foos_no_format' => 'foos#index', :via => :get
+                    resources :bars
+                  end
+                end
+              end
+            end
+          end
+
           context "custom header" do
             before :each do
               TestApi::Application.routes.draw do

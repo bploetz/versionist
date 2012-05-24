@@ -35,7 +35,7 @@ describe Versionist::NewApiVersionGenerator do
       end
 
       context "api version doesn't exist" do
-        [{:header => "Accept", :value => "application/vnd.mycompany.com-#{ver}"}, {:header => "API-VERSION", :value => ver}, {:path => "/#{ver}"}, {:parameter => "version", :value => ver}].each do |versioning_strategy|
+        [{:header => "Accept", :value => "application/vnd.mycompany.com-#{ver}"}, {:header => "Accept", :value => "application/vnd.mycompany.com; version=#{ver}"}, {:header => "API-VERSION", :value => ver}, {:path => "/#{ver}"}, {:parameter => "version", :value => ver}].each do |versioning_strategy|
           context "versioning_strategy: #{versioning_strategy.to_s}" do
             before :each do
               ::FileUtils.rm(::File.expand_path("../../tmp/config/routes.rb", __FILE__))

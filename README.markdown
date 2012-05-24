@@ -38,7 +38,7 @@ in the configuration Hash passed to `api_version`. You configure the module name
 
 This strategy uses an HTTP header to request a specific version of your API.
 
-    Accept: application/vnd.mycompany.com-v1,application/json
+    Accept: application/vnd.mycompany.com; version=1,application/json
     GET /foos
 
 You configure the header to be inspected and the header value specifying the version in the configuration Hash passed to `api_version`.
@@ -49,7 +49,7 @@ Examples:
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V1", :header => "Accept", :value => "application/vnd.mycompany.com-v1") do
+  api_version(:module => "V1", :header => "Accept", :value => "application/vnd.mycompany.com; version=1") do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -81,7 +81,7 @@ end
 
 This strategy uses a URL path prefix to request a specific version of your API.
 
-    GET /v3.5.1/foos
+    GET /v3/foos
 
 You configure the path version prefix to be applied to the routes.
 
@@ -89,7 +89,7 @@ Example:
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V3__5__1", :path => "/v3.5.1") do
+  api_version(:module => "V3", :path => "/v3") do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -101,7 +101,7 @@ end
 
 This strategy uses a request parameter to request a specific version of your API.
 
-    GET /foos?version=v1.1.3
+    GET /foos?version=v2
 
 You configure the parameter name and value to be applied to the routes.
 
@@ -109,7 +109,7 @@ Example:
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V1__1__3", :parameter => "version", :value => "v1.1.3") do
+  api_version(:module => "V2", :parameter => "version", :value => "v2") do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -165,15 +165,15 @@ If you wish to simply replace dots with underscores, you'll need to use *two* un
 For example, if your public facing version is v2.0.0 and you want to map this to the module `V2_0_0`, you would do the following in `api_routes`:
 
 ```ruby
-api_version(:module => "V2__0__0", :header => "Accept", :value => "application/vnd.mycompany.com-v2.0.0") do
+api_version(:module => "V2__0__0", :header => "Accept", :value => "application/vnd.mycompany.com; version=v2.0.0") do
   ...
 end
 ```
 
 If you use the generators provided Versionist (more below) simply pass the module name as is (without this double underscore hack) and Versionist will take care of this detail for you.
 
-    rails generate versionist:new_api_version v2.0.0 V2_0_0 header:Accept value:application/vnd.mycompany.com-v2.0.0
-      route  api_version(:module => "V2__0__0", :header=>"Accept", :value=>"application/vnd.mycompany.com-v2.0.0") do
+    rails generate versionist:new_api_version v2.0.0 V2_0_0 header:Accept value:"application/vnd.mycompany.com; version=v2.0.0"
+      route  api_version(:module => "V2__0__0", :header=>"Accept", :value=>"application/vnd.mycompany.com; version=v2.0.0") do
       end
       create  app/controllers/v2_0_0
       create  app/controllers/v2_0_0/base_controller.rb
@@ -198,7 +198,7 @@ If you use the generators provided Versionist (more below) simply pass the modul
       create  spec/presenters/v2_0_0/foos_presenter_spec.rb
 
 
-Unfortunately this work around currently only works in Rails 3.0 and 3.1. Rails 3.2 doesn't seem to honor underscores in module names at all (see [https://github.com/rails/rails/issues/5849](https://github.com/rails/rails/issues/5849)).
+Unfortunately this work-around currently only works in Rails 3.0 and 3.1, and does not work in Rails 3.2. See [https://github.com/rails/rails/issues/5849](https://github.com/rails/rails/issues/5849)) and [https://github.com/rails/rails/pull/6105](https://github.com/rails/rails/pull/6105).
 
 Don't shoot the messenger. :-)
 
@@ -224,22 +224,22 @@ Usage
 
 Example:
 
-    rails generate versionist:new_api_version v2.0.0 V2_0_0 header:Accept value:application/vnd.mycompany.com-v2.0.0
-      route  api_version(:module => "V2__0__0", :header=>"Accept", :value=>"application/vnd.mycompany.com-v2.0.0") do
+    rails generate versionist:new_api_version v2 V2 header:Accept value:"application/vnd.mycompany.com; version=2"
+      route  api_version(:module => "V2", :header=>"Accept", :value=>"application/vnd.mycompany.com; version=2") do
       end
-      create  app/controllers/v2_0_0
-      create  app/controllers/v2_0_0/base_controller.rb
-      create  spec/controllers/v2_0_0
-      create  spec/controllers/v2_0_0/base_controller_spec.rb
-      create  spec/requests/v2_0_0
-      create  spec/requests/v2_0_0/base_controller_spec.rb
-      create  app/presenters/v2_0_0
-      create  app/presenters/v2_0_0/base_presenter.rb
-      create  spec/presenters/v2_0_0
-      create  spec/presenters/v2_0_0/base_presenter_spec.rb
-      create  public/docs/v2.0.0
-      create  public/docs/v2.0.0/index.html
-      create  public/docs/v2.0.0/style.css
+      create  app/controllers/v2
+      create  app/controllers/v2/base_controller.rb
+      create  spec/controllers/v2
+      create  spec/controllers/v2/base_controller_spec.rb
+      create  spec/requests/v2
+      create  spec/requests/v2/base_controller_spec.rb
+      create  app/presenters/v2
+      create  app/presenters/v2/base_presenter.rb
+      create  spec/presenters/v2
+      create  spec/presenters/v2/base_presenter_spec.rb
+      create  public/docs/v2
+      create  public/docs/v2/index.html
+      create  public/docs/v2/style.css
 
 
 ### `versionist:new_controller`
@@ -252,10 +252,10 @@ Usage
 
 Example:
 
-    rails generate versionist:new_controller foos V2_0_0
-      create  app/controllers/v2_0_0/foos_controller.rb
-      create  spec/controllers/v2_0_0/foos_controller_spec.rb
-      create  spec/requests/v2_0_0/foos_controller_spec.rb
+    rails generate versionist:new_controller foos V2
+      create  app/controllers/v2/foos_controller.rb
+      create  spec/controllers/v2/foos_controller_spec.rb
+      create  spec/requests/v2/foos_controller_spec.rb
 
 
 ### `versionist:new_presenter`
@@ -268,9 +268,9 @@ Usage
 
 Example:
 
-    rails generate versionist:new_presenter foos V2_0_0
-      create  app/presenters/v2_0_0/foos_presenter.rb
-      create  spec/presenters/v2_0_0/foos_presenter_spec.rb
+    rails generate versionist:new_presenter foos V2
+      create  app/presenters/v2/foos_presenter.rb
+      create  spec/presenters/v2/foos_presenter_spec.rb
 
 
 ### `versionist:copy_api_version`
@@ -292,11 +292,11 @@ Usage
 
 Example:
 
-    rails generate versionist:copy_api_version v2.0.0 V2_0_0 v3.0.0 V3_0_0
-      route  api_version(:module => "V3__0__0", :header=>"Accept", :value=>"application/vnd.mycompany.com-v3.0.0") do
+    rails generate versionist:copy_api_version v2 V2 v3 V3
+      route  api_version(:module => "V3", :header=>"Accept", :value=>"application/vnd.mycompany.com; version=3") do
       end
-      Copying all files from app/controllers/v2_0_0 to app/controllers/v3_0_0
-      Copying all files from spec/controllers/v2_0_0 to spec/controllers/v3_0_0
-      Copying all files from app/presenters/v2_0_0 to app/presenters/v3_0_0
-      Copying all files from spec/presenters/v2_0_0 to spec/presenters/v3_0_0
-      Copying all files from public/docs/v2.0.0 to public/docs/v3.0.0
+      Copying all files from app/controllers/v2 to app/controllers/v3
+      Copying all files from spec/controllers/v2 to spec/controllers/v3
+      Copying all files from app/presenters/v2 to app/presenters/v3
+      Copying all files from spec/presenters/v2 to spec/presenters/v3
+      Copying all files from public/docs/v2 to public/docs/v3
