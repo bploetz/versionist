@@ -49,9 +49,9 @@ Examples:
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V1", :header => "Accept", :value => "application/vnd.mycompany.com; version=1") do
-    match '/foos.(:format)' => 'foos#index', :via => :get
-    match '/foos_no_format' => 'foos#index', :via => :get
+  api_version module: "V1", header: "Accept", value: "application/vnd.mycompany.com; version=1" do
+    match '/foos.(:format)' => 'foos#index', via: :get
+    match '/foos_no_format' => 'foos#index', via: :get
     resources :bars
   end
 end
@@ -69,9 +69,9 @@ Rails' format resolution logic. This is the only case where Versionist will alte
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V20120317", :header => "API-VERSION", :value => "v20120317") do
-    match '/foos.(:format)' => 'foos#index', :via => :get
-    match '/foos_no_format' => 'foos#index', :via => :get
+  api_version module: "V20120317", header: "API-VERSION", value: "v20120317" do
+    match '/foos.(:format)' => 'foos#index', via: :get
+    match '/foos_no_format' => 'foos#index', via: :get
     resources :bars
   end
 end
@@ -89,9 +89,9 @@ Example:
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V3", :path => "/v3") do
-    match '/foos.(:format)' => 'foos#index', :via => :get
-    match '/foos_no_format' => 'foos#index', :via => :get
+  api_version module: "V3", path: "/v3" do
+    match '/foos.(:format)' => 'foos#index', via: :get
+    match '/foos_no_format' => 'foos#index', via: :get
     resources :bars
   end
 end
@@ -109,9 +109,9 @@ Example:
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V2", :parameter => "version", :value => "v2") do
-    match '/foos.(:format)' => 'foos#index', :via => :get
-    match '/foos_no_format' => 'foos#index', :via => :get
+  api_version module: "V2", parameter: "version", value: "v2" do
+    match '/foos.(:format)' => 'foos#index', via: :get
+    match '/foos_no_format' => 'foos#index', via: :get
     resources :bars
   end
 end
@@ -127,9 +127,9 @@ Example.
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V20120317", :header => "API-VERSION", :value => "v20120317", :default => true) do
-    match '/foos.(:format)' => 'foos#index', :via => :get
-    match '/foos_no_format' => 'foos#index', :via => :get
+  api_version module: "V20120317", header: "API-VERSION", value: "v20120317", default: true do
+    match '/foos.(:format)' => 'foos#index', via: :get
+    match '/foos_no_format' => 'foos#index', via: :get
     resources :bars
   end
 end
@@ -148,7 +148,7 @@ Example.
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V20120317", :header => "API-VERSION", :value => "v20120317", :defaults => {:format => :json}, :default => true) do
+  api_version module: "V20120317", header: "API-VERSION", value: "v20120317", defaults: {format: :json}, default: true do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -165,7 +165,7 @@ If you wish to simply replace dots with underscores, you'll need to use *two* un
 For example, if your public facing version is v2.0.0 and you want to map this to the module `V2_0_0`, you would do the following in `api_routes`:
 
 ```ruby
-api_version(:module => "V2__0__0", :header => "Accept", :value => "application/vnd.mycompany.com; version=v2.0.0") do
+api_version module: "V2__0__0", header: "Accept", value: "application/vnd.mycompany.com; version=v2.0.0" do
   ...
 end
 ```
