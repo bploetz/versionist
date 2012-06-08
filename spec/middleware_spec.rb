@@ -35,5 +35,11 @@ describe Versionist::Middleware do
       status, headers, response = described_class.new(@app).call(request)
       response[0].should == "audio/*; q=0.2, audio/basic, application/json, application/vnd.mycompany.com-v2.3.0"
     end
+
+    it "should not alter the header if the accept header is not present" do
+      request = Rack::MockRequest.env_for("/foos", :lint => true, :fatal => true)
+      status, headers, response = described_class.new(@app).call(request)
+      response[0].should be_nil
+    end
   end
 end
