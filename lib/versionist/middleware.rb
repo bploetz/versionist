@@ -19,7 +19,7 @@ module Versionist
 
     def _call(env)
       request = ::Rack::Request.new(env)
-      strategy = Versionist.configuration.versioning_strategies.detect {|vs| vs.is_a?(Versionist::VersioningStrategy::Header) && vs.config[:header] == ACCEPT && env[HTTP_ACCEPT].include?(vs.config[:value])}
+      strategy = Versionist.configuration.versioning_strategies.detect {|vs| vs.is_a?(Versionist::VersioningStrategy::Header) && vs.config[:header] == ACCEPT && env[HTTP_ACCEPT].try(:include?, vs.config[:value])}
       if !strategy.nil?
         entries = env[HTTP_ACCEPT].split(',')
         index = -1
