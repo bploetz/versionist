@@ -37,7 +37,7 @@ module Versionist
       # Use the :as option and strip out non-word characters from the path to avoid this:
       # https://github.com/rails/rails/issues/3224
       route_hash = {:module => config[:module] }
-      route_has[:as] = config[:as] || config[:path].gsub(/\W/, '_') unless config[:no_as]
+      route_hash[:as] = config[:as] || config[:path].gsub(/\W/, '_') unless config[:no_as]
       route_hash.merge!({:defaults => config[:defaults]}) if config.has_key?(:defaults)
       namespace(config[:path], route_hash, &block)
       if path.default?
