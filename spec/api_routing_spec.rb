@@ -617,7 +617,7 @@ describe Versionist::Routing do
   context "route reloading" do
     it "should clear cached data when calling Rails.application.reload_routes!" do
       lambda {
-        Versionist.configuration.should_receive(:clear!) if defined? Rails::Application::RoutesReloader
+        Versionist.configuration.should_receive(:clear!)
         Rails.application.reload_routes!
       }.should_not raise_error
     end
