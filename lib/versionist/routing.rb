@@ -36,10 +36,12 @@ module Versionist
       path = Versionist::VersioningStrategy::Path.new(config)
       # Use the :as option and strip out non-word characters from the path to avoid this:
       # https://github.com/rails/rails/issues/3224
-      route_hash = {:module => config[:module], :as => config[:path].gsub(/\W/, '_')}
+      route_hash = {:module => config[:module], :as => config[:path].gsub(/\W/, '_') }
       route_hash.merge!({:defaults => config[:defaults]}) if config.has_key?(:defaults)
+      as = route_hash.delete :as if path.default?
       namespace(config[:path], route_hash, &block)
       if path.default?
+        route_hash[:name_prefix] = as
         scope(route_hash, &block)
       end
     end
