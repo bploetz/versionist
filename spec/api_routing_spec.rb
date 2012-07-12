@@ -438,7 +438,17 @@ describe Versionist::Routing do
             assert_equal 'application/json', response.content_type
             assert_equal ver, response.body
 
+            get "/#{ver}/bars.json", nil, @headers
+            assert_response 200
+            assert_equal 'application/json', response.content_type
+            assert_equal ver, response.body
+
             get "/#{ver}/foos.xml", nil, @headers
+            assert_response 200
+            assert_equal 'application/xml', response.content_type
+            assert_equal ver, response.body
+
+            get "/#{ver}/bars.xml", nil, @headers
             assert_response 200
             assert_equal 'application/xml', response.content_type
             assert_equal ver, response.body
@@ -463,9 +473,11 @@ describe Versionist::Routing do
               TestApi::Application.routes.draw do
                 api_version({:module => mod, :path => "/#{ver}", :default => true}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
+                  resources :bars
                 end
                 api_version({:module => "not_default", :path => "/not_default"}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
+                  resources :bars
                 end
               end
             end
@@ -476,7 +488,17 @@ describe Versionist::Routing do
               assert_equal 'application/json', response.content_type
               assert_equal ver, response.body
 
+              get "/#{ver}/bars.json", nil, @headers
+              assert_response 200
+              assert_equal 'application/json', response.content_type
+              assert_equal ver, response.body
+
               get "/foos.xml", nil, @headers
+              assert_response 200
+              assert_equal 'application/xml', response.content_type
+              assert_equal ver, response.body
+
+              get "/#{ver}/bars.xml", nil, @headers
               assert_response 200
               assert_equal 'application/xml', response.content_type
               assert_equal ver, response.body
@@ -492,7 +514,7 @@ describe Versionist::Routing do
 
           context ":defaults" do
             it "should pass the :defaults hash on to the namespace() call" do
-              ActionDispatch::Routing::Mapper.any_instance.should_receive(:namespace).with("/#{ver}", hash_including(:defaults => {:format => :json}))
+              ActionDispatch::Routing::Mapper.any_instance.should_receive(:namespace).with("#{ver}", hash_including(:defaults => {:format => :json}))
               TestApi::Application.routes.draw do
                 api_version({:module => mod, :path => "/#{ver}", :defaults => {:format => :json}}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
@@ -503,7 +525,7 @@ describe Versionist::Routing do
             end
 
             it "should pass the :defaults hash on to the namespace() call and the scope() call when :default is present" do
-              ActionDispatch::Routing::Mapper.any_instance.should_receive(:namespace).with("/#{ver}", hash_including(:defaults => {:format => :json}))
+              ActionDispatch::Routing::Mapper.any_instance.should_receive(:namespace).with("#{ver}", hash_including(:defaults => {:format => :json}))
               ActionDispatch::Routing::Mapper.any_instance.should_receive(:scope).with(hash_including(:defaults => {:format => :json}))
               TestApi::Application.routes.draw do
                 api_version({:module => mod, :path => "/#{ver}", :default => true, :defaults => {:format => :json}}) do

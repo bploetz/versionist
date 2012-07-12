@@ -36,6 +36,7 @@ module Versionist
       path = Versionist::VersioningStrategy::Path.new(config)
       # Use the :as option and strip out non-word characters from the path to avoid this:
       # https://github.com/rails/rails/issues/3224
+      config[:path].slice!(0) if config[:path] =~ /^\//
       route_hash = {:module => config[:module], :as => config[:path].gsub(/\W/, '_')}
       route_hash.merge!({:defaults => config[:defaults]}) if config.has_key?(:defaults)
       namespace(config[:path], route_hash, &block)

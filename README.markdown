@@ -89,7 +89,7 @@ Example:
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V3", :path => "/v3") do
+  api_version(:module => "V3", :path => "v3") do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
