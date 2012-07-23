@@ -14,10 +14,12 @@ module Versionist
       raise ArgumentError, "you must specify :header, :path, or :parameter in configuration Hash passed to api_version" if !config.has_key?(:header) && !config.has_key?(:path) && !config.has_key?(:parameter)
       raise ArgumentError, ":defaults must be a Hash" if config.has_key?(:defaults) && !config[:defaults].is_a?(Hash)
       if config.has_key?(:header)
-        return configure_header(config, &block)
-      elsif config.has_key?(:path)
-        return configure_path(config, &block)
-      elsif config.has_key?(:parameter)
+        configure_header(config, &block)
+      end
+      if config.has_key?(:path)
+        configure_path(config, &block)
+      end
+      if config.has_key?(:parameter)
         configure_parameter(config, &block)
       end
     end
