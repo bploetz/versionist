@@ -117,6 +117,32 @@ MyApi::Application.routes.draw do
 end
 ```
 
+### Using Multiple Strategies
+
+It is possible to combine two or more of the above strategies. One
+example of when you might want to support multiple strategies
+simultaneously is if you have an API that supports JSONP. Your preferred
+strategy might be for users of the API to set a header, but since JSONP
+doesn't support setting custom headers, you also need to support either
+:path or :parameter.
+
+Example:
+
+```ruby
+MyApi::Application.routes.draw do
+  api_version(:module => 'V2', :header => 'API-VERSION', :parameter => "version", :value => 'v2', :path => 'v2') do
+    match '/foos.(:format)' => 'foos#index', :via => :get
+    match '/foos_no_format' => 'foos#index', :via => :get
+    resources :bars
+  end
+end
+```
+
+Caveat: If you are using :header and :parameter, they need to share the
+same value. For this reason, if you use mupltiple strategies, you will
+probably want to set a custom header instead of using an Accept mime
+type.
+
 ### Default Version
 
 If a request is made to your API without specifying a specific version, by default a RoutingError (i.e. 404) will occur. You can optionally configure Versionist to
