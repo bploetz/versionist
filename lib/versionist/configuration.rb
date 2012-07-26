@@ -16,6 +16,7 @@ module Versionist
       @versioning_strategies.clear
       @default_version = nil
       @header_versions.clear
+      @parameter_versions.clear
     end
   end
 end
