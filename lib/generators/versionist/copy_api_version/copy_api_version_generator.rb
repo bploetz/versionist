@@ -66,6 +66,17 @@ module Versionist
           else
             say "No controller tests found in test/functional for #{old_version}"
           end
+
+          if File.exists? "test/integration/#{module_name_for_path(old_module_name)}"
+            log "Copying all files from test/integration/#{module_name_for_path(old_module_name)} to test/integration/#{module_name_for_path(new_module_name)}"
+            FileUtils.cp_r "test/integration/#{module_name_for_path(old_module_name)}", "test/integration/#{module_name_for_path(new_module_name)}"
+            Dir.glob("test/integration/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
+              text = File.read(f)
+              File.open(f, 'w') {|f| f << text.gsub(/#{old_module_name}/, new_module_name)}
+            end
+          else
+            say "No integration tests found in test/integration for #{old_version}"
+          end
         when :rspec
           if File.exists? "spec/controllers/#{module_name_for_path(old_module_name)}"
             log "Copying all files from spec/controllers/#{module_name_for_path(old_module_name)} to spec/controllers/#{module_name_for_path(new_module_name)}"
@@ -76,6 +87,17 @@ module Versionist
             end
           else
             say "No controller specs found in spec/controllers for #{old_version}"
+          end
+
+          if File.exists? "spec/requests/#{module_name_for_path(old_module_name)}"
+            log "Copying all files from spec/requests/#{module_name_for_path(old_module_name)} to spec/requests/#{module_name_for_path(new_module_name)}"
+            FileUtils.cp_r "spec/requests/#{module_name_for_path(old_module_name)}", "spec/requests/#{module_name_for_path(new_module_name)}"
+            Dir.glob("spec/requests/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
+              text = File.read(f)
+              File.open(f, 'w') {|f| f << text.gsub(/#{old_module_name}/, new_module_name)}
+            end
+          else
+            say "No request specs found in spec/requests for #{old_version}"
           end
         else
           say "Unsupported test_framework: #{Versionist.configuration.configured_test_framework}"
