@@ -35,10 +35,10 @@ module Versionist
     end
 
     def configure_path(config, &block)
+      config[:path].slice!(0) if config[:path] =~ /^\//
       path = Versionist::VersioningStrategy::Path.new(config)
       # Use the :as option and strip out non-word characters from the path to avoid this:
       # https://github.com/rails/rails/issues/3224
-      config[:path].slice!(0) if config[:path] =~ /^\//
       route_hash = {:module => config[:module], :as => config[:path].gsub(/\W/, '_')}
       route_hash.merge!({:defaults => config[:defaults]}) if config.has_key?(:defaults)
       namespace(config[:path], route_hash, &block)
@@ -53,16 +53,5 @@ module Versionist
       route_hash.merge!({:defaults => config[:defaults]}) if config.has_key?(:defaults)
       scope(route_hash, &block)
     end
-  end
-end
-
-# Hook to clear versionist cached data when routes are reloaded
-module Rails
-  class Application #:nodoc:
-    def reload_routes_with_versionist!
-      Versionist.configuration.clear!
-      reload_routes_without_versionist!
-    end
-    alias_method_chain :reload_routes!, :versionist
   end
 end

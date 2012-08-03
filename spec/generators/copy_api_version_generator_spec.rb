@@ -28,54 +28,76 @@ describe Versionist::CopyApiVersionGenerator do
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/app/presenters/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}", __FILE__))
+          ::FileUtils.rm_rf(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/spec/controllers/#{module_name_for_path(mod)}", __FILE__))
+          ::FileUtils.rm_rf(::File.expand_path("../../tmp/spec/requests/#{module_name_for_path(mod)}", __FILE__))
           Versionist.configuration.configured_test_framework = nil
         end
 
-        it "should raise an error if old version not found config/routes.rb" do
+        it "should not raise an error if old version not found config/routes.rb" do
           lambda {
             run_generator [ver, mod, "x", "X", {}]
-          }.should raise_error(RuntimeError, /old API version #{mod} not found in config\/routes.rb/)
+          }.should_not raise_error
         end
 
-        it "should raise an error if old version module not found in app/controllers" do
+        it "should not raise an error if old version module not found in app/controllers" do
           ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-#{ver}\") do\n  end\nend"}
           lambda {
             run_generator [ver, mod, "x", "X", {}]
-          }.should raise_error(RuntimeError, /old API version module namespace #{mod} not found in app\/controllers/)
+          }.should_not raise_error
         end
 
-        it "should raise an error if old version module not found in test/functional when Test::Unit is the test framework" do
+        it "should not raise an error if old version module not found in test/functional when Test::Unit is the test framework" do
           ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-#{ver}\") do\n  end\nend"}
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/presenters/#{module_name_for_path(mod)}", __FILE__))
           Versionist.configuration.configured_test_framework = :test_unit
           lambda {
             run_generator [ver, mod, "x", "X", {}]
-          }.should raise_error(RuntimeError, /old API version module namespace #{mod} not found in test\/functional/)
+          }.should_not raise_error
         end
 
-        it "should raise an error if old version module not found in spec/controllers when rspec is the test framework" do
+        it "should not raise an error if old version module not found in test/integration when Test::Unit is the test framework" do
+          ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-#{ver}\") do\n  end\nend"}
+          ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
+          ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/presenters/#{module_name_for_path(mod)}", __FILE__))
+          Versionist.configuration.configured_test_framework = :test_unit
+          lambda {
+            run_generator [ver, mod, "x", "X", {}]
+          }.should_not raise_error
+        end
+
+        it "should not raise an error if old version module not found in spec/controllers when rspec is the test framework" do
           ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-#{ver}\") do\n  end\nend"}
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/presenters/#{module_name_for_path(mod)}", __FILE__))
           Versionist.configuration.configured_test_framework = :rspec
           lambda {
             run_generator [ver, mod, "x", "X", {}]
-          }.should raise_error(RuntimeError, /old API version module namespace #{mod} not found in spec\/controllers/)
+          }.should_not raise_error
         end
 
-        it "should raise an error if old version module not found in app/presenters" do
+        it "should not raise an error if old version module not found in spec/requests when rspec is the test framework" do
+          ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-#{ver}\") do\n  end\nend"}
+          ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
+          ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/presenters/#{module_name_for_path(mod)}", __FILE__))
+          Versionist.configuration.configured_test_framework = :rspec
+          lambda {
+            run_generator [ver, mod, "x", "X", {}]
+          }.should_not raise_error
+        end
+
+        it "should not raise an error if old version module not found in app/presenters" do
           ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-#{ver}\") do\n  end\nend"}
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec/controllers/#{module_name_for_path(mod)}", __FILE__))
           Versionist.configuration.configured_test_framework = :rspec
           lambda {
             run_generator [ver, mod, "x", "X", {}]
-          }.should raise_error(RuntimeError, /old API version module namespace #{mod} not found in app\/presenters/)
+          }.should_not raise_error
         end
 
-        it "should raise an error if old version module not found in test/presenters when Test::Unit is the test framework" do
+        it "should not raise an error if old version module not found in test/presenters when Test::Unit is the test framework" do
           ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-#{ver}\") do\n  end\nend"}
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}", __FILE__))
@@ -83,10 +105,10 @@ describe Versionist::CopyApiVersionGenerator do
           Versionist.configuration.configured_test_framework = :test_unit
           lambda {
             run_generator [ver, mod, "x", "X", {}]
-          }.should raise_error(RuntimeError, /old API version module namespace #{mod} not found in test\/presenters/)
+          }.should_not raise_error
         end
 
-        it "should raise an error if old version module not found in spec/presenters when rspec is the test framework" do
+        it "should not raise an error if old version module not found in spec/presenters when rspec is the test framework" do
           ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-#{ver}\") do\n  end\nend"}
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec/controllers/#{module_name_for_path(mod)}", __FILE__))
@@ -94,10 +116,10 @@ describe Versionist::CopyApiVersionGenerator do
           Versionist.configuration.configured_test_framework = :rspec
           lambda {
             run_generator [ver, mod, "x", "X", {}]
-          }.should raise_error(RuntimeError, /old API version module namespace #{mod} not found in spec\/presenters/)
+          }.should_not raise_error
         end
 
-        it "should raise an error if old version not found in public/docs" do
+        it "should not raise an error if old version not found in public/docs" do
           ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-#{ver}\") do\n  end\nend"}
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec/controllers/#{module_name_for_path(mod)}", __FILE__))
@@ -106,7 +128,7 @@ describe Versionist::CopyApiVersionGenerator do
           Versionist.configuration.configured_test_framework = :rspec
           lambda {
             run_generator [ver, mod, "x", "X", {}]
-          }.should raise_error(RuntimeError, /old API version #{ver} not found in public\/docs/)
+          }.should_not raise_error
         end
       end
 
@@ -201,36 +223,19 @@ end
         end
 
         it "should copy documentation" do
-          expected_index_html = <<-HTML
-<!DOCTYPE html>
-<html lang="en-US">
-  <head>
-    <title>Documentation for x</title>
-    <link href="x/style.css" media="screen" rel="stylesheet" type="text/css">
-  </head>
-  <body>
-    <div id="container">
-      <div id="operations">
-        <h3>API Operations</h3>
-      </div>
-      <div id="content">
-        <h1>Documentation for x</h1>
-      </div>
-    </div>
-  </body>
-</html>
-          HTML
-
           assert_file "public/docs/x/style.css"
-          assert_file "public/docs/x/index.html", expected_index_html.chop
+          assert_file "public/docs/x/index.html"
         end
 
         context "test_framework: test_unit" do
           before :each do
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}", __FILE__))
+            ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}", __FILE__))
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/presenters/#{module_name_for_path(mod)}", __FILE__))
             ::File.open(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}/base_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::BaseControllerTest < ActionController::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
             ::File.open(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}/foos_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::FoosControllerTest < ActionController::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
+            ::File.open(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}/base_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::BaseControllerTest < ActionDispatch::IntegrationTest\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
+            ::File.open(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}/foos_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::FoosControllerTest < ActionDispatch::IntegrationTest\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
             ::File.open(::File.expand_path("../../tmp/test/presenters/#{module_name_for_path(mod)}/base_presenter_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::BasePresenterTest < Test::Unit::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
             ::File.open(::File.expand_path("../../tmp/test/presenters/#{module_name_for_path(mod)}/foo_presenter_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::FooPresenterTest < Test::Unit::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
             Versionist.configuration.configured_test_framework = :test_unit
@@ -238,7 +243,7 @@ end
           end
 
           it "should copy old controller tests to new controller tests" do
-            expected_base_controller_test = <<-BASE
+            expected_base_controller_functional_test = <<-BASE
 require 'test_helper'
 
 class X::BaseControllerTest < ActionController::TestCase
@@ -249,7 +254,18 @@ class X::BaseControllerTest < ActionController::TestCase
 end
             BASE
 
-            expected_foos_controller_test = <<-FOOS
+            expected_base_controller_integration_test = <<-BASE
+require 'test_helper'
+
+class X::BaseControllerTest < ActionDispatch::IntegrationTest
+  # Replace this with your real tests.
+  test "the truth" do
+    assert true
+  end
+end
+            BASE
+
+            expected_foos_controller_functional_test = <<-FOOS
 require 'test_helper'
 
 class X::FoosControllerTest < ActionController::TestCase
@@ -260,8 +276,22 @@ class X::FoosControllerTest < ActionController::TestCase
 end
             FOOS
 
-            assert_file "test/functional/#{module_name_for_path("X")}/base_controller_test.rb", expected_base_controller_test.chop
-            assert_file "test/functional/#{module_name_for_path("X")}/foos_controller_test.rb", expected_foos_controller_test.chop
+            expected_foos_controller_integration_test = <<-FOOS
+require 'test_helper'
+
+class X::FoosControllerTest < ActionDispatch::IntegrationTest
+  # Replace this with your real tests.
+  test "the truth" do
+    assert true
+  end
+end
+            FOOS
+
+
+            assert_file "test/functional/#{module_name_for_path("X")}/base_controller_test.rb", expected_base_controller_functional_test.chop
+            assert_file "test/integration/#{module_name_for_path("X")}/base_controller_test.rb", expected_base_controller_integration_test.chop
+            assert_file "test/functional/#{module_name_for_path("X")}/foos_controller_test.rb", expected_foos_controller_functional_test.chop
+            assert_file "test/integration/#{module_name_for_path("X")}/foos_controller_test.rb", expected_foos_controller_integration_test.chop
           end
 
           it "should copy old presenter tests to new presenter tests" do
@@ -295,9 +325,12 @@ end
         context "test_framework: rspec" do
           before :each do
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec/controllers/#{module_name_for_path(mod)}", __FILE__))
+            ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec/requests/#{module_name_for_path(mod)}", __FILE__))
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec/presenters/#{module_name_for_path(mod)}", __FILE__))
             ::File.open(::File.expand_path("../../tmp/spec/controllers/#{module_name_for_path(mod)}/base_controller_spec.rb", __FILE__), "w") {|f| f.write "require 'spec_helper'\n\ndescribe #{mod}::BaseController do\n\nend"}
             ::File.open(::File.expand_path("../../tmp/spec/controllers/#{module_name_for_path(mod)}/foos_controller_spec.rb", __FILE__), "w") {|f| f.write "require 'spec_helper'\n\ndescribe #{mod}::FoosController do\n\nend"}
+            ::File.open(::File.expand_path("../../tmp/spec/requests/#{module_name_for_path(mod)}/base_controller_spec.rb", __FILE__), "w") {|f| f.write "require 'spec_helper'\n\ndescribe #{mod}::BaseController do\n\nend"}
+            ::File.open(::File.expand_path("../../tmp/spec/requests/#{module_name_for_path(mod)}/foos_controller_spec.rb", __FILE__), "w") {|f| f.write "require 'spec_helper'\n\ndescribe #{mod}::FoosController do\n\nend"}
             ::File.open(::File.expand_path("../../tmp/spec/presenters/#{module_name_for_path(mod)}/base_presenter_spec.rb", __FILE__), "w") {|f| f.write "require 'spec_helper'\n\ndescribe #{mod}::BasePresenter do\n\nend"}
             ::File.open(::File.expand_path("../../tmp/spec/presenters/#{module_name_for_path(mod)}/foo_presenter_spec.rb", __FILE__), "w") {|f| f.write "require 'spec_helper'\n\ndescribe #{mod}::FooPresenter do\n\nend"}
             Versionist.configuration.configured_test_framework = :rspec
@@ -323,6 +356,8 @@ end
 
             assert_file "spec/controllers/#{module_name_for_path("X")}/base_controller_spec.rb", expected_base_controller_spec.chop
             assert_file "spec/controllers/#{module_name_for_path("X")}/foos_controller_spec.rb", expected_foos_controller_spec.chop
+            assert_file "spec/requests/#{module_name_for_path("X")}/base_controller_spec.rb", expected_base_controller_spec.chop
+            assert_file "spec/requests/#{module_name_for_path("X")}/foos_controller_spec.rb", expected_foos_controller_spec.chop
           end
 
           it "should copy old presenter specs to new presenter specs" do
