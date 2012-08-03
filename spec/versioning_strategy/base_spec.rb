@@ -24,9 +24,12 @@ describe Versionist::VersioningStrategy::Base do
 
     @base2 = Versionist::VersioningStrategy::Base.new({"default" => true})
     @base2.default?.should == true
-    # symbolize_keys! should be called
-    @base2.config.should_not == {"default" => true}
-    @base2.config.should == {:default => true}
+  end
+
+  it "should call symbolize_keys" do
+    @base2 = Versionist::VersioningStrategy::Base.new({"foo" => true})
+    @base2.config.should_not == {"foo" => true}
+    @base2.config.should == {:foo => true}
   end
 
   it "should add self to Versionist::Configuration.versioning_strategies" do
@@ -63,8 +66,8 @@ describe Versionist::VersioningStrategy::Base do
 
   context "==" do
     before :each do
-      @base = Versionist::VersioningStrategy::Base.new({:default => false})
-      @equal_base = Versionist::VersioningStrategy::Base.new({:default => false})
+      @base = Versionist::VersioningStrategy::Base.new({:path => 'V1'})
+      @equal_base = Versionist::VersioningStrategy::Base.new({:path => 'V1'})
     end
 
     it "should return true if passed an equal object" do

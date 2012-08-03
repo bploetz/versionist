@@ -10,7 +10,7 @@ module Versionist
         raise ArgumentError, "you must pass a configuration Hash" if config.nil? || !config.is_a?(Hash)
         @config = config
         @config.symbolize_keys!
-        if @config.has_key?(:default)
+        if @config.delete(:default)
           @default = true
         else
           @default = false

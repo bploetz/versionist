@@ -632,6 +632,38 @@ describe Versionist::Routing do
             end
           end
         end
+
+        context "multi strategy" do
+          before :each do
+            TestApi::Application.routes.draw do
+              api_version({:module => mod, :header => "API-VERSION", :parameter => "version", :path => ver, :value => ver, :default => true}) do
+                match '/foos.(:format)' => 'foos#index', :via => :get
+              end
+            end
+          end
+
+          it "should route to the correct controller when header matches" do
+            @headers["HTTP_API_VERSION"] = ver
+            get "/foos.json", nil, @headers
+            assert_response 200
+            assert_equal 'application/json', response.content_type
+            assert_equal ver, response.body
+          end
+
+          it "should route to the correct controller when path matches" do
+            get "/#{ver}/foos.json", nil, @headers
+            assert_response 200
+            assert_equal 'application/json', response.content_type
+            assert_equal ver, response.body
+          end
+
+          it "should route to the correct controller when parameter matches" do
+            get "/foos.json?version=#{ver}", nil, @headers
+            assert_response 200
+            assert_equal 'application/json', response.content_type
+            assert_equal ver, response.body
+          end
+        end
       end
     end
   end
