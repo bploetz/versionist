@@ -636,7 +636,7 @@ describe Versionist::Routing do
         context "multi strategy" do
           before :each do
             TestApi::Application.routes.draw do
-              api_version({:module => mod, :header => "API-VERSION", :parameter => "version", :path => ver, :value => ver}) do
+              api_version({:module => mod, :header => "API-VERSION", :parameter => "version", :path => ver, :value => ver, :default => true}) do
                 match '/foos.(:format)' => 'foos#index', :via => :get
               end
             end
