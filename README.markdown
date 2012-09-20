@@ -2,7 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/bploetz/versionist.png?branch=master)](http://travis-ci.org/bploetz/versionist)
 
-A plugin for versioning Rails 3 based RESTful APIs. Versionist supports three versioning strategies out of the box:
+A plugin for versioning Rails based RESTful APIs. Versionist supports three versioning strategies out of the box:
 
 - Specifying version via an HTTP header
 - Specifying version by prepending paths with a version slug
@@ -20,15 +20,15 @@ Versionist includes Rails generators for generating new versions of your API as 
 
 ## Installation
 
-Add the following dependency to your Rails 3 application's `Gemfile` file and run `bundle install`:
+Add the following dependency to your Rails application's `Gemfile` file and run `bundle install`:
 
     gem 'versionist'
 
 
 ## Configuration
 
-Versionist provides the method `api_version` that you use in your Rails 3 application's `config/routes.rb` file to constrain a collection of routes to a specific version of your API.
-The versioning strategy used by the collection of routes constrained by `api_version` is set by specifying either `:header`, `:path`, or `:parameter` (and their supporting values)
+Versionist provides the method `api_version` that you use in your Rails application's `config/routes.rb` file to constrain a collection of routes to a specific version of your API.
+The versioning strategies used by the collection of routes constrained by `api_version` is set by specifying `:header`, `:path`, and/or `:parameter` (and their supporting values)
 in the configuration Hash passed to `api_version`. You configure the module namespace for your API version by specifying `:module` in the configuration Hash passed to `api_version`.
 
 
@@ -49,7 +49,7 @@ Examples:
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V1", :header => "Accept", :value => "application/vnd.mycompany.com; version=1") do
+  api_version(:module => "V1", :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=1"}) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -69,7 +69,7 @@ Rails' format resolution logic. This is the only case where Versionist will alte
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V20120317", :header => "API-VERSION", :value => "v20120317") do
+  api_version(:module => "V20120317", :header => {:name => "API-VERSION", :value => "v20120317"}) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -89,7 +89,7 @@ Example:
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V3", :path => "v3") do
+  api_version(:module => "V3", :path => {:value => "v3"}) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -109,7 +109,7 @@ Example:
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V2", :parameter => "version", :value => "v2") do
+  api_version(:module => "V2", :parameter => {:name => "version", :value => "v2"}) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -127,7 +127,7 @@ Example.
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V20120317", :header => "API-VERSION", :value => "v20120317", :default => true) do
+  api_version(:module => "V20120317", :header => {:name => "API-VERSION", :value => "v20120317"}, :default => true) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -148,13 +148,27 @@ Example.
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V20120317", :header => "API-VERSION", :value => "v20120317", :defaults => {:format => :json}, :default => true) do
+  api_version(:module => "V20120317", :header => {:name => "API-VERSION", :value => "v20120317"}, :defaults => {:format => :json}, :default => true) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
   end
 end
 ```
+
+## Multiple Versioning Strategies Per API Version
+
+An API version may optionally support multiple concurrent versioning strategies.
+
+Example.
+```ruby
+MyApi::Application.routes.draw do
+  api_version(:module => "V1", :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=1"}, :path => {:value => "v1"}) do
+    match '/foos.(:format)' => 'foos#index', :via => :get
+    match '/foos_no_format' => 'foos#index', :via => :get
+    resources :bars
+  end
+end
 
 ## A Note About Testing When Using The HTTP Header or Request Parameter Strategies
 
@@ -193,56 +207,10 @@ describe V1::TestController do
 end
 ```
 
-## Version/Module Naming Convention Gotcha
-
-Note that if your public facing version naming convention uses dots (i.e. v1.2.3), your module names cannot use dots, as you obviously cannot use dots in module names in Ruby.
-If you wish to simply replace dots with underscores, you'll need to use *two* underscores (i.e. `__`) in the module name passed to `api_version` to work around a quirk in Rails' inflector.
-
-For example, if your public facing version is v2.0.0 and you want to map this to the module `V2_0_0`, you would do the following in `api_routes`:
-
-```ruby
-api_version(:module => "V2__0__0", :header => "Accept", :value => "application/vnd.mycompany.com; version=v2.0.0") do
-  ...
-end
-```
-
-If you use the generators provided Versionist (more below) simply pass the module name as is (without this double underscore hack) and Versionist will take care of this detail for you.
-
-    rails generate versionist:new_api_version v2.0.0 V2_0_0 header:Accept value:"application/vnd.mycompany.com; version=v2.0.0"
-      route  api_version(:module => "V2__0__0", :header=>"Accept", :value=>"application/vnd.mycompany.com; version=v2.0.0") do
-      end
-      create  app/controllers/v2_0_0
-      create  app/controllers/v2_0_0/base_controller.rb
-      create  spec/controllers/v2_0_0
-      create  spec/controllers/v2_0_0/base_controller_spec.rb
-      create  app/presenters/v2_0_0
-      create  app/presenters/v2_0_0/base_presenter.rb
-      create  spec/presenters/v2_0_0
-      create  spec/presenters/v2_0_0/base_presenter_spec.rb
-      create  public/docs/v2.0.0
-      create  public/docs/v2.0.0/index.html
-      create  public/docs/v2.0.0/style.css
-
-
-    rails generate versionist:new_controller foos V2_0_0
-      create  app/controllers/v2_0_0/foos_controller.rb
-      create  spec/controllers/v2_0_0/foos_controller_spec.rb
-
-
-    rails generate versionist:new_presenter foos V2_0_0
-      create  app/presenters/v2_0_0/foos_presenter.rb
-      create  spec/presenters/v2_0_0/foos_presenter_spec.rb
-
-
-Unfortunately this work-around currently only works in Rails 3.0 and 3.1, and does not work in Rails 3.2. See [https://github.com/rails/rails/issues/5849](https://github.com/rails/rails/issues/5849)) and [https://github.com/rails/rails/pull/6105](https://github.com/rails/rails/pull/6105).
-
-Don't shoot the messenger. :-)
-
-
 ## Generators
 
-Versionist comes with generators to facilitate creating new versions of your APIs and new components with an existing version.
-To see the available generators, simply run `rails generate`, and you will see the versionist generators under the `versionist` namespace.
+Versionist comes with generators to facilitate managing the versions of your API. To see the available generators, simply run
+`rails generate`, and you will see the versionist generators under the `versionist` namespace.
 
 The following generators are available:
 
@@ -256,12 +224,31 @@ creates the infrastructure for a new API version. This will create:
 
 Usage
 
-    rails generate versionist:new_api_version <version> <module namespace> <versioning strategy options>
+    rails generate versionist:new_api_version <version> <module namespace> [options]
 
-Example:
+Examples:
 
-    rails generate versionist:new_api_version v2 V2 header:Accept value:"application/vnd.mycompany.com; version=2"
-      route  api_version(:module => "V2", :header=>"Accept", :value=>"application/vnd.mycompany.com; version=2") do
+    # HTTP header versioning strategy
+    rails generate versionist:new_api_version v2 V2 --header=name:Accept value:"application/vnd.mycompany.com; version=2"
+
+    # request parameter versioning strategy
+    rails generate versionist:new_api_version v2 V2 --parameter=name:version value:2
+
+    # path versioning strategy
+    rails generate versionist:new_api_version v2 V2 --path=value:v2
+
+    # multiple versioning strategies
+    rails generate versionist:new_api_version v2 V2 --header=name:Accept value:"application/vnd.mycompany.com; version=2" --parameter=name:version value:2
+
+    # default version
+    rails generate versionist:new_api_version v2 V2 --path=value:v2 --default
+
+    # route :defaults hash
+    rails generate versionist:new_api_version v2 V2 --path=value:v2 --defaults=format:json
+
+
+    rails generate versionist:new_api_version v2 V2 --header=name:Accept value:"application/vnd.mycompany.com; version=2"
+      route  api_version(:module => "V2", :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=2"}) do
       end
       create  app/controllers/v2
       create  app/controllers/v2/base_controller.rb
@@ -336,3 +323,29 @@ Example:
       Copying all files from app/presenters/v2 to app/presenters/v3
       Copying all files from spec/presenters/v2 to spec/presenters/v3
       Copying all files from public/docs/v2 to public/docs/v3
+
+## Upgrading from Versionist 0.x to 1.x
+
+A backwards incompatible change was made to the format of the configuration hash passed to `api_version()` starting in Versionist 1.0.
+Prior to 1.0, `api_version()` expected hashes with the following structure:
+
+    api_version(:module => "V1", :header => "Accept", :value => "application/vnd.mycompany.com; version=1") do
+      ...
+    end
+
+In order to support multiple concurrent versioning strategies per api version, `api_version()` expects that the `:header`, `:parameter`, and `:path`
+keys point to hashes and contain the required keys.
+
+    api_version(:module => "V1", :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=1"}) do
+      ...
+    end
+
+    api_version(:module => "V1", :parameter => {:name => "version", :value => "1"}) do
+      ...
+    end
+
+    api_version(:module => "V1", :path => {:value => "v1"}) do
+      ...
+    end
+
+An error will be thrown at startup if your `config/routes.rb` file contains 0.x style `api_version()` entries when running with Versionist 1.x.

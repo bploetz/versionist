@@ -1,7 +1,7 @@
 PATH
   remote: /Users/bploetz/workspace/versionist
   specs:
-    versionist (0.3.1)
+    versionist (1.0.0)
       rails (~> 3.0)
       yard (~> 0.7)
 
@@ -98,7 +98,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.33)
-    yard (0.8.2.1)
+    yard (0.8.3)
 
 PLATFORMS
   ruby

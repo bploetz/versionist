@@ -1,16 +1,30 @@
 require 'spec_helper'
 
 describe Versionist::VersioningStrategy::Path do
-  it "should raise an ArgumentError if :path is not specified" do
+  before :each do
+    Versionist.configuration.clear!
+  end
+
+  after :each do
+    Versionist.configuration.clear!
+  end
+
+  it "should raise an ArgumentError if :value is not specified" do
     lambda {
-      Versionist::VersioningStrategy::Path.new({})
-    }.should raise_error(ArgumentError, /you must specify :path in the configuration Hash/)
+      Versionist::VersioningStrategy::Path.new({:path => {}})
+    }.should raise_error(ArgumentError, /you must specify :value in the :path configuration Hash/)
+  end
+
+  it "should add the version to Versionist::Configuration.path_versions" do
+    Versionist.configuration.path_versions.should be_empty
+    path_version = Versionist::VersioningStrategy::Path.new({:path => {:value => "v1"}})
+    Versionist.configuration.path_versions.include?(path_version).should be_true
   end
 
   context "==" do
     before :each do
-      @path = Versionist::VersioningStrategy::Path.new({:path => "/v1"})
-      @equal_path = Versionist::VersioningStrategy::Path.new({:path => "/v1"})
+      @path = Versionist::VersioningStrategy::Path.new({:path => {:value => "/v1"}})
+      @equal_path = Versionist::VersioningStrategy::Path.new({:path => {:value => "/v1"}})
     end
 
     it "should return true if passed an equal object" do
@@ -22,7 +36,7 @@ describe Versionist::VersioningStrategy::Path do
     end
 
     it "should return false if passed an object that's not equal" do
-      @unequal_path = Versionist::VersioningStrategy::Path.new({:path => "v2"})
+      @unequal_path = Versionist::VersioningStrategy::Path.new({:path => {:value => "v2"}})
       (@path == @unequal_path).should == false
     end
 

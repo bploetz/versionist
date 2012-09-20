@@ -32,34 +32,43 @@ describe Versionist::Routing do
       }.should raise_error(ArgumentError, /you must pass a configuration Hash to api_version/)
     end
 
-    it "should raise an error when config doesn't contain :module" do
+    it "should raise an error when config doesn't contain any supported strategies" do
       lambda {
         TestApi::Application.routes.draw do
           api_version({})
         end
-      }.should raise_error(ArgumentError, /you must specify :module in configuration Hash passed to api_version/)
+      }.should raise_error(ArgumentError, /you must specify :header, :path, or :parameter in configuration Hash passed to api_version/)
     end
 
-    it "should raise an error when config doesn't contain any supported strategies" do
+    it "should raise an error when strategy key doesn't point to a Hash" do
+      [:header, :path, :parameter].each do |s|
+        lambda {
+          TestApi::Application.routes.draw do
+            api_version({s => 1})
+          end
+        }.should raise_error(ArgumentError, /#{s} key in configuration Hash passed to api_version must point to a Hash/)
+      end
+    end
+
+    it "should raise an error when config doesn't contain :module" do
       lambda {
         TestApi::Application.routes.draw do
-          api_version({:module => "v1"})
+          api_version({:path => {:value => "v1"}})
         end
-      }.should raise_error(ArgumentError, /you must specify :header, :path, or :parameter in configuration Hash passed to api_version/)
+      }.should raise_error(ArgumentError, /you must specify :module in configuration Hash passed to api_version/)
     end
 
     it "should raise an error when config contains a :defaults key which isn't a Hash" do
       lambda {
         TestApi::Application.routes.draw do
-          api_version({:module => "v1", :header => "Accept", :value => "application/vnd.mycompany.com-v1", :defaults => 1}) do
-          end
+          api_version({:module => "V1", :path => {:value => "v1"}, :defaults => 1})
         end
       }.should raise_error(ArgumentError, /:defaults must be a Hash/)
     end
 
     it "should add the middleware" do
       TestApi::Application.routes.draw do
-        api_version({:module => "v1", :header => "Accept", :value => "application/vnd.mycompany.com-v1"}) do
+        api_version({:module => "v1", :header => {:name => "Accept", :value => "application/vnd.mycompany.com-v1"}}) do
           match '/foos.(:format)' => 'foos#index', :via => :get
           match '/foos_no_format' => 'foos#index', :via => :get
           resources :bars
@@ -82,7 +91,7 @@ describe Versionist::Routing do
           context "Accept" do
             before :each do
               TestApi::Application.routes.draw do
-                api_version({:module => mod, :header => "Accept", :value => "application/vnd.mycompany.com-#{ver}"}) do
+                api_version({:module => mod, :header => {:name => "Accept", :value => "application/vnd.mycompany.com-#{ver}"}}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
                   match '/foos_no_format' => 'foos#index', :via => :get
                   resources :bars
@@ -139,10 +148,10 @@ describe Versionist::Routing do
             context ":default => true" do
               before :each do
                 TestApi::Application.routes.draw do
-                  api_version({:module => mod, :header => "Accept", :value => "application/vnd.mycompany.com-#{ver}", :default => true}) do
+                  api_version({:module => mod, :header => {:name => "Accept", :value => "application/vnd.mycompany.com-#{ver}"}, :default => true}) do
                     match '/foos.(:format)' => 'foos#index', :via => :get
                   end
-                  api_version({:module => "not_default", :header => "Accept", :value => "application/vnd.mycompany.com-not_default"}) do
+                  api_version({:module => "not_default", :header => {:name => "Accept", :value => "application/vnd.mycompany.com-not_default"}}) do
                     match '/foos.(:format)' => 'foos#index', :via => :get
                   end
                 end
@@ -180,7 +189,7 @@ describe Versionist::Routing do
               it "should pass the :defaults hash on to the scope() call" do
                 ActionDispatch::Routing::Mapper.any_instance.should_receive(:scope).with(hash_including(:defaults => {:format => :json}))
                 TestApi::Application.routes.draw do
-                  api_version({:module => mod, :header => "Accept", :value => "application/vnd.mycompany.com-#{ver}", :defaults => {:format => :json}}) do
+                  api_version({:module => mod, :header => {:name => "Accept", :value => "application/vnd.mycompany.com-#{ver}"}, :defaults => {:format => :json}}) do
                     match '/foos.(:format)' => 'foos#index', :via => :get
                     match '/foos_no_format' => 'foos#index', :via => :get
                     resources :bars
@@ -193,7 +202,7 @@ describe Versionist::Routing do
           context "Accept with parameters" do
             before :each do
               TestApi::Application.routes.draw do
-                api_version({:module => mod, :header => "Accept", :value => "application/vnd.mycompany.com; version=#{ver}"}) do
+                api_version({:module => mod, :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=#{ver}"}}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
                   match '/foos_no_format' => 'foos#index', :via => :get
                   resources :bars
@@ -250,10 +259,10 @@ describe Versionist::Routing do
             context ":default => true" do
               before :each do
                 TestApi::Application.routes.draw do
-                  api_version({:module => mod, :header => "Accept", :value => "application/vnd.mycompany.com; version=#{ver}", :default => true}) do
+                  api_version({:module => mod, :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=#{ver}"}, :default => true}) do
                     match '/foos.(:format)' => 'foos#index', :via => :get
                   end
-                  api_version({:module => "not_default", :header => "Accept", :value => "application/vnd.mycompany.com; version=not_default"}) do
+                  api_version({:module => "not_default", :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=not_default"}}) do
                     match '/foos.(:format)' => 'foos#index', :via => :get
                   end
                 end
@@ -291,7 +300,7 @@ describe Versionist::Routing do
               it "should pass the :defaults hash on to the scope() call" do
                 ActionDispatch::Routing::Mapper.any_instance.should_receive(:scope).with(hash_including(:defaults => {:format => :json}))
                 TestApi::Application.routes.draw do
-                  api_version({:module => mod, :header => "Accept", :value => "application/vnd.mycompany.com; version=#{ver}", :defaults => {:format => :json}}) do
+                  api_version({:module => mod, :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=#{ver}"}, :defaults => {:format => :json}}) do
                     match '/foos.(:format)' => 'foos#index', :via => :get
                     match '/foos_no_format' => 'foos#index', :via => :get
                     resources :bars
@@ -304,7 +313,7 @@ describe Versionist::Routing do
           context "custom header" do
             before :each do
               TestApi::Application.routes.draw do
-                api_version({:module => mod, :header => "API-VERSION", :value => ver}) do
+                api_version({:module => mod, :header => {:name => "API-VERSION", :value => ver}}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
                   match '/foos_no_format' => 'foos#index', :via => :get
                   resources :bars
@@ -357,10 +366,10 @@ describe Versionist::Routing do
             context ":default => true" do
               before :each do
                 TestApi::Application.routes.draw do
-                  api_version({:module => mod, :header => "API-VERSION", :value => ver, :default => true}) do
+                  api_version({:module => mod, :header => {:name => "API-VERSION", :value => ver}, :default => true}) do
                     match '/foos.(:format)' => 'foos#index', :via => :get
                   end
-                  api_version({:module => "not_default", :header => "API-VERSION", :value => "not_default"}) do
+                  api_version({:module => "not_default", :header => {:name => "API-VERSION", :value => "not_default"}}) do
                     match '/foos.(:format)' => 'foos#index', :via => :get
                   end
                 end
@@ -398,7 +407,7 @@ describe Versionist::Routing do
               it "should pass the :defaults hash on to the scope() call" do
                 ActionDispatch::Routing::Mapper.any_instance.should_receive(:scope).with(hash_including(:defaults => {:format => :json}))
                 TestApi::Application.routes.draw do
-                  api_version({:module => mod, :header => "API-VERSION", :value => ver, :defaults => {:format => :json}}) do
+                  api_version({:module => mod, :header => {:name => "API-VERSION", :value => ver}, :defaults => {:format => :json}}) do
                     match '/foos.(:format)' => 'foos#index', :via => :get
                     match '/foos_no_format' => 'foos#index', :via => :get
                     resources :bars
@@ -412,7 +421,7 @@ describe Versionist::Routing do
         context ":path" do
           before :each do
             TestApi::Application.routes.draw do
-              api_version({:module => mod, :path => "/#{ver}"}) do
+              api_version({:module => mod, :path => {:value => "/#{ver}"}}) do
                 match '/foos.(:format)' => 'foos#index', :via => :get
                 match '/foos_no_format' => 'foos#index', :via => :get
                 resources :bars
@@ -471,11 +480,11 @@ describe Versionist::Routing do
           context ":default => true" do
             before :each do
               TestApi::Application.routes.draw do
-                api_version({:module => mod, :path => "/#{ver}", :default => true}) do
+                api_version({:module => mod, :path => {:value => "/#{ver}"}, :default => true}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
                   resources :bars
                 end
-                api_version({:module => "not_default", :path => "/not_default"}) do
+                api_version({:module => "not_default", :path => {:value => "/not_default"}}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
                   resources :bars
                 end
@@ -516,7 +525,7 @@ describe Versionist::Routing do
             it "should pass the :defaults hash on to the namespace() call" do
               ActionDispatch::Routing::Mapper.any_instance.should_receive(:namespace).with("#{ver}", hash_including(:defaults => {:format => :json}))
               TestApi::Application.routes.draw do
-                api_version({:module => mod, :path => "/#{ver}", :defaults => {:format => :json}}) do
+                api_version({:module => mod, :path => {:value => "/#{ver}"}, :defaults => {:format => :json}}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
                   match '/foos_no_format' => 'foos#index', :via => :get
                   resources :bars
@@ -528,7 +537,7 @@ describe Versionist::Routing do
               ActionDispatch::Routing::Mapper.any_instance.should_receive(:namespace).with("#{ver}", hash_including(:defaults => {:format => :json}))
               ActionDispatch::Routing::Mapper.any_instance.should_receive(:scope).with(hash_including(:defaults => {:format => :json}))
               TestApi::Application.routes.draw do
-                api_version({:module => mod, :path => "/#{ver}", :default => true, :defaults => {:format => :json}}) do
+                api_version({:module => mod, :path => {:value => "/#{ver}"}, :default => true, :defaults => {:format => :json}}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
                   match '/foos_no_format' => 'foos#index', :via => :get
                   resources :bars
@@ -541,7 +550,7 @@ describe Versionist::Routing do
         context ":parameter" do
           before :each do
             TestApi::Application.routes.draw do
-              api_version({:module => mod, :parameter => "version", :value => ver}) do
+              api_version({:module => mod, :parameter => {:name => "version", :value => ver}}) do
                 match '/foos.(:format)' => 'foos#index', :via => :get
                 match '/foos_no_format' => 'foos#index', :via => :get
                 resources :bars
@@ -590,10 +599,10 @@ describe Versionist::Routing do
           context ":default => true" do
             before :each do
               TestApi::Application.routes.draw do
-                api_version({:module => mod, :parameter => "version", :value => ver, :default => true}) do
+                api_version({:module => mod, :parameter => {:name => "version", :value => ver}, :default => true}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
                 end
-                api_version({:module => "not_default", :parameter => "version", :value => "not_default"}) do
+                api_version({:module => "not_default", :parameter => {:name => "version", :value => "not_default"}}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
                 end
               end
@@ -623,13 +632,53 @@ describe Versionist::Routing do
             it "should pass the :defaults hash on to the scope() call" do
               ActionDispatch::Routing::Mapper.any_instance.should_receive(:scope).with(hash_including(:defaults => {:format => :json}))
               TestApi::Application.routes.draw do
-                api_version({:module => mod, :parameter => "version", :value => ver, :defaults => {:format => :json}}) do
+                api_version({:module => mod, :parameter => {:name => "version", :value => ver}, :defaults => {:format => :json}}) do
                   match '/foos.(:format)' => 'foos#index', :via => :get
                   match '/foos_no_format' => 'foos#index', :via => :get
                   resources :bars
                 end
               end
             end
+          end
+        end
+
+        context "multi-strategy :default => true" do
+          before :each do
+            TestApi::Application.routes.draw do
+              api_version({:module => mod, :header => {:name => "Accept", :value => "application/vnd.mycompany.com-#{ver}"}, :parameter => {:name => "version", :value => "#{ver}"}, :default => true}) do
+                match '/foos.(:format)' => 'foos#index', :via => :get
+              end
+              api_version({:module => "not_default", :header => {:name => "Accept", :value => "application/vnd.mycompany.com-not_default"}}) do
+                match '/foos.(:format)' => 'foos#index', :via => :get
+              end
+            end
+          end
+
+          it "should route to the default when no version given" do
+            get "/foos.json", nil, @headers
+            assert_response 200
+            assert_equal 'application/json', response.content_type
+            assert_equal ver, response.body
+
+            @headers["HTTP_ACCEPT"] = ""
+            get "/foos.json", nil, @headers
+            assert_response 200
+            assert_equal 'application/json', response.content_type
+            assert_equal ver, response.body
+
+            @headers["HTTP_ACCEPT"] = "   "
+            get "/foos.json", nil, @headers
+            assert_response 200
+            assert_equal 'application/json', response.content_type
+            assert_equal ver, response.body
+          end
+
+          it "should not route to the default when another configured version is given" do
+            @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-not_default"
+            get "/foos.json", nil, @headers
+            assert_response 200
+            assert_equal 'application/json', response.content_type
+            assert_equal "not_default", response.body
           end
         end
       end

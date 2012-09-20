@@ -20,13 +20,11 @@ describe Versionist::VersioningStrategy::Base do
   it "should set attributes" do
     @base = Versionist::VersioningStrategy::Base.new({})
     @base.config.should == {}
-    @base.default?.should == false
 
-    @base2 = Versionist::VersioningStrategy::Base.new({"default" => true})
-    @base2.default?.should == true
+    @base2 = Versionist::VersioningStrategy::Base.new({"module" => "V1"})
     # symbolize_keys! should be called
-    @base2.config.should_not == {"default" => true}
-    @base2.config.should == {:default => true}
+    @base2.config.should_not == {"module" => "V1"}
+    @base2.config.should == {:module => "V1"}
   end
 
   it "should add self to Versionist::Configuration.versioning_strategies" do
@@ -44,21 +42,6 @@ describe Versionist::VersioningStrategy::Base do
     Versionist::VersioningStrategy::Base.new({})
     Versionist.configuration.versioning_strategies.should_not be_empty
     Versionist.configuration.versioning_strategies.size.should == 1
-  end
-
-  it "should set self as Versionist::Configuration.default_version if config contains :default" do
-    Versionist.configuration.default_version.should be_nil
-    Versionist::VersioningStrategy::Base.new({:default => true, :path => "foo"})
-    Versionist.configuration.default_version.should_not be_nil
-  end
-
-  it "should raise an error when attempting to set more than one :default version" do
-    Versionist.configuration.default_version.should be_nil
-    Versionist::VersioningStrategy::Base.new({:default => true, :path => "foo"})
-    Versionist.configuration.default_version.should_not be_nil
-    lambda {
-      Versionist::VersioningStrategy::Base.new({:default => true, :path => "bar"})
-    }.should raise_error(ArgumentError, /attempt to set more than one default api version/)
   end
 
   context "==" do

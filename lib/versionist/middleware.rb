@@ -19,13 +19,13 @@ module Versionist
 
     def _call(env)
       request = ::Rack::Request.new(env)
-      strategy = Versionist.configuration.versioning_strategies.detect {|vs| vs.is_a?(Versionist::VersioningStrategy::Header) && vs.config[:header] == ACCEPT && env[HTTP_ACCEPT].try(:include?, vs.config[:value])}
+      strategy = Versionist.configuration.header_versions.detect {|vs| vs.config[:header][:name] == ACCEPT && env[HTTP_ACCEPT].try(:include?, vs.config[:header][:value])}
       if !strategy.nil?
         entries = env[HTTP_ACCEPT].split(',')
         index = -1
         entries.each_with_index do |e, i|
           e.strip!
-          index = i if e == strategy.config[:value]
+          index = i if e == strategy.config[:header][:value]
         end
         if (index != -1)
           version = entries.delete_at(index)

@@ -8,15 +8,47 @@ module Versionist
 
     argument :version, :type => :string
     argument :module_name, :type => :string
-    argument :versioning_strategy, :banner => "VERSIONING_STRATEGY_OPTIONS", :type => :hash
+    class_option :default, :type => :boolean
+    class_option :header, :type => :hash, :group => :header
+    class_option :parameter, :type => :hash, :group => :parameter
+    class_option :path, :type => :hash, :group => :path
+    class_option :defaults, :type => :hash, :group => :defaults
+
+
+    def verify_options
+      raise "Must specify at least one versioning strategy option" if !['header', 'parameter', 'path'].any? {|strategy| options.has_key?(strategy)}
+      if options.has_key?("header")
+        raise "Must specify name and value for header versioning strategy" if !options["header"].has_key?("name") || !options["header"].has_key?("value")
+      end
+      if options.has_key?("parameter")
+        raise "Must specify name and value for parameter versioning strategy" if !options["parameter"].has_key?("name") || !options["parameter"].has_key?("value")
+      end
+      if options.has_key?("path")
+        raise "Must specify value for path versioning strategy" if !options["path"].has_key?("value")
+      end
+    end
 
     def add_routes
       in_root do
         api_version_block = /api_version.*:module\s*(=>|:)\s*("|')#{module_name_for_route(module_name)}("|')/
         matching_version_blocks = File.readlines("config/routes.rb").grep(api_version_block)
         raise "API version already exists in config/routes.rb" if !matching_version_blocks.empty?
-        versioning_strategy.symbolize_keys!
-        route "api_version(:module => \"#{module_name_for_route(module_name)}\", #{versioning_strategy.to_s.gsub(/[\{\}]/, '')}) do\n  end"
+        route_string = "api_version(:module => \"#{module_name_for_route(module_name)}\""
+        ['header', 'parameter', 'path'].each do |versioning_strategy|
+          if options.has_key?(versioning_strategy)
+            options[versioning_strategy].symbolize_keys!
+            route_string << ", :#{versioning_strategy} => {#{options[versioning_strategy].to_s.gsub(/[\{\}]/, '').gsub('=>', ' => ')}}"
+          end
+        end
+        if options.has_key?('defaults')
+          options['defaults'].symbolize_keys!
+          route_string << ", :defaults => {#{options['defaults'].to_s.gsub(/[\{\}]/, '').gsub('=>', ' => ')}}"
+        end
+        if options.has_key?('default')
+          route_string << ", :default => true"
+        end
+        route_string << ") do\n  end"
+        route route_string
       end
     end
 

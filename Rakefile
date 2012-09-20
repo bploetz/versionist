@@ -1,8 +1,7 @@
 require 'rspec/core/rake_task'
-require 'rdoc/task'
-require 'versionist/version'
+require File.expand_path('../lib/versionist/version', __FILE__)
 
-GEMFILE_MAP = {"gemfiles/Rails-3.0" => "Rails 3.0", "gemfiles/Rails-3.1" => "Rails 3.1", "gemfiles/Rails-3.2" => "Rails 3.2"}
+GEMFILE_MAP = {"gemfiles/Rails-3.0" => "Rails 3.0", "gemfiles/Rails-3.1" => "Rails 3.1", "gemfiles/Rails-3.2" => "Rails 3.2", "gemfiles/RailsAPI-0.0" => "Rails API 0.0"}
 
 # To run the tests locally:
 #   gem install bundler
@@ -35,10 +34,3 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 task :default => [:spec]
-
-RDoc::Task.new do |rdoc|
-  files = ['lib/**/*.rb']
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "Versionist #{Versionist::VERSION}"
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end

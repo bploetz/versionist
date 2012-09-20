@@ -2,12 +2,13 @@ require 'spec_helper'
 require 'rack/test'
 
 describe Versionist::Middleware do
-  before :all do
-    Versionist::VersioningStrategy::Header.new({:header => "Accept", :value => "application/vnd.mycompany.com-v2.3.0"})
+  before :each do
+    Versionist.configuration.clear!
+    Versionist::VersioningStrategy::Header.new({:header => {:name => "Accept", :value => "application/vnd.mycompany.com-v2.3.0"}})
     @app = lambda {|env| [200, {"Content-Type" => "text/plain"}, [env["HTTP_ACCEPT"]]]}
   end
 
-  after :all do
+  after :each do
     Versionist.configuration.clear!
   end
 

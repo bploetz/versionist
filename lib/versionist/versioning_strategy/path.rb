@@ -8,13 +8,14 @@ module Versionist
       # - :path the path prefix containing the version
       def initialize(config)
         super
-        raise ArgumentError, "you must specify :path in the configuration Hash" if !config.has_key?(:path)
+        raise ArgumentError, "you must specify :value in the :path configuration Hash" if !config[:path].has_key?(:value)
+        Versionist.configuration.path_versions << self if !Versionist.configuration.path_versions.include?(self)
       end
 
       def ==(other)
         super
         return false if !other.is_a?(Versionist::VersioningStrategy::Path)
-        return config[:path] == other.config[:path]
+        return config[:path][:value] == other.config[:path][:value]
       end
     end
   end
