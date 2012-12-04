@@ -15,7 +15,7 @@ module Versionist
 
       def matches?(request)
         header_string = request.headers[config[:header]].to_s
-        return ((!header_string.blank? && header_string.include?(config[:value])) ||
+        return ((!header_string.blank? && header_string.eql?(config[:value])) ||
                 (self.default? && (Versionist.configuration.header_versions.none? {|v| header_string.include?(v)})))
       end
 
