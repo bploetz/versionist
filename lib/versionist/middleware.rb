@@ -19,7 +19,10 @@ module Versionist
 
     def _call(env)
       request = ::Rack::Request.new(env)
-      strategy = Versionist.configuration.header_versions.detect {|vs| vs.config[:header][:name] == ACCEPT && env[HTTP_ACCEPT].try(:include?, vs.config[:header][:value])}
+      potential_matches = Versionist.configuration.header_versions.select {|hv| hv.config[:header][:name] == ACCEPT && env[HTTP_ACCEPT].try(:include?, hv.config[:header][:value])}
+      if !potential_matches.empty?
+        strategy = potential_matches.max {|a,b| a.config[:header][:value].length <=> b.config[:header][:value].length}
+      end
       if !strategy.nil?
         entries = env[HTTP_ACCEPT].split(',')
         index = -1

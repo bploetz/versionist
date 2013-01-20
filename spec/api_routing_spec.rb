@@ -683,6 +683,84 @@ describe Versionist::Routing do
         end
       end
     end
+
+    context "Accept header version substring matches" do
+      before :each do
+        @headers = Hash.new
+
+        TestApi::Application.routes.draw do
+          api_version({:module => "v1", :header => {:name => "Accept", :value => "application/vnd.mycompany.com-v1"}, :default => true}) do
+            match '/foos.(:format)' => 'foos#index', :via => :get
+            match '/foos_no_format' => 'foos#index', :via => :get
+            resources :bars
+          end
+
+          api_version({:module => "v11", :header => {:name => "Accept", :value => "application/vnd.mycompany.com-v11"}}) do
+            match '/foos.(:format)' => 'foos#index', :via => :get
+            match '/foos_no_format' => 'foos#index', :via => :get
+            resources :bars
+          end
+        end
+      end
+
+      it "should route to the correct controller" do
+        @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-v1"
+        get "/foos.json", nil, @headers
+        assert_response 200
+        assert_equal 'application/json', response.content_type
+        assert_equal "v1", response.body
+
+        @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-v1"
+        get "/foos.json", nil, @headers
+        assert_response 200
+        assert_equal 'application/json', response.content_type
+        assert_equal "v1", response.body
+
+        # default routing
+        get "/foos.json", nil, {}
+        assert_response 200
+        assert_equal 'application/json', response.content_type
+        assert_equal "v1", response.body
+      end
+
+      it "should route to the correct controller when format specified via accept header" do
+        @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-v1,application/json"
+        get "/foos_no_format", nil, @headers
+        assert_response 200
+        assert_equal 'application/json', response.content_type
+        assert_equal "v1", response.body
+
+        @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com-v1"
+        get "/foos_no_format", nil, @headers
+        assert_response 200
+        assert_equal 'application/xml', response.content_type
+        assert_equal "v1", response.body
+
+        @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com-v1, application/json"
+        get "/foos_no_format", nil, @headers
+        assert_response 200
+        assert_equal 'application/xml', response.content_type
+        assert_equal "v1", response.body
+
+        @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-v11,application/json"
+        get "/foos_no_format", nil, @headers
+        assert_response 200
+        assert_equal 'application/json', response.content_type
+        assert_equal "v11", response.body
+
+        @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com-v11"
+        get "/foos_no_format", nil, @headers
+        assert_response 200
+        assert_equal 'application/xml', response.content_type
+        assert_equal "v11", response.body
+
+        @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com-v11, application/json"
+        get "/foos_no_format", nil, @headers
+        assert_response 200
+        assert_equal 'application/xml', response.content_type
+        assert_equal "v11", response.body
+      end
+    end
   end
 
   context "route reloading" do

@@ -14,7 +14,22 @@ module Versionist
 
       def matches?(request)
         header_string = request.headers[config[:header][:name]].to_s
-        return !header_string.blank? && header_string.include?(config[:header][:value])
+        if !header_string.blank?
+          potential_matches = Versionist.configuration.header_versions.select {|hv| header_string.include?(hv.config[:header][:value])}
+          if !potential_matches.empty?
+            if potential_matches.include?(self)
+              if potential_matches.size == 1
+                return true
+              else
+                # when finding multiple potential matches, the match with the longest value wins
+                #  (i.e. v2.1 trumps v2), as one is a subset of the other
+                longest = potential_matches.max {|a,b| a.config[:header][:value].length <=> b.config[:header][:value].length}
+                return longest == self
+              end
+            end
+          end
+        end
+        false
       end
 
       def ==(other)
