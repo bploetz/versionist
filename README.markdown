@@ -260,6 +260,8 @@ Examples:
       create  app/presenters/v2/base_presenter.rb
       create  spec/presenters/v2
       create  spec/presenters/v2/base_presenter_spec.rb
+      create  app/helpers/v2
+      create  spec/helpers/v2
       create  public/docs/v2
       create  public/docs/v2/index.html
       create  public/docs/v2/style.css
@@ -303,6 +305,7 @@ copies an existing API version to a new API version. This will do the following:
 - Copy all existing routes in config/routes.rb from the old API version to routes for the new API version in config/routes.rb (**see note below**)
 - Copy all existing controllers and tests from the old API version to the new API version
 - Copy all existing presenters and tests from the old API version to the new API version
+- Copy all existing helpers and tests from the old API version to the new API version
 - Copy all documentation from the old API version to the new API version
 
 **Note**: routes can only be copied with MRI Ruby 1.9 and above, as this feature relies on Ripper which is only available 
@@ -322,6 +325,8 @@ Example:
       Copying all files from spec/controllers/v2 to spec/controllers/v3
       Copying all files from app/presenters/v2 to app/presenters/v3
       Copying all files from spec/presenters/v2 to spec/presenters/v3
+      Copying all files from app/helpers/v2 to app/helpers/v3
+      Copying all files from spec/helpers/v2 to spec/helpers/v3
       Copying all files from public/docs/v2 to public/docs/v3
 
 ## Upgrading from Versionist 0.x to 1.x

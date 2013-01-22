@@ -101,6 +101,25 @@ module Versionist
       end
     end
 
+    def add_helpers_dir
+      in_root do
+        empty_directory "app/helpers/#{module_name_for_path(module_name)}"
+      end
+    end
+
+    def add_helpers_test_dir
+      in_root do
+        case Versionist.configuration.configured_test_framework
+        when :test_unit
+          empty_directory "test/helpers/#{module_name_for_path(module_name)}"
+        when :rspec
+          empty_directory "spec/helpers/#{module_name_for_path(module_name)}"
+        else
+          say "Unsupported test_framework: #{Versionist.configuration.configured_test_framework}"
+        end
+      end
+    end
+
     def add_documentation_base
       in_root do
         empty_directory "public/docs/#{version}"

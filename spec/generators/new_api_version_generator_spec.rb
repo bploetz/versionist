@@ -133,6 +133,10 @@ end
           CONTENTS
         end
 
+        it "should create a namespaced helpers directory" do
+          assert_directory "app/helpers/#{module_name_for_path(mod)}"
+        end
+
         it "should create a documentation directory" do
           assert_directory "public/docs/#{ver}"
         end
@@ -301,6 +305,10 @@ class #{mod}::BasePresenterTest < Test::Unit::TestCase
 end
             CONTENTS
           end
+
+          it "should create a namespaced test/helpers directory" do
+            assert_directory "test/helpers/#{module_name_for_path(mod)}"
+          end
         end
 
         context "test_framework: rspec" do
@@ -347,6 +355,10 @@ describe #{mod}::BasePresenter do
 
 end
             CONTENTS
+          end
+
+          it "should create a namespaced spec/helpers directory" do
+            assert_directory "spec/helpers/#{module_name_for_path(mod)}"
           end
         end
       end

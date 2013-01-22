@@ -27,6 +27,7 @@ describe Versionist::CopyApiVersionGenerator do
           ::FileUtils.touch(::File.expand_path("../../tmp/config/routes.rb", __FILE__))
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/app/presenters/#{module_name_for_path(mod)}", __FILE__))
+          ::FileUtils.rm_rf(::File.expand_path("../../tmp/app/helpers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/spec/controllers/#{module_name_for_path(mod)}", __FILE__))
@@ -138,12 +139,15 @@ describe Versionist::CopyApiVersionGenerator do
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec/controllers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/presenters/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec/presenters/#{module_name_for_path(mod)}", __FILE__))
+          ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/helpers/#{module_name_for_path(mod)}", __FILE__))
+          ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec/helpers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/public/docs/#{ver}", __FILE__))
           ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-#{ver}\") do\n  end\nend"}
           ::File.open(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}/base_controller.rb", __FILE__), "w") {|f| f.write "class #{mod}::BaseController < ApplicationController\nend"}
           ::File.open(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}/foos_controller.rb", __FILE__), "w") {|f| f.write "class #{mod}::FoosController < #{mod}::BaseController\nend"}
           ::File.open(::File.expand_path("../../tmp/app/presenters/#{module_name_for_path(mod)}/base_presenter.rb", __FILE__), "w") {|f| f.write "class #{mod}::BasePresenter\n\n  def initialize(#{ver})\n    @#{ver} = #{ver}\n  end\n\n  def as_json(options={})\n    # fill me in...\n  end\n\n  def to_xml(options={}, &block)\n    xml = options[:builder] ||= Builder::XmlMarkup.new\n    # fill me in...\n  end\nend"}
           ::File.open(::File.expand_path("../../tmp/app/presenters/#{module_name_for_path(mod)}/foo_presenter.rb", __FILE__), "w") {|f| f.write "class #{mod}::FooPresenter < #{mod}::BasePresenter\n\n  def initialize(#{ver})\n    @#{ver} = #{ver}\n  end\n\n  def as_json(options={})\n    # fill me in...\n  end\n\n  def to_xml(options={}, &block)\n    xml = options[:builder] ||= Builder::XmlMarkup.new\n    # fill me in...\n  end\nend"}
+          ::File.open(::File.expand_path("../../tmp/app/helpers/#{module_name_for_path(mod)}/foos_helper.rb", __FILE__), "w") {|f| f.write "module #{mod}::FoosHelper\n\n  def help\n  end\nend"}
           ::File.open(::File.expand_path("../../tmp/public/docs/#{ver}/style.css", __FILE__), "w") {|f| f.write "body {margin: 0; background-color: #fff; color: #000; font-family: Arial,sans-serif;}\ncontent {margin-left: 200px;}\ncontent h1 {text-align: center;}\noperations {float: left; width: 200px; border-right: 1px solid #ccc;}\noperations h3 {text-align: center;}"}
           ::File.open(::File.expand_path("../../tmp/public/docs/#{ver}/index.html", __FILE__), "w") {|f| f.write "<!DOCTYPE html>\n<html lang=\"en-US\">\n  <head>\n    <title>Documentation for #{ver}</title>\n    <link href=\"#{ver}/style.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\">\n  </head>\n  <body>\n    <div id=\"container\">\n      <div id=\"operations\">\n        <h3>API Operations</h3>\n      </div>\n      <div id=\"content\">\n        <h1>Documentation for #{ver}</h1>\n      </div>\n    </div>\n  </body>\n</html>"}
           Versionist.configuration.configured_test_framework = nil
@@ -222,6 +226,18 @@ end
           assert_file "app/presenters/#{module_name_for_path("X")}/foo_presenter.rb", expected_foo_presenter.chop
         end
 
+        it "should copy old helpers to new helpers" do
+          expected_foos_helper = <<-DOC
+module X::FoosHelper
+
+  def help
+  end
+end
+          DOC
+
+          assert_file "app/helpers/#{module_name_for_path("X")}/foos_helper.rb", expected_foos_helper.chop
+        end
+
         it "should copy documentation" do
           assert_file "public/docs/x/style.css"
           assert_file "public/docs/x/index.html"
@@ -232,12 +248,14 @@ end
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}", __FILE__))
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}", __FILE__))
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/presenters/#{module_name_for_path(mod)}", __FILE__))
+            ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/helpers/#{module_name_for_path(mod)}", __FILE__))
             ::File.open(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}/base_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::BaseControllerTest < ActionController::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
             ::File.open(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}/foos_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::FoosControllerTest < ActionController::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
             ::File.open(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}/base_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::BaseControllerTest < ActionDispatch::IntegrationTest\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
             ::File.open(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}/foos_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::FoosControllerTest < ActionDispatch::IntegrationTest\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
             ::File.open(::File.expand_path("../../tmp/test/presenters/#{module_name_for_path(mod)}/base_presenter_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::BasePresenterTest < Test::Unit::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
             ::File.open(::File.expand_path("../../tmp/test/presenters/#{module_name_for_path(mod)}/foo_presenter_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::FooPresenterTest < Test::Unit::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
+            ::File.open(::File.expand_path("../../tmp/test/helpers/#{module_name_for_path(mod)}/foos_helper_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::FoosHelperTest < Test::Unit::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
             Versionist.configuration.configured_test_framework = :test_unit
             run_generator [ver, mod, "x", "X"]
           end
@@ -320,6 +338,21 @@ end
             assert_file "test/presenters/#{module_name_for_path("X")}/base_presenter_test.rb", expected_base_presenter_test.chop
             assert_file "test/presenters/#{module_name_for_path("X")}/foo_presenter_test.rb", expected_foo_presenter_test.chop
           end
+
+          it "should copy old helper tests to new helper tests" do
+            expected_foos_helper_test = <<-DOC
+require 'test_helper'
+
+class X::FoosHelperTest < Test::Unit::TestCase
+  # Replace this with your real tests.
+  test "the truth" do
+    assert true
+  end
+end
+            DOC
+  
+            assert_file "test/helpers/#{module_name_for_path("X")}/foos_helper_test.rb", expected_foos_helper_test.chop
+          end
         end
 
         context "test_framework: rspec" do
@@ -327,12 +360,14 @@ end
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec/controllers/#{module_name_for_path(mod)}", __FILE__))
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec/requests/#{module_name_for_path(mod)}", __FILE__))
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec/presenters/#{module_name_for_path(mod)}", __FILE__))
+            ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec/helpers/#{module_name_for_path(mod)}", __FILE__))
             ::File.open(::File.expand_path("../../tmp/spec/controllers/#{module_name_for_path(mod)}/base_controller_spec.rb", __FILE__), "w") {|f| f.write "require 'spec_helper'\n\ndescribe #{mod}::BaseController do\n\nend"}
             ::File.open(::File.expand_path("../../tmp/spec/controllers/#{module_name_for_path(mod)}/foos_controller_spec.rb", __FILE__), "w") {|f| f.write "require 'spec_helper'\n\ndescribe #{mod}::FoosController do\n\nend"}
             ::File.open(::File.expand_path("../../tmp/spec/requests/#{module_name_for_path(mod)}/base_controller_spec.rb", __FILE__), "w") {|f| f.write "require 'spec_helper'\n\ndescribe #{mod}::BaseController do\n\nend"}
             ::File.open(::File.expand_path("../../tmp/spec/requests/#{module_name_for_path(mod)}/foos_controller_spec.rb", __FILE__), "w") {|f| f.write "require 'spec_helper'\n\ndescribe #{mod}::FoosController do\n\nend"}
             ::File.open(::File.expand_path("../../tmp/spec/presenters/#{module_name_for_path(mod)}/base_presenter_spec.rb", __FILE__), "w") {|f| f.write "require 'spec_helper'\n\ndescribe #{mod}::BasePresenter do\n\nend"}
             ::File.open(::File.expand_path("../../tmp/spec/presenters/#{module_name_for_path(mod)}/foo_presenter_spec.rb", __FILE__), "w") {|f| f.write "require 'spec_helper'\n\ndescribe #{mod}::FooPresenter do\n\nend"}
+            ::File.open(::File.expand_path("../../tmp/spec/helpers/#{module_name_for_path(mod)}/foos_helper_spec.rb", __FILE__), "w") {|f| f.write "require 'spec_helper'\n\ndescribe #{mod}::FoosHelper do\n\nend"}
             Versionist.configuration.configured_test_framework = :rspec
             run_generator [ver, mod, "x", "X"]
           end
@@ -379,6 +414,18 @@ end
 
             assert_file "spec/presenters/#{module_name_for_path("X")}/base_presenter_spec.rb", expected_base_presenter_spec.chop
             assert_file "spec/presenters/#{module_name_for_path("X")}/foo_presenter_spec.rb", expected_foo_presenter_spec.chop
+          end
+
+          it "should copy old helper specs to new helper specs" do
+            expected_foos_helper_spec = <<-DOC
+require 'spec_helper'
+
+describe X::FoosHelper do
+
+end
+            DOC
+
+            assert_file "spec/helpers/#{module_name_for_path("X")}/foos_helper_spec.rb", expected_foos_helper_spec.chop
           end
         end
       end

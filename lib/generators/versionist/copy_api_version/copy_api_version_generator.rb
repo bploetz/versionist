@@ -151,6 +151,52 @@ module Versionist
       end
     end
 
+    def copy_helpers
+      in_root do
+        if File.exists? "app/helpers/#{module_name_for_path(old_module_name)}"
+          log "Copying all files from app/helpers/#{module_name_for_path(old_module_name)} to app/helpers/#{module_name_for_path(new_module_name)}"
+          FileUtils.cp_r "app/helpers/#{module_name_for_path(old_module_name)}", "app/helpers/#{module_name_for_path(new_module_name)}"
+          Dir.glob("app/helpers/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
+            text = File.read(f)
+            File.open(f, 'w') {|f| f << text.gsub(/#{old_module_name}/, new_module_name)}
+          end
+        else
+          say "No helpers found in app/helpers for #{old_version}"
+        end
+      end
+    end
+
+    def copy_helper_tests
+      in_root do
+        case Versionist.configuration.configured_test_framework
+        when :test_unit
+          if File.exists? "test/helpers/#{module_name_for_path(old_module_name)}"
+            log "Copying all files from test/helpers/#{module_name_for_path(old_module_name)} to test/helpers/#{module_name_for_path(new_module_name)}"
+            FileUtils.cp_r "test/helpers/#{module_name_for_path(old_module_name)}", "test/helpers/#{module_name_for_path(new_module_name)}"
+            Dir.glob("test/helpers/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
+              text = File.read(f)
+              File.open(f, 'w') {|f| f << text.gsub(/#{old_module_name}/, new_module_name)}
+            end
+          else
+            say "No helper tests found in test/helpers for #{old_version}"
+          end
+        when :rspec
+          if File.exists? "spec/helpers/#{module_name_for_path(old_module_name)}"
+            log "Copying all files from spec/helpers/#{module_name_for_path(old_module_name)} to spec/helpers/#{module_name_for_path(new_module_name)}"
+            FileUtils.cp_r "spec/helpers/#{module_name_for_path(old_module_name)}", "spec/helpers/#{module_name_for_path(new_module_name)}"
+            Dir.glob("spec/helpers/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
+              text = File.read(f)
+              File.open(f, 'w') {|f| f << text.gsub(/#{old_module_name}/, new_module_name)}
+            end
+          else
+            say "No helper specs found in spec/helpers for #{old_version}"
+          end
+        else
+          say "Unsupported test_framework: #{Versionist.configuration.configured_test_framework}"
+        end
+      end
+    end
+
     def copy_documentation
       in_root do
         if File.exists? "public/docs/#{old_version}"
