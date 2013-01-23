@@ -1,7 +1,5 @@
 # versionist
 
-[![Build Status](https://secure.travis-ci.org/bploetz/versionist.png?branch=master)](http://travis-ci.org/bploetz/versionist)
-
 A plugin for versioning Rails based RESTful APIs. Versionist supports three versioning strategies out of the box:
 
 - Specifying version via an HTTP header
