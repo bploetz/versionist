@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.authors = ['Brian Ploetz']
   s.summary = "versionist-#{Versionist::VERSION}"
-  s.description = 'A plugin for versioning Rails 3 based RESTful APIs.'
+  s.description = 'A plugin for versioning Rails based RESTful APIs.'
   s.files = Dir['lib/**/*']
   s.rdoc_options = ['--charset=UTF-8']
   s.require_paths = ['lib']
