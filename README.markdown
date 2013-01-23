@@ -36,27 +36,30 @@ in the configuration Hash passed to `api_version`. You configure the module name
 A backwards incompatible change was made to the format of the configuration hash passed to `api_version()` starting in Versionist 1.0.
 Prior to 1.0, `api_version()` expected hashes with the following structure:
 
-    api_version(:module => "V1", :header => "Accept", :value => "application/vnd.mycompany.com; version=1") do
-      ...
-    end
+```ruby
+api_version(:module => "V1", :header => "Accept", :value => "application/vnd.mycompany.com; version=1") do
+  ...
+end
+```
 
 In order to support multiple concurrent versioning strategies per api version, `api_version()` expects that the `:header`, `:parameter`, and `:path`
 keys point to hashes and contain the required keys.
 
-    api_version(:module => "V1", :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=1"}) do
-      ...
-    end
+```ruby
+api_version(:module => "V1", :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=1"}) do
+  ...
+end
 
-    api_version(:module => "V1", :parameter => {:name => "version", :value => "1"}) do
-      ...
-    end
+api_version(:module => "V1", :parameter => {:name => "version", :value => "1"}) do
+  ...
+end
 
-    api_version(:module => "V1", :path => {:value => "v1"}) do
-      ...
-    end
+api_version(:module => "V1", :path => {:value => "v1"}) do
+  ...
+end
+```
 
 An error will be thrown at startup if your `config/routes.rb` file contains 0.x style `api_version()` entries when running with Versionist 1.x+.
-
 
 ## Versioning Strategies
 
