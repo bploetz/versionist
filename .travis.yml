@@ -22,4 +22,5 @@ gemfile:
   - gemfiles/Rails-3.0
   - gemfiles/Rails-3.1
   - gemfiles/Rails-3.2
+  - gemfiles/Rails-4.0
   - gemfiles/RailsAPI-0.0
