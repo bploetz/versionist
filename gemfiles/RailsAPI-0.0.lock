@@ -2,7 +2,7 @@ PATH
   remote: /Users/bploetz/workspace/versionist
   specs:
     versionist (1.0.0)
-      rails (~> 3.0)
+      rails (>= 3, < 5)
       yard (~> 0.7)
 
 GEM

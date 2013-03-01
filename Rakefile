@@ -1,7 +1,7 @@
 require 'rspec/core/rake_task'
 require File.expand_path('../lib/versionist/version', __FILE__)
 
-GEMFILE_MAP = {"gemfiles/Rails-3.0" => "Rails 3.0", "gemfiles/Rails-3.1" => "Rails 3.1", "gemfiles/Rails-3.2" => "Rails 3.2", "gemfiles/RailsAPI-0.0" => "Rails API 0.0"}
+GEMFILE_MAP = {"gemfiles/Rails-3.0" => "Rails 3.0", "gemfiles/Rails-3.1" => "Rails 3.1", "gemfiles/Rails-3.2" => "Rails 3.2", "gemfiles/Rails-4.0" => "Rails 4.0", "gemfiles/RailsAPI-0.0" => "Rails API 0.0"}
 
 # To run the tests locally:
 #   gem install bundler
