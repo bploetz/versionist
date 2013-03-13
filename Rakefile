@@ -1,7 +1,14 @@
-require 'rspec/core/rake_task'
-require File.expand_path('../lib/versionist/version', __FILE__)
+require 'rubygems'
+require 'bundler'
+Bundler.setup
 
-GEMFILE_MAP = {"gemfiles/Rails-3.0" => "Rails 3.0", "gemfiles/Rails-3.1" => "Rails 3.1", "gemfiles/Rails-3.2" => "Rails 3.2", "gemfiles/RailsAPI-0.0" => "Rails API 0.0"}
+require 'rspec/core/rake_task'
+
+desc "Run all specs"
+RSpec::Core::RakeTask.new
+task :default => [:spec]
+
+GEMFILE_MAP = {"gemfiles/Rails-3.0" => "Rails 3.0", "gemfiles/Rails-3.1" => "Rails 3.1", "gemfiles/Rails-3.2" => "Rails 3.2", "gemfiles/RailsAPI-0.0" => "Rails API 0.0", "gemfiles/Rails-4.0" => "Rails 4.0"}
 
 # To run the tests locally:
 #   gem install bundler
@@ -28,9 +35,3 @@ task :build do
   system "gem build versionist.gemspec"
 end
 
-desc "Run all specs"
-RSpec::Core::RakeTask.new(:spec) do |t|
-  t.pattern = "spec/**/*_spec.rb"
-end
-
-task :default => [:spec]

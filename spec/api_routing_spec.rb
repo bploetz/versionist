@@ -3,7 +3,7 @@ require 'rspec/rails'
 
 describe Versionist::Routing do
   include RSpec::Rails::RequestExampleGroup
-  
+
   before :all do
     ENV["RAILS_ENV"] = 'test'
     require File.expand_path("../test-api/config/application", __FILE__)
@@ -79,9 +79,9 @@ describe Versionist::Routing do
     end
 
     {"v1" => "v1", "v2" => "v2", "v2.1" => "v2__1"}.each do |ver, mod|
-      # Skip module names with underscores in Rails 3.2
+      # Skip module names with underscores in Rails 3.2+
       # https://github.com/rails/rails/issues/5849
-      next if Rails::VERSION::MAJOR == 3 && Rails::VERSION::MINOR == 2 && mod.include?('_')
+      next if ((Rails::VERSION::MAJOR == 3 && Rails::VERSION::MINOR == 2) || (Rails::VERSION::MAJOR == 4)) && mod.include?('_')
       context ver do
         before :each do
           @headers = Hash.new
@@ -97,7 +97,7 @@ describe Versionist::Routing do
                   resources :bars
                 end
                 match '/foos(:format)' => 'foos#index', :via => :get
-                match '*a', :to => 'application#not_found'
+                match '*a', :to => 'application#not_found', :via => :get
               end
             end
 
@@ -208,7 +208,7 @@ describe Versionist::Routing do
                   resources :bars
                 end
                 match '/foos(:format)' => 'foos#index', :via => :get
-                match '*a', :to => 'application#not_found'
+                match '*a', :to => 'application#not_found', :via => :get
               end
             end
 
@@ -319,7 +319,7 @@ describe Versionist::Routing do
                   resources :bars
                 end
                 match '/foos(:format)' => 'foos#index', :via => :get
-                match '*a', :to => 'application#not_found'
+                match '*a', :to => 'application#not_found', :via => :get
               end
             end
 
@@ -427,7 +427,7 @@ describe Versionist::Routing do
                 resources :bars
               end
               match '/foos(:format)' => 'foos#index', :via => :get
-              match '*a', :to => 'application#not_found'
+              match '*a', :to => 'application#not_found', :via => :get
             end
           end
 
@@ -556,7 +556,7 @@ describe Versionist::Routing do
                 resources :bars
               end
               match '/foos(:format)' => 'foos#index', :via => :get
-              match '*a', :to => 'application#not_found'
+              match '*a', :to => 'application#not_found', :via => :get
             end
           end
 

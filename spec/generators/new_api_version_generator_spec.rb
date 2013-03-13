@@ -108,7 +108,13 @@ Test::Application.routes.draw do
 
 end
           CONTENTS
-          assert_file "config/routes.rb", expected.chop
+          # Rails 4 removed the trailing newline from the 'route' generator
+          # https://github.com/rails/rails/commit/7cdb12286639b38db2eb1e9fd0c8b2e6bc3b39dc
+          if Rails::VERSION::MAJOR < 4
+            assert_file "config/routes.rb", expected.chop
+          elsif Rails::VERSION::MAJOR == 4
+            assert_file "config/routes.rb", expected.gsub(/^$\n/, '').chop
+          end
         end
 
         it "should create a namespaced controller directory" do
@@ -195,7 +201,13 @@ Test::Application.routes.draw do
 
 end
             CONTENTS
-            assert_file "config/routes.rb", expected.chop
+            # Rails 4 removed the trailing newline from the 'route' generator
+            # https://github.com/rails/rails/commit/7cdb12286639b38db2eb1e9fd0c8b2e6bc3b39dc
+            if Rails::VERSION::MAJOR < 4
+              assert_file "config/routes.rb", expected.chop
+            elsif Rails::VERSION::MAJOR == 4
+              assert_file "config/routes.rb", expected.gsub(/^$\n/, '').chop
+            end
           end
         end
 
@@ -221,7 +233,13 @@ Test::Application.routes.draw do
 
 end
             CONTENTS
-            assert_file "config/routes.rb", expected.chop
+            # Rails 4 removed the trailing newline from the 'route' generator
+            # https://github.com/rails/rails/commit/7cdb12286639b38db2eb1e9fd0c8b2e6bc3b39dc
+            if Rails::VERSION::MAJOR < 4
+              assert_file "config/routes.rb", expected.chop
+            elsif Rails::VERSION::MAJOR == 4
+              assert_file "config/routes.rb", expected.gsub(/^$\n/, '').chop
+            end
           end
         end
 
@@ -247,7 +265,13 @@ Test::Application.routes.draw do
 
 end
             CONTENTS
-            assert_file "config/routes.rb", expected.chop
+            # Rails 4 removed the trailing newline from the 'route' generator
+            # https://github.com/rails/rails/commit/7cdb12286639b38db2eb1e9fd0c8b2e6bc3b39dc
+            if Rails::VERSION::MAJOR < 4
+              assert_file "config/routes.rb", expected.chop
+            elsif Rails::VERSION::MAJOR == 4
+              assert_file "config/routes.rb", expected.gsub(/^$\n/, '').chop
+            end
           end
         end
 

@@ -4,12 +4,10 @@ gem "rails", "~> 3.1.0"
 
 gemspec :path => "../"
 
-group :development do
-  gem 'awesome_print', '= 1.0.2'
+group :development, :test do
   gem 'rake', '>= 0.9.2'
   gem 'rspec', '2.8.0'
   gem 'rspec-rails', '2.8.0'
   gem 'generator_spec', '0.8.5'
-  gem 'rdoc', '>= 3.11'
   gem 'simplecov', '0.5.4'
 end

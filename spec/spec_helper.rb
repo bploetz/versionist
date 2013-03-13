@@ -10,7 +10,6 @@ SimpleCov.start do
 end
 require 'versionist'
 require 'fileutils'
-require 'ap'
 
 RSpec.configure do |config|
   config.mock_with :rspec
