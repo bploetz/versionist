@@ -1,13 +1,3 @@
-require 'rubygems'
-require 'bundler'
-Bundler.setup
-
-require 'rspec/core/rake_task'
-
-desc "Run all specs"
-RSpec::Core::RakeTask.new
-task :default => [:spec]
-
 GEMFILE_MAP = {"gemfiles/Rails-3.0" => "Rails 3.0", "gemfiles/Rails-3.1" => "Rails 3.1", "gemfiles/Rails-3.2" => "Rails 3.2", "gemfiles/RailsAPI-0.0" => "Rails API 0.0", "gemfiles/Rails-4.0" => "Rails 4.0"}
 
 # To run the tests locally:
@@ -30,6 +20,12 @@ namespace :test do
   end
   task :all=> [:setup] + GEMFILE_MAP.map {|gemfile, name| "test:#{gemfile.downcase.gsub(/\./, "_")}"}
 end
+
+require 'rspec/core/rake_task'
+
+desc "Run all specs"
+RSpec::Core::RakeTask.new
+task :default => [:spec]
 
 task :build do
   system "gem build versionist.gemspec"

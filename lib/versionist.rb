@@ -18,4 +18,4 @@ module Versionist
   end
 end
 
-require 'versionist/railtie' if defined?(Rails) && Rails::VERSION::MAJOR == 3
+require 'versionist/railtie' if defined?(Rails) && Rails::VERSION::MAJOR >= 3
