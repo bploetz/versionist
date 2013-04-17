@@ -1,7 +1,5 @@
 module Versionist
   class NewPresenterGenerator < Rails::Generators::NamedBase
-    include Versionist::InflectorFixes
-
     desc "creates a new presenter for an existing API version"
     source_root File.expand_path('../templates', __FILE__)
 

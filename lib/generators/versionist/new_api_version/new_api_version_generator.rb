@@ -1,7 +1,5 @@
 module Versionist
   class NewApiVersionGenerator < Rails::Generators::Base
-    include Versionist::InflectorFixes
-
     desc "creates the infrastructure for a new API version"
 
     source_root File.expand_path('../templates', __FILE__)

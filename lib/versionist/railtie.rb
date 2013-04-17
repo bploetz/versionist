@@ -6,6 +6,7 @@ module Versionist
 
     initializer 'versionist.configure' do |app|
       ActionDispatch::Routing::Mapper.send :include, Versionist::Routing
+      Rails::Generators::Base.send :include, Versionist::InflectorFixes
     end
 
     config.app_middleware.use Versionist::Middleware
