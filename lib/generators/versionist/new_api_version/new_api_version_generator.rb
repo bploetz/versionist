@@ -1,6 +1,6 @@
 module Versionist
   class NewApiVersionGenerator < Rails::Generators::Base
-    include InflectorFixes
+    include Versionist::InflectorFixes
 
     desc "creates the infrastructure for a new API version"
 

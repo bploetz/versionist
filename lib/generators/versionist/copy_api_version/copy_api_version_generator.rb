@@ -3,7 +3,7 @@ require 'fileutils'
 
 module Versionist
   class CopyApiVersionGenerator < Rails::Generators::Base
-    include InflectorFixes
+    include Versionist::InflectorFixes
 
     desc "copies an existing API version a new API version"
 
