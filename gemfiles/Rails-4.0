@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "4.0.0.rc2"
+gem "rails", "4.0.0"
 
 gemspec :path => "../"
 
@@ -8,6 +8,6 @@ group :development, :test do
   gem 'rake'
   gem 'rspec', '>= 2.13.0'
   gem 'rspec-rails', '>= 2.13.0'
-  gem 'generator_spec', '0.8.5'
+  gem 'generator_spec', '0.9.0'
   gem 'simplecov'
 end

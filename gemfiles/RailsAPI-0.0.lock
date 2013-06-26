@@ -1,7 +1,7 @@
 PATH
   remote: /Users/bploetz/workspace/versionist
   specs:
-    versionist (2.0.0.beta1)
+    versionist (1.1.0)
       rails (>= 3)
       yard (~> 0.7)
 

@@ -1,3 +1,3 @@
 module Versionist
-  VERSION = '2.0.0.beta1'
+  VERSION = '1.1.0'
 end
