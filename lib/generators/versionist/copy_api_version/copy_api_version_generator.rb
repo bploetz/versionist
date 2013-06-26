@@ -3,8 +3,6 @@ require 'fileutils'
 
 module Versionist
   class CopyApiVersionGenerator < Rails::Generators::Base
-    include InflectorFixes
-
     desc "copies an existing API version a new API version"
 
     source_root File.expand_path('../templates', __FILE__)
