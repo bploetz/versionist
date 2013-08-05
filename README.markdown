@@ -76,7 +76,7 @@ Examples:
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V1", :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=1"}) do
+  api_version(:module => "v1", :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=1"}) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -116,7 +116,7 @@ Example:
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V3", :path => {:value => "v3"}) do
+  api_version(:module => "v3", :path => {:value => "v3"}) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -136,7 +136,7 @@ Example:
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V2", :parameter => {:name => "version", :value => "v2"}) do
+  api_version(:module => "v2", :parameter => {:name => "version", :value => "v2"}) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -154,7 +154,7 @@ Example.
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V20120317", :header => {:name => "API-VERSION", :value => "v20120317"}, :default => true) do
+  api_version(:module => "v20120317", :header => {:name => "API-VERSION", :value => "v20120317"}, :default => true) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -175,7 +175,7 @@ Example.
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V20120317", :header => {:name => "API-VERSION", :value => "v20120317"}, :defaults => {:format => :json}, :default => true) do
+  api_version(:module => "v20120317", :header => {:name => "API-VERSION", :value => "v20120317"}, :defaults => {:format => :json}, :default => true) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -190,7 +190,7 @@ An API version may optionally support multiple concurrent versioning strategies.
 Example.
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V1", :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=1"}, :path => {:value => "v1"}) do
+  api_version(:module => "v1", :header => {:name => "Accept", :value => "application/vnd.mycompany.com; version=1"}, :path => {:value => "v1"}) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -347,7 +347,7 @@ Usage
 Example:
 
     rails generate versionist:copy_api_version v2 V2 v3 V3
-      route  api_version(:module => "V3", :header=>"Accept", :value=>"application/vnd.mycompany.com; version=3") do
+      route  api_version(:module => "v3", :header=>"Accept", :value=>"application/vnd.mycompany.com; version=3") do
       end
       Copying all files from app/controllers/v2 to app/controllers/v3
       Copying all files from spec/controllers/v2 to spec/controllers/v3
