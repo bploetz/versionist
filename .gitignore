@@ -1,3 +1,5 @@
+gemfiles/*.lock
+
 # Mac
 .DS_Store
 
