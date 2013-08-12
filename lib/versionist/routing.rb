@@ -28,6 +28,7 @@ module Versionist
       end
       raise ArgumentError, "you must specify :module in configuration Hash passed to api_version" if !config.has_key?(:module)
       raise ArgumentError, ":defaults must be a Hash" if config.has_key?(:defaults) && !config[:defaults].is_a?(Hash)
+      rails_quirks(config, &block)
       configure_header(config, &block) if config.has_key?(:header)
       configure_path(config, &block) if config.has_key?(:path)
       configure_parameter(config, &block) if config.has_key?(:parameter)
@@ -66,6 +67,19 @@ module Versionist
       route_hash = {:module => config[:module], :constraints => default}
       route_hash.merge!({:defaults => config[:defaults]}) if config.has_key?(:defaults)
       scope(route_hash, &block)
+    end
+
+    # deals with quirks in routing among the various Rails versions
+    def rails_quirks(config, &block)
+      rails4_quirks(config) if Rails::VERSION::MAJOR == 4
+    end
+
+    # Rails 4 quirks
+    def rails4_quirks(config, &block)
+      # Rails 4 no longer allows constant syntax in routing. 
+      # https://github.com/bploetz/versionist/issues/39
+      # call underscore on the module so it adheres to this convention
+      config[:module] = config[:module].underscore
     end
   end
 end

@@ -78,7 +78,7 @@ describe Versionist::Routing do
       TestApi::Application.config.middleware.should include(Versionist::Middleware) 
     end
 
-    {"v1" => "v1", "v2" => "v2", "v2.1" => "v2__1"}.each do |ver, mod|
+    {"v1" => "v1", "v1" => "V1", "v2" => "v2", "v2" => "V2", "v2.1" => "v2__1", "v2.1" => "V2__1", "v3" => "Api::V3", "v3" => "api/v3"}.each do |ver, mod|
       # Skip module names with underscores in Rails 3.2+
       # https://github.com/rails/rails/issues/5849
       next if ((Rails::VERSION::MAJOR == 3 && Rails::VERSION::MINOR == 2) || (Rails::VERSION::MAJOR == 4)) && mod.include?('_')
@@ -107,7 +107,7 @@ describe Versionist::Routing do
             end
 
             it "should not route when header doesn't match" do
-              @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-v3"
+              @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-v4"
               get "/foos.json", nil, @headers
               assert_response 404
             end
@@ -218,7 +218,7 @@ describe Versionist::Routing do
             end
 
             it "should not route when header doesn't match" do
-              @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com; version=v3"
+              @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com; version=v4"
               get "/foos.json", nil, @headers
               assert_response 404
             end
