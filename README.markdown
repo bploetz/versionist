@@ -164,6 +164,8 @@ end
 
 If you attempt to specify more than one default version, an error will be thrown at startup.
 
+Note that when you configure a default API version, you will see the routes under your default version show up twice when running `rake routes`. This is due to the fact that Versionist adds another `scope` to your routes to handle the default case. Unfortunately `rake routes` does not show you enough contextual information to be able to differentiate the two, but this is the expected behavior.
+
 
 ### Rails Route :defaults Hash
 
