@@ -28,10 +28,14 @@ module Versionist
       end
       raise ArgumentError, "you must specify :module in configuration Hash passed to api_version" if !config.has_key?(:module)
       raise ArgumentError, ":defaults must be a Hash" if config.has_key?(:defaults) && !config[:defaults].is_a?(Hash)
-      configure_header(config, &block) if config.has_key?(:header)
-      configure_path(config, &block) if config.has_key?(:path)
-      configure_parameter(config, &block) if config.has_key?(:parameter)
-      configure_default(config, &block) if config.has_key?(:default) && config[:default]
+
+      if config.has_key?(:default) && config[:default]
+        configure_default(config, &block) if config.has_key?(:default) && config[:default]
+      else
+        configure_header(config, &block) if config.has_key?(:header)
+        configure_path(config, &block) if config.has_key?(:path)
+        configure_parameter(config, &block) if config.has_key?(:parameter)
+      end
     end
 
 
