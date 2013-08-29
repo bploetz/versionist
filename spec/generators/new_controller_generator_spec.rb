@@ -23,6 +23,30 @@ describe Versionist::NewControllerGenerator do
       end
     end
 
+    context "ruby hash syntaxes" do
+      context "< 1.9" do
+        it "should not raise an error if api version exists" do
+          ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path("V1")}", __FILE__))
+          ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route("V1")}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
+          Versionist.configuration.configured_test_framework = nil
+          lambda {
+            run_generator ["foo", "V1"]
+          }.should_not raise_error(RuntimeError, /API version doesn't exist in config\/routes.rb. Please run \'rails generate versionist:new_api_version\' generator first/)
+        end
+      end
+
+      context ">= 1.9" do
+        it "should not raise an error if api version exists" do
+          ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path("V1")}", __FILE__))
+          ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(module: \"#{module_name_for_route("V1")}\", header: \"Accept\", value: \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
+          Versionist.configuration.configured_test_framework = nil
+          lambda {
+            run_generator ["foo", "V1"]
+          }.should_not raise_error(RuntimeError, /API version doesn't exist in config\/routes.rb. Please run \'rails generate versionist:new_api_version\' generator first/)
+        end
+      end
+    end
+
     context "api version exists" do
       {"foo" => "V1", "bar" => "V2", "foos" => "V2_1", "bazs" => "Api::V3"}.each do |name, mod|
         context "#{name} => #{mod}" do

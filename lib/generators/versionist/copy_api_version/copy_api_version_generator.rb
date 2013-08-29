@@ -23,7 +23,7 @@ module Versionist
         parser = YARD::Parser::SourceParser.parse_string(File.read("config/routes.rb"))
         existing_routes = nil
         parser.enumerator.first.traverse do |node|
-          existing_routes = node.source if node.type == :fcall && node.source =~ /api_version.*:module\s*(=>|:)\s*("|')#{module_name_for_route(old_module_name)}("|')/
+          existing_routes = node.source if node.type == :fcall && node.source =~ /api_version.*:?module\s*(=>|:)\s*("|')#{module_name_for_route(old_module_name)}("|')/
         end
         if !existing_routes.nil?
           copied_routes = String.new(existing_routes)
