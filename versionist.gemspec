@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   s.authors = ['Brian Ploetz']
   s.summary = "versionist-#{Versionist::VERSION}"
   s.description = 'A plugin for versioning Rails based RESTful APIs.'
+  s.license = 'MIT'
   s.files = Dir['lib/**/*']
   s.rdoc_options = ['--charset=UTF-8']
   s.require_paths = ['lib']
