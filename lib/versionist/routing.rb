@@ -64,7 +64,7 @@ module Versionist
 
     def configure_default(config, &block)
       default = Versionist::VersioningStrategy::Default.new(config)
-      route_hash = {:module => config[:module], :constraints => default}
+      route_hash = {:module => config[:module], :constraints => default, :as => 'default'}
       route_hash.merge!({:defaults => config[:defaults]}) if config.has_key?(:defaults)
       scope(route_hash, &block)
     end
