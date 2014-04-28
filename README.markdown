@@ -358,3 +358,6 @@ Example:
       Copying all files from app/helpers/v2 to app/helpers/v3
       Copying all files from spec/helpers/v2 to spec/helpers/v3
       Copying all files from public/docs/v2 to public/docs/v3
+
+## Additional Resources
+- [API Versioning using Versionist](http://www.multunus.com/blog/2014/04/api-versioning-using-versionist/)
