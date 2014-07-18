@@ -230,9 +230,8 @@ require 'spec_helper'
 describe V1::TestController do
   it "should get v1" do
     get '/test', {}, {'Accept' => 'application/vnd.mycompany.com; version=1'}
-      assert_response 200
-      assert_equal "v1", response.body
-   end
+    assert_response 200
+    assert_equal "v1", response.body
   end
 end
 ```
