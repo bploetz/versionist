@@ -24,7 +24,7 @@ describe Versionist::VersioningStrategy::Header do
   it "should add the version to Versionist::Configuration.header_versions" do
     Versionist.configuration.header_versions.should be_empty
     header_version = Versionist::VersioningStrategy::Header.new({:header => {:name => "Accept", :value => "application/vnd.mycompany.com-v2"}})
-    Versionist.configuration.header_versions.include?(header_version).should be_true
+    Versionist.configuration.header_versions.include?(header_version).should == true
   end
 
   it "should not add self to Versionist::Configuration.header_versions more than once" do

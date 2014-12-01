@@ -24,7 +24,7 @@ describe Versionist::VersioningStrategy::Parameter do
   it "should add the version to Versionist::Configuration.parameter_versions" do
     Versionist.configuration.parameter_versions.should be_empty
     parmeter_version = Versionist::VersioningStrategy::Parameter.new({:parameter => {:name => "version", :value => "3"}})
-    Versionist.configuration.parameter_versions.include?(parmeter_version).should be_true
+    Versionist.configuration.parameter_versions.include?(parmeter_version).should == true
   end
 
   it "should not add self to Versionist::Configuration.parameter_versions more than once" do

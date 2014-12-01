@@ -31,7 +31,7 @@ describe Versionist::NewControllerGenerator do
           Versionist.configuration.configured_test_framework = nil
           lambda {
             run_generator ["foo", "V1"]
-          }.should_not raise_error(RuntimeError, /API version doesn't exist in config\/routes.rb. Please run \'rails generate versionist:new_api_version\' generator first/)
+          }.should_not raise_error#(RuntimeError, /API version doesn't exist in config\/routes.rb. Please run \'rails generate versionist:new_api_version\' generator first/)
         end
       end
 
@@ -42,7 +42,7 @@ describe Versionist::NewControllerGenerator do
           Versionist.configuration.configured_test_framework = nil
           lambda {
             run_generator ["foo", "V1"]
-          }.should_not raise_error(RuntimeError, /API version doesn't exist in config\/routes.rb. Please run \'rails generate versionist:new_api_version\' generator first/)
+          }.should_not raise_error#(RuntimeError, /API version doesn't exist in config\/routes.rb. Please run \'rails generate versionist:new_api_version\' generator first/)
         end
       end
     end

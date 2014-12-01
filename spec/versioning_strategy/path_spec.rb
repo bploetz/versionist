@@ -18,7 +18,7 @@ describe Versionist::VersioningStrategy::Path do
   it "should add the version to Versionist::Configuration.path_versions" do
     Versionist.configuration.path_versions.should be_empty
     path_version = Versionist::VersioningStrategy::Path.new({:path => {:value => "v1"}})
-    Versionist.configuration.path_versions.include?(path_version).should be_true
+    Versionist.configuration.path_versions.include?(path_version).should == true
   end
 
   context "==" do
