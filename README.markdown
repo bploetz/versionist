@@ -200,13 +200,12 @@ MyApi::Application.routes.draw do
 end
 ```
 
-## A Note About Testing When Using The HTTP Header or Request Parameter Strategies
+## A Note About Testing
 
 Rails functional tests (ActionController::TestCase) and RSpec Controller specs are for testing controller action methods in isolation.
 They do not go through the full Rails stack, specifically the Rails dispatcher code path, which is where versionist hooks in to do its thing.
 
-In order to test your versioned API routes which rely on the HTTP Header or Request Parameter strategies, use integration tests (ActionDispatch::IntegrationTest)
-if you're using Test::Unit, or Request specs if you're using RSpec.
+In order to test your versioned API routes, use integration tests (ActionDispatch::IntegrationTest) if you're using Test::Unit, or Request specs if you're using RSpec.
 
 Test::Unit Example:
 ```ruby
