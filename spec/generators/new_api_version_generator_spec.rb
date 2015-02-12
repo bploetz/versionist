@@ -340,49 +340,102 @@ end
             ::FileUtils.rm(::File.expand_path("../../tmp/config/routes.rb", __FILE__))
             ::FileUtils.touch(::File.expand_path("../../tmp/config/routes.rb", __FILE__))
             Versionist.configuration.configured_test_framework = :rspec
-            run_generator %W(#{ver} #{mod} --header=name:Accept value:application/vnd.mycompany.com-#{ver})
           end
 
-          it "should create a namespaced spec/controllers directory" do
-            assert_directory "spec/controllers/#{module_name_for_path(mod)}"
+          context "directories" do
+            before :each do
+              run_generator %W(#{ver} #{mod} --header=name:Accept value:application/vnd.mycompany.com-#{ver})
+            end
+
+            it "should create a namespaced spec/controllers directory" do
+              assert_directory "spec/controllers/#{module_name_for_path(mod)}"
+            end
+
+            it "should create a namespaced spec/presenters directory" do
+              assert_directory "spec/presenters/#{module_name_for_path(mod)}"
+            end
+
+            it "should create a namespaced spec/helpers directory" do
+              assert_directory "spec/helpers/#{module_name_for_path(mod)}"
+            end
           end
 
-          it "should create a namespaced base controller spec" do
-            assert_file "spec/controllers/#{module_name_for_path(mod)}/base_controller_spec.rb", <<-CONTENTS
+          context "rspec < 3" do
+            before :each do
+              run_generator %W(#{ver} #{mod} --header=name:Accept value:application/vnd.mycompany.com-#{ver})
+            end
+
+            it "should create a namespaced base request spec" do
+              assert_file "spec/requests/#{module_name_for_path(mod)}/base_controller_spec.rb", <<-CONTENTS
 require 'spec_helper'
 
 describe #{mod}::BaseController do
 
 end
-            CONTENTS
-          end
+              CONTENTS
+            end
 
-          it "should create a namespaced base request spec" do
-            assert_file "spec/requests/#{module_name_for_path(mod)}/base_controller_spec.rb", <<-CONTENTS
+            it "should create a namespaced base controller spec" do
+              assert_file "spec/controllers/#{module_name_for_path(mod)}/base_controller_spec.rb", <<-CONTENTS
 require 'spec_helper'
 
 describe #{mod}::BaseController do
 
 end
-            CONTENTS
-          end
+              CONTENTS
+            end
 
-          it "should create a namespaced spec/presenters directory" do
-            assert_directory "spec/presenters/#{module_name_for_path(mod)}"
-          end
-
-          it "should create a namespaced base presenter spec" do
-            assert_file "spec/presenters/#{module_name_for_path(mod)}/base_presenter_spec.rb", <<-CONTENTS
+            it "should create a namespaced base presenter spec" do
+              assert_file "spec/presenters/#{module_name_for_path(mod)}/base_presenter_spec.rb", <<-CONTENTS
 require 'spec_helper'
 
 describe #{mod}::BasePresenter do
 
 end
-            CONTENTS
+              CONTENTS
+            end
           end
 
-          it "should create a namespaced spec/helpers directory" do
-            assert_directory "spec/helpers/#{module_name_for_path(mod)}"
+          context "rspec >= 3" do
+            before :each do
+              ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec", __FILE__))
+              ::FileUtils.touch(::File.expand_path("../../tmp/spec/rails_helper.rb", __FILE__))
+              run_generator %W(#{ver} #{mod} --header=name:Accept value:application/vnd.mycompany.com-#{ver})
+            end
+
+            after :each do
+              ::FileUtils.rm(::File.expand_path("../../tmp/spec/rails_helper.rb", __FILE__))
+            end
+
+            it "should create a namespaced base request spec" do
+              assert_file "spec/requests/#{module_name_for_path(mod)}/base_controller_spec.rb", <<-CONTENTS
+require 'rails_helper'
+
+describe #{mod}::BaseController do
+
+end
+              CONTENTS
+            end
+
+            it "should create a namespaced base controller spec" do
+              assert_file "spec/controllers/#{module_name_for_path(mod)}/base_controller_spec.rb", <<-CONTENTS
+require 'rails_helper'
+
+describe #{mod}::BaseController do
+
+end
+              CONTENTS
+            end
+
+            it "should create a namespaced base presenter spec" do
+              assert_file "spec/presenters/#{module_name_for_path(mod)}/base_presenter_spec.rb", <<-CONTENTS
+require 'rails_helper'
+
+describe #{mod}::BasePresenter do
+
+end
+              CONTENTS
+            end
           end
         end
       end

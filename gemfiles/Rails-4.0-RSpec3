@@ -1,0 +1,13 @@
+source "http://rubygems.org"
+
+gem "rails", "4.0.0"
+
+gemspec :path => "../"
+
+group :development, :test do
+  gem 'rake'
+  gem 'rspec', '>= 3'
+  gem 'rspec-rails', '>= 3'
+  gem 'generator_spec', '0.9.0'
+  gem 'simplecov'
+end

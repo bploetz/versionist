@@ -114,35 +114,78 @@ end
               ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
               ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-v1\") do\n  end\nend"}
               Versionist.configuration.configured_test_framework = :rspec
-              run_generator [name, mod]
             end
 
-            it "should create a namespaced spec/controllers directory" do
-              assert_directory "spec/controllers/#{module_name_for_path(mod)}"
+            context "directories" do
+              before :each do
+                run_generator [name, mod]
+              end
+
+              it "should create a namespaced spec/controllers directory" do
+                assert_directory "spec/controllers/#{module_name_for_path(mod)}"
+              end
+
+              it "should create a namespaced spec/requests directory" do
+                assert_directory "spec/requests/#{module_name_for_path(mod)}"
+              end
             end
 
-            it "should create a namespaced controller spec" do
-              assert_file "spec/controllers/#{module_name_for_path(mod)}/#{name.underscore}_controller_spec.rb", <<-CONTENTS
+            context "rspec < 3" do
+              before :each do
+                run_generator [name, mod]
+              end
+
+              it "should create a namespaced controller spec" do
+                assert_file "spec/controllers/#{module_name_for_path(mod)}/#{name.underscore}_controller_spec.rb", <<-CONTENTS
 require 'spec_helper'
 
 describe #{mod}::#{name.camelize}Controller do
 
 end
-              CONTENTS
-            end
+                CONTENTS
+              end
 
-            it "should create a namespaced spec/requests directory" do
-              assert_directory "spec/requests/#{module_name_for_path(mod)}"
-            end
-
-            it "should create a namespaced request spec" do
-              assert_file "spec/requests/#{module_name_for_path(mod)}/#{name.underscore}_controller_spec.rb", <<-CONTENTS
+              it "should create a namespaced request spec" do
+                assert_file "spec/requests/#{module_name_for_path(mod)}/#{name.underscore}_controller_spec.rb", <<-CONTENTS
 require 'spec_helper'
 
 describe #{mod}::#{name.camelize}Controller do
 
 end
-              CONTENTS
+                CONTENTS
+              end
+            end
+
+            context "rspec >= 3" do
+              before :each do
+                ::FileUtils.mkdir_p(::File.expand_path("../../tmp/spec", __FILE__))
+                ::FileUtils.touch(::File.expand_path("../../tmp/spec/rails_helper.rb", __FILE__))
+                run_generator [name, mod]
+              end
+
+              after :each do
+                ::FileUtils.rm(::File.expand_path("../../tmp/spec/rails_helper.rb", __FILE__))
+              end
+
+              it "should create a namespaced controller spec" do
+                assert_file "spec/controllers/#{module_name_for_path(mod)}/#{name.underscore}_controller_spec.rb", <<-CONTENTS
+require 'rails_helper'
+
+describe #{mod}::#{name.camelize}Controller do
+
+end
+                CONTENTS
+              end
+
+              it "should create a namespaced request spec" do
+                assert_file "spec/requests/#{module_name_for_path(mod)}/#{name.underscore}_controller_spec.rb", <<-CONTENTS
+require 'rails_helper'
+
+describe #{mod}::#{name.camelize}Controller do
+
+end
+                CONTENTS
+              end
             end
           end
         end

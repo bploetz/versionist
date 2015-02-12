@@ -20,7 +20,12 @@ module Versionist
         when :test_unit
           template 'new_presenter_test.rb', File.join("test", "presenters", "#{module_name_for_path(module_name)}", "#{file_name}_presenter_test.rb")
         when :rspec
-          template 'new_presenter_spec.rb', File.join("spec", "presenters", "#{module_name_for_path(module_name)}", "#{file_name}_presenter_spec.rb")
+          if File.exists? "spec/rails_helper.rb"
+            @rspec_require_file = "rails_helper"
+          else
+            @rspec_require_file = "spec_helper"
+          end
+          template 'new_presenter_spec.rb', File.join("spec", "presenters", "#{module_name_for_path(module_name)}", "#{file_name}_presenter_spec.rb"), :assigns => { :rspec_require_file => @rspec_require_file }
         else
           say "Unsupported test_framework: #{Versionist.configuration.configured_test_framework}"
         end

@@ -14,7 +14,6 @@ module Versionist
     class_option :path, :type => :hash, :group => :path
     class_option :defaults, :type => :hash, :group => :defaults
 
-
     def verify_options
       raise "Must specify at least one versioning strategy option" if !['header', 'parameter', 'path'].any? {|strategy| options.has_key?(strategy)}
       if options.has_key?("header")
@@ -69,10 +68,15 @@ module Versionist
           empty_directory "test/integration/#{module_name_for_path(module_name)}"
           template 'base_controller_integration_test.rb', File.join("test", "integration", "#{module_name_for_path(module_name)}", "base_controller_test.rb")
         when :rspec
+          if File.exists? "spec/rails_helper.rb"
+            @rspec_require_file = "rails_helper"
+          else
+            @rspec_require_file = "spec_helper"
+          end
           empty_directory "spec/controllers/#{module_name_for_path(module_name)}"
-          template 'base_controller_spec.rb', File.join("spec", "controllers", "#{module_name_for_path(module_name)}", "base_controller_spec.rb")
+          template 'base_controller_spec.rb', File.join("spec", "controllers", "#{module_name_for_path(module_name)}", "base_controller_spec.rb"), :assigns => { :rspec_require_file => @rspec_require_file }
           empty_directory "spec/requests/#{module_name_for_path(module_name)}"
-          template 'base_controller_spec.rb', File.join("spec", "requests", "#{module_name_for_path(module_name)}", "base_controller_spec.rb")
+          template 'base_controller_spec.rb', File.join("spec", "requests", "#{module_name_for_path(module_name)}", "base_controller_spec.rb"), :assigns => { :rspec_require_file => @rspec_require_file }
         else
           say "Unsupported test_framework: #{Versionist.configuration.configured_test_framework}"
         end
@@ -93,8 +97,13 @@ module Versionist
           empty_directory "test/presenters/#{module_name_for_path(module_name)}"
           template 'base_presenter_test.rb', File.join("test", "presenters", "#{module_name_for_path(module_name)}", "base_presenter_test.rb")
         when :rspec
+          if File.exists? "spec/rails_helper.rb"
+            @rspec_require_file = "rails_helper"
+          else
+            @rspec_require_file = "spec_helper"
+          end
           empty_directory "spec/presenters/#{module_name_for_path(module_name)}"
-          template 'base_presenter_spec.rb', File.join("spec", "presenters", "#{module_name_for_path(module_name)}", "base_presenter_spec.rb")
+          template 'base_presenter_spec.rb', File.join("spec", "presenters", "#{module_name_for_path(module_name)}", "base_presenter_spec.rb"), :assigns => { :rspec_require_file => @rspec_require_file }
         else
           say "Unsupported test_framework: #{Versionist.configuration.configured_test_framework}"
         end
