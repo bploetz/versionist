@@ -5,6 +5,7 @@ module Versionist
 
   autoload :Configuration
   autoload :InflectorFixes, "generators/versionist/inflector_fixes"
+  autoload :RspecHelper, "generators/versionist/rspec_helper"
   autoload :CopyApiVersionGenerator, "generators/versionist/copy_api_version/copy_api_version_generator"
   autoload :NewApiVersionGenerator, "generators/versionist/new_api_version/new_api_version_generator"
   autoload :NewControllerGenerator, "generators/versionist/new_controller/new_controller_generator"

@@ -1,6 +1,7 @@
 module Versionist
   class NewApiVersionGenerator < Rails::Generators::Base
     include InflectorFixes
+    include RspecHelper
 
     desc "creates the infrastructure for a new API version"
 
@@ -68,11 +69,7 @@ module Versionist
           empty_directory "test/integration/#{module_name_for_path(module_name)}"
           template 'base_controller_integration_test.rb', File.join("test", "integration", "#{module_name_for_path(module_name)}", "base_controller_test.rb")
         when :rspec
-          if File.exists? "spec/rails_helper.rb"
-            @rspec_require_file = "rails_helper"
-          else
-            @rspec_require_file = "spec_helper"
-          end
+          @rspec_require_file = rspec_helper_filename
           empty_directory "spec/controllers/#{module_name_for_path(module_name)}"
           template 'base_controller_spec.rb', File.join("spec", "controllers", "#{module_name_for_path(module_name)}", "base_controller_spec.rb"), :assigns => { :rspec_require_file => @rspec_require_file }
           empty_directory "spec/requests/#{module_name_for_path(module_name)}"
@@ -97,11 +94,7 @@ module Versionist
           empty_directory "test/presenters/#{module_name_for_path(module_name)}"
           template 'base_presenter_test.rb', File.join("test", "presenters", "#{module_name_for_path(module_name)}", "base_presenter_test.rb")
         when :rspec
-          if File.exists? "spec/rails_helper.rb"
-            @rspec_require_file = "rails_helper"
-          else
-            @rspec_require_file = "spec_helper"
-          end
+          @rspec_require_file = rspec_helper_filename
           empty_directory "spec/presenters/#{module_name_for_path(module_name)}"
           template 'base_presenter_spec.rb', File.join("spec", "presenters", "#{module_name_for_path(module_name)}", "base_presenter_spec.rb"), :assigns => { :rspec_require_file => @rspec_require_file }
         else
