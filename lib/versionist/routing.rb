@@ -71,15 +71,10 @@ module Versionist
 
     # deals with quirks in routing among the various Rails versions
     def rails_quirks(config, &block)
-      rails4_quirks(config) if Rails::VERSION::MAJOR == 4
-    end
-
-    # Rails 4 quirks
-    def rails4_quirks(config, &block)
       # Rails 4 no longer allows constant syntax in routing. 
       # https://github.com/bploetz/versionist/issues/39
       # call underscore on the module so it adheres to this convention
-      config[:module] = config[:module].underscore
+      config[:module] = config[:module].underscore if Rails::VERSION::MAJOR >= 4
     end
   end
 end

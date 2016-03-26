@@ -1,4 +1,4 @@
-GEMFILE_MAP = {"gemfiles/Rails-3.0" => "Rails 3.0", "gemfiles/Rails-3.1" => "Rails 3.1", "gemfiles/Rails-3.2" => "Rails 3.2", "gemfiles/RailsAPI-0.0" => "Rails API 0.0", "gemfiles/Rails-4.0" => "Rails 4.0", "gemfiles/Rails-4.0-RSpec3" => "RSpec 3"}
+GEMFILE_MAP = {"gemfiles/Rails-3.0" => "Rails 3.0", "gemfiles/Rails-3.1" => "Rails 3.1", "gemfiles/Rails-3.2" => "Rails 3.2", "gemfiles/RailsAPI-0.0" => "Rails API 0.0", "gemfiles/Rails-4.0" => "Rails 4.0", "gemfiles/Rails-4.0-RSpec3" => "RSpec 3", "gemfiles/Rails-5.0" => "Rails 5.0"}
 
 # To run the tests locally:
 #   gem install bundler
