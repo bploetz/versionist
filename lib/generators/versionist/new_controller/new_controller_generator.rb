@@ -32,8 +32,7 @@ module Versionist
       in_root do
         case Versionist.configuration.configured_test_framework
         when :test_unit
-          template 'new_controller_functional_test.rb', File.join("test", "functional", "#{module_name_for_path(module_name)}", "#{file_name}_controller_test.rb")
-          template 'new_controller_integration_test.rb', File.join("test", "integration", "#{module_name_for_path(module_name)}", "#{file_name}_controller_test.rb")
+          template 'new_controller_functional_test.rb', File.join("test", "controllers", "#{module_name_for_path(module_name)}", "#{file_name}_controller_test.rb")
         when :rspec
           @rspec_require_file = rspec_helper_filename
           template 'new_controller_spec.rb', File.join("spec", "controllers", "#{module_name_for_path(module_name)}", "#{file_name}_controller_spec.rb"), :assigns => { :rspec_require_file => @rspec_require_file }

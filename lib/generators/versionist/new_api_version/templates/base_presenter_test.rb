@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class <%= module_name %>::BasePresenterTest < Test::Unit::TestCase
+class <%= module_name %>::BasePresenterTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   test "the truth" do
     assert true
