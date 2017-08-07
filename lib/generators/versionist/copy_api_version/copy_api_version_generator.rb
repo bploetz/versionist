@@ -14,6 +14,15 @@ module Versionist
     argument :new_version, :type => :string
     argument :new_module_name, :type => :string
 
+    def older_than_rails_5?
+      Rails.version.to_i < 5
+    end
+
+    def test_path
+      return "test/functional" if older_than_rails_5?
+      "test/controllers"
+    end
+
     def copy_routes
       in_root do
         if RUBY_VERSION =~ /1.8/ || !defined?(RUBY_ENGINE) || RUBY_ENGINE != "ruby"
@@ -56,26 +65,28 @@ module Versionist
       in_root do
         case Versionist.configuration.configured_test_framework
         when :test_unit
-          if File.exists? "test/functional/#{module_name_for_path(old_module_name)}"
-            log "Copying all files from test/functional/#{module_name_for_path(old_module_name)} to test/functional/#{module_name_for_path(new_module_name)}"
-            FileUtils.cp_r "test/functional/#{module_name_for_path(old_module_name)}", "test/functional/#{module_name_for_path(new_module_name)}"
-            Dir.glob("test/functional/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
+          if File.exists? "#{test_path}/#{module_name_for_path(old_module_name)}"
+            log "Copying all files from #{test_path}/#{module_name_for_path(old_module_name)} to #{test_path}/#{module_name_for_path(new_module_name)}"
+            FileUtils.cp_r "#{test_path}/#{module_name_for_path(old_module_name)}", "#{test_path}/#{module_name_for_path(new_module_name)}"
+            Dir.glob("#{test_path}/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
               text = File.read(f)
               File.open(f, 'w') {|f| f << text.gsub(/#{old_module_name}/, new_module_name)}
             end
           else
-            say "No controller tests found in test/functional for #{old_version}"
+            say "No tests found in #{test_path} for #{old_version}"
           end
 
-          if File.exists? "test/integration/#{module_name_for_path(old_module_name)}"
-            log "Copying all files from test/integration/#{module_name_for_path(old_module_name)} to test/integration/#{module_name_for_path(new_module_name)}"
-            FileUtils.cp_r "test/integration/#{module_name_for_path(old_module_name)}", "test/integration/#{module_name_for_path(new_module_name)}"
-            Dir.glob("test/integration/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
-              text = File.read(f)
-              File.open(f, 'w') {|f| f << text.gsub(/#{old_module_name}/, new_module_name)}
+          if older_than_rails_5?
+            if File.exists? "test/integration/#{module_name_for_path(old_module_name)}"
+              log "Copying all files from test/integration/#{module_name_for_path(old_module_name)} to test/integration/#{module_name_for_path(new_module_name)}"
+              FileUtils.cp_r "test/integration/#{module_name_for_path(old_module_name)}", "test/integration/#{module_name_for_path(new_module_name)}"
+              Dir.glob("test/integration/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
+                text = File.read(f)
+                File.open(f, 'w') {|f| f << text.gsub(/#{old_module_name}/, new_module_name)}
+              end
+            else
+              say "No integration tests found in test/integration for #{old_version}"
             end
-          else
-            say "No integration tests found in test/integration for #{old_version}"
           end
         when :rspec
           if File.exists? "spec/controllers/#{module_name_for_path(old_module_name)}"
