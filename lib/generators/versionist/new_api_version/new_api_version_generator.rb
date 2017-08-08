@@ -64,10 +64,12 @@ module Versionist
       in_root do
         case Versionist.configuration.configured_test_framework
         when :test_unit
-          empty_directory "test/functional/#{module_name_for_path(module_name)}"
-          template 'base_controller_functional_test.rb', File.join("test", "functional", "#{module_name_for_path(module_name)}", "base_controller_test.rb")
-          empty_directory "test/integration/#{module_name_for_path(module_name)}"
-          template 'base_controller_integration_test.rb', File.join("test", "integration", "#{module_name_for_path(module_name)}", "base_controller_test.rb")
+          if older_than_rails_5?
+            empty_directory "test/integration/#{module_name_for_path(module_name)}"
+            template 'base_controller_integration_test.rb', File.join("test", "integration", "#{module_name_for_path(module_name)}", "base_controller_test.rb")
+          end
+          empty_directory "test/#{test_path}/#{module_name_for_path(module_name)}"
+          template 'base_controller_functional_test.rb', File.join("test", "#{test_path}", "#{module_name_for_path(module_name)}", "base_controller_test.rb")
         when :rspec
           @rspec_require_file = rspec_helper_filename
           empty_directory "spec/controllers/#{module_name_for_path(module_name)}"
