@@ -8,7 +8,7 @@ module TestApi
     config.active_support.deprecation = :log
     config.action_controller.logger = nil
     config.logger = Logger.new(STDOUT)
-    config.log_level = Logger::Severity::UNKNOWN
+    config.log_level = :info
     config.action_controller.logger = nil
     config.middleware.delete Rails::Rack::Logger
     config.action_dispatch.show_exceptions = false
