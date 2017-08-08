@@ -20,3 +20,12 @@ RSpec.configure do |config|
     ::FileUtils.rm_rf(tmp_dir)
   end
 end
+
+def older_than_rails_5?
+  Rails.version.to_i < 5
+end
+
+def test_path
+  return "test/functional" if older_than_rails_5?
+  "test/controllers"
+end

@@ -14,15 +14,6 @@ module Versionist
     argument :new_version, :type => :string
     argument :new_module_name, :type => :string
 
-    def older_than_rails_5?
-      Rails.version.to_i < 5
-    end
-
-    def test_path
-      return "test/functional" if older_than_rails_5?
-      "test/controllers"
-    end
-
     def copy_routes
       in_root do
         if RUBY_VERSION =~ /1.8/ || !defined?(RUBY_ENGINE) || RUBY_ENGINE != "ruby"

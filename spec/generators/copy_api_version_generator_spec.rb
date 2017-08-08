@@ -5,16 +5,6 @@ describe Versionist::CopyApiVersionGenerator do
   include GeneratorSpec::TestCase
   include Versionist::InflectorFixes
 
-  let(:older_than_rails_5?) { Rails.version.to_i < 5 }
-
-  let(:test_path) do
-    if older_than_rails_5?
-      "test/functional"
-    else
-      "test/controllers"
-    end
-  end
-
   destination File.expand_path("../../tmp", __FILE__)
 
   before :each do
