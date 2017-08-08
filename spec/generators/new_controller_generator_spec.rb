@@ -71,12 +71,12 @@ describe Versionist::NewControllerGenerator do
               run_generator [name, mod]
             end
 
-            it "should create a namespaced test/functional directory" do
-              assert_directory "test/functional/#{module_name_for_path(mod)}"
+            it "should create a namespaced test directory" do
+              assert_directory "test/#{test_path}/#{module_name_for_path(mod)}"
             end
 
-            it "should create a namespaced controller functional test" do
-              assert_file "test/functional/#{module_name_for_path(mod)}/#{name.underscore}_controller_test.rb", <<-CONTENTS
+            it "should create a namespaced controller test" do
+              assert_file "test/#{test_path}/#{module_name_for_path(mod)}/#{name.underscore}_controller_test.rb", <<-CONTENTS
 require 'test_helper'
 
 class #{mod}::#{name.camelize}ControllerTest < ActionController::TestCase
@@ -89,12 +89,13 @@ end
               CONTENTS
             end
 
-            it "should create a namespaced test/integration directory" do
-              assert_directory "test/integration/#{module_name_for_path(mod)}"
-            end
+            if older_than_rails_5?
+              it "should create a namespaced test/integration directory" do
+                assert_directory "test/integration/#{module_name_for_path(mod)}"
+              end
 
-            it "should create a namespaced controller integration test" do
-              assert_file "test/integration/#{module_name_for_path(mod)}/#{name.underscore}_controller_test.rb", <<-CONTENTS
+              it "should create a namespaced controller integration test" do
+                assert_file "test/integration/#{module_name_for_path(mod)}/#{name.underscore}_controller_test.rb", <<-CONTENTS
 require 'test_helper'
 
 class #{mod}::#{name.camelize}ControllerTest < ActionDispatch::IntegrationTest
@@ -104,7 +105,8 @@ class #{mod}::#{name.camelize}ControllerTest < ActionDispatch::IntegrationTest
     assert true
   end
 end
-              CONTENTS
+                CONTENTS
+              end
             end
           end
 
