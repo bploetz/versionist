@@ -8,8 +8,11 @@ describe Versionist::CopyApiVersionGenerator do
   let(:older_than_rails_5?) { Rails.version.to_i < 5 }
 
   let(:test_path) do
-    return "test/functional" if older_than_rails_5?
-    "test/controllers"
+    if older_than_rails_5?
+      "test/functional"
+    else
+      "test/controllers"
+    end
   end
 
   destination File.expand_path("../../tmp", __FILE__)
