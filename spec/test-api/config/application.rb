@@ -4,6 +4,8 @@ require 'versionist/railtie'
 module TestApi
   class Application < Rails::Application
     config.secret_token = "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!hi mom!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    config.secret_key_base = "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!hi mom!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    config.eager_load = true
     config.root = File.expand_path("../../", __FILE__)
     config.active_support.deprecation = :log
     config.action_controller.logger = nil
