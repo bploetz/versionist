@@ -104,7 +104,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.json", nil, @headers
               else
-                get "/foos.json", params: nil, headers: @headers
+                get "/foos.json", :params => nil, :headers => @headers
               end
               assert_response 404
             end
@@ -114,7 +114,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.json", nil, @headers
               else
-                get "/foos.json", params: nil, headers: @headers
+                get "/foos.json", :params => nil, :headers => @headers
               end
               assert_response 404
             end
@@ -124,7 +124,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.json", nil, @headers
               else
-                get "/foos.json", params: nil, headers: @headers
+                get "/foos.json", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/json', response.content_type
@@ -133,7 +133,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.xml", nil, @headers
               else
-                get "/foos.xml", params: nil, headers: @headers
+                get "/foos.xml", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/xml', response.content_type
@@ -145,7 +145,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos_no_format", nil, @headers
               else
-                get "/foos_no_format", params: nil, headers: @headers
+                get "/foos_no_format", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/json', response.content_type
@@ -155,7 +155,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos_no_format", nil, @headers
               else
-                get "/foos_no_format", params: nil, headers: @headers
+                get "/foos_no_format", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/xml', response.content_type
@@ -165,7 +165,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos_no_format", nil, @headers
               else
-                get "/foos_no_format", params: nil, headers: @headers
+                get "/foos_no_format", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/xml', response.content_type
@@ -188,7 +188,7 @@ describe Versionist::Routing do
                 if older_than_rails_5?
                   get "/foos.json", nil, @headers
                 else
-                  get "/foos.json", params: nil, headers: @headers
+                  get "/foos.json", :params => nil, :headers => @headers
                 end
                 assert_response 200
                 assert_equal 'application/json', response.content_type
@@ -198,7 +198,7 @@ describe Versionist::Routing do
                 if older_than_rails_5?
                   get "/foos.json", nil, @headers
                 else
-                  get "/foos.json", params: nil, headers: @headers
+                  get "/foos.json", :params => nil, :headers => @headers
                 end
                 assert_response 200
                 assert_equal 'application/json', response.content_type
@@ -208,7 +208,7 @@ describe Versionist::Routing do
                 if older_than_rails_5?
                   get "/foos.json", nil, @headers
                 else
-                  get "/foos.json", params: nil, headers: @headers
+                  get "/foos.json", :params => nil, :headers => @headers
                 end
                 assert_response 200
                 assert_equal 'application/json', response.content_type
@@ -220,7 +220,7 @@ describe Versionist::Routing do
                 if older_than_rails_5?
                   get "/foos.json", nil, @headers
                 else
-                  get "/foos.json", params: nil, headers: @headers
+                  get "/foos.json", :params => nil, :headers => @headers
                 end
                 assert_response 200
                 assert_equal 'application/json', response.content_type
@@ -258,7 +258,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.json", nil, @headers
               else
-                get "/foos.json", params: nil, headers: @headers
+                get "/foos.json", :params => nil, :headers => @headers
               end
               assert_response 404
             end
@@ -268,7 +268,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.json", nil, @headers
               else
-                get "/foos.json", params: nil, headers: @headers
+                get "/foos.json", :params => nil, :headers => @headers
               end
               assert_response 404
             end
@@ -278,7 +278,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.json", nil, @headers
               else
-                get "/foos.json", params: nil, headers: @headers
+                get "/foos.json", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/json', response.content_type
@@ -287,7 +287,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.xml", nil, @headers
               else
-                get "/foos.xml", params: nil, headers: @headers
+                get "/foos.xml", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/xml', response.content_type
@@ -299,7 +299,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos_no_format", nil, @headers
               else
-                get "/foos_no_format", params: nil, headers: @headers
+                get "/foos_no_format", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/json', response.content_type
@@ -309,7 +309,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos_no_format", nil, @headers
               else
-                get "/foos_no_format", params: nil, headers: @headers
+                get "/foos_no_format", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/xml', response.content_type
@@ -319,7 +319,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos_no_format", nil, @headers
               else
-                get "/foos_no_format", params: nil, headers: @headers
+                get "/foos_no_format", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/xml', response.content_type
@@ -342,7 +342,7 @@ describe Versionist::Routing do
                 if older_than_rails_5?
                   get "/foos.json", nil, @headers
                 else
-                  get "/foos.json", params: nil, headers: @headers
+                  get "/foos.json", :params => nil, :headers => @headers
                 end
                 assert_response 200
                 assert_equal 'application/json', response.content_type
@@ -352,7 +352,7 @@ describe Versionist::Routing do
                 if older_than_rails_5?
                   get "/foos.json", nil, @headers
                 else
-                  get "/foos.json", params: nil, headers: @headers
+                  get "/foos.json", :params => nil, :headers => @headers
                 end
                 assert_response 200
                 assert_equal 'application/json', response.content_type
@@ -362,7 +362,7 @@ describe Versionist::Routing do
                 if older_than_rails_5?
                   get "/foos.json", nil, @headers
                 else
-                  get "/foos.json", params: nil, headers: @headers
+                  get "/foos.json", :params => nil, :headers => @headers
                 end
                 assert_response 200
                 assert_equal 'application/json', response.content_type
@@ -374,7 +374,7 @@ describe Versionist::Routing do
                 if older_than_rails_5?
                   get "/foos.json", nil, @headers
                 else
-                  get "/foos.json", params: nil, headers: @headers
+                  get "/foos.json", :params => nil, :headers => @headers
                 end
                 assert_response 200
                 assert_equal 'application/json', response.content_type
@@ -412,7 +412,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.json", nil, @headers
               else
-                get "/foos.json", params: nil, headers: @headers
+                get "/foos.json", :params => nil, :headers => @headers
               end
               assert_response 404
             end
@@ -422,7 +422,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.json", nil, @headers
               else
-                get "/foos.json", params: nil, headers: @headers
+                get "/foos.json", :params => nil, :headers => @headers
               end
               assert_response 404
             end
@@ -432,7 +432,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.json", nil, @headers
               else
-                get "/foos.json", params: nil, headers: @headers
+                get "/foos.json", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/json', response.content_type
@@ -441,7 +441,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.xml", nil, @headers
               else
-                get "/foos.xml", params: nil, headers: @headers
+                get "/foos.xml", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/xml', response.content_type
@@ -454,7 +454,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos_no_format", nil, @headers
               else
-                get "/foos_no_format", params: nil, headers: @headers
+                get "/foos_no_format", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/json', response.content_type
@@ -465,7 +465,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos_no_format", nil, @headers
               else
-                get "/foos_no_format", params: nil, headers: @headers
+                get "/foos_no_format", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/xml', response.content_type
@@ -488,7 +488,7 @@ describe Versionist::Routing do
                 if older_than_rails_5?
                   get "/foos.json", nil, @headers
                 else
-                  get "/foos.json", params: nil, headers: @headers
+                  get "/foos.json", :params => nil, :headers => @headers
                 end
                 assert_response 200
                 assert_equal 'application/json', response.content_type
@@ -498,7 +498,7 @@ describe Versionist::Routing do
                 if older_than_rails_5?
                   get "/foos.json", nil, @headers
                 else
-                  get "/foos.json", params: nil, headers: @headers
+                  get "/foos.json", :params => nil, :headers => @headers
                 end
                 assert_response 200
                 assert_equal 'application/json', response.content_type
@@ -508,7 +508,7 @@ describe Versionist::Routing do
                 if older_than_rails_5?
                   get "/foos.xml", nil, @headers
                 else
-                  get "/foos.xml", params: nil, headers: @headers
+                  get "/foos.xml", :params => nil, :headers => @headers
                 end
                 assert_response 200
                 assert_equal 'application/xml', response.content_type
@@ -520,7 +520,7 @@ describe Versionist::Routing do
                 if older_than_rails_5?
                   get "/foos.json", nil, @headers
                 else
-                  get "/foos.json", params: nil, headers: @headers
+                  get "/foos.json", :params => nil, :headers => @headers
                 end
                 assert_response 200
                 assert_equal 'application/json', response.content_type
@@ -559,7 +559,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/foos.json", nil, @headers
             else
-              get "/foos.json", params: nil, headers: @headers
+              get "/foos.json", :params => nil, :headers => @headers
             end
             assert_response 404
           end
@@ -568,7 +568,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/bogu/foos.json", nil, @headers
             else
-              get "/bogus/foos.json", params: nil, headers: @headers
+              get "/bogus/foos.json", :params => nil, :headers => @headers
             end
             assert_response 404
           end
@@ -577,7 +577,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/#{ver}/foos.json", nil, @headers
             else
-              get "/#{ver}/foos.json", params: nil, headers: @headers
+              get "/#{ver}/foos.json", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/json', response.content_type
@@ -586,7 +586,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/#{ver}/bars.json", nil, @headers
             else
-              get "/#{ver}/bars.json", params: nil, headers: @headers
+              get "/#{ver}/bars.json", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/json', response.content_type
@@ -595,7 +595,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/#{ver}/foos.xml", nil, @headers
             else
-              get "/#{ver}/foos.xml", params: nil, headers: @headers
+              get "/#{ver}/foos.xml", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/xml', response.content_type
@@ -604,7 +604,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/#{ver}/bars.xml", nil, @headers
             else
-              get "/#{ver}/bars.xml", params: nil, headers: @headers
+              get "/#{ver}/bars.xml", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/xml', response.content_type
@@ -616,7 +616,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/#{ver}/foos_no_format", nil, @headers
             else
-              get "/#{ver}/foos_no_format", params: nil, headers: @headers
+              get "/#{ver}/foos_no_format", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/json', response.content_type
@@ -626,7 +626,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/#{ver}/foos_no_format", nil, @headers
             else
-              get "/#{ver}/foos_no_format", params: nil, headers: @headers
+              get "/#{ver}/foos_no_format", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/xml', response.content_type
@@ -651,7 +651,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.json", nil, @headers
               else
-                get "/foos.json", params: nil, headers: @headers
+                get "/foos.json", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/json', response.content_type
@@ -660,7 +660,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/#{ver}/bars.json", nil, @headers
               else
-                get "/#{ver}/bars.json", params: nil, headers: @headers
+                get "/#{ver}/bars.json", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/json', response.content_type
@@ -669,7 +669,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.xml", nil, @headers
               else
-                get "/foos.xml", params: nil, headers: @headers
+                get "/foos.xml", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/xml', response.content_type
@@ -678,7 +678,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/#{ver}/bars.xml", nil, @headers
               else
-                get "/#{ver}/bars.xml", params: nil, headers: @headers
+                get "/#{ver}/bars.xml", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/xml', response.content_type
@@ -689,7 +689,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/not_default/foos.json", nil, @headers
               else
-                get "/not_default/foos.json", params: nil, headers: @headers
+                get "/not_default/foos.json", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/json', response.content_type
@@ -739,7 +739,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/foos.json", nil, @headers
             else
-              get "/foos.json", params: nil, headers: @headers
+              get "/foos.json", :params => nil, :headers => @headers
             end
             assert_response 404
           end
@@ -748,7 +748,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/foos.json?version=3", nil, @headers
             else
-              get "/foos.json?version=3", params: nil, headers: @headers
+              get "/foos.json?version=3", :params => nil, :headers => @headers
             end
             assert_response 404
           end
@@ -757,7 +757,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/foos.json?version=#{ver}", nil, @headers
             else
-              get "/foos.json?version=#{ver}", params: nil, headers: @headers
+              get "/foos.json?version=#{ver}", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/json', response.content_type
@@ -766,7 +766,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/foos.xml?version=#{ver}", nil, @headers
             else
-              get "/foos.xml?version=#{ver}", params: nil, headers: @headers
+              get "/foos.xml?version=#{ver}", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/xml', response.content_type
@@ -778,7 +778,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/foos_no_format?version=#{ver}", nil, @headers
             else
-              get "/foos_no_format?version=#{ver}", params: nil, headers: @headers
+              get "/foos_no_format?version=#{ver}", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/json', response.content_type
@@ -788,7 +788,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/foos_no_format?version=#{ver}", nil, @headers
             else
-              get "/foos_no_format?version=#{ver}", params: nil, headers: @headers
+              get "/foos_no_format?version=#{ver}", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/xml', response.content_type
@@ -811,7 +811,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.json", nil, @headers
               else
-                get "/foos.json", params: nil, headers: @headers
+                get "/foos.json", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/json', response.content_type
@@ -820,7 +820,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.json?version=", nil, @headers
               else
-                get "/foos.json?version=", params: nil, headers: @headers
+                get "/foos.json?version=", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/json', response.content_type
@@ -831,7 +831,7 @@ describe Versionist::Routing do
               if older_than_rails_5?
                 get "/foos.json?version=not_default", nil, @headers
               else
-                get "/foos.json?version=not_default", params: nil, headers: @headers
+                get "/foos.json?version=not_default", :params => nil, :headers => @headers
               end
               assert_response 200
               assert_equal 'application/json', response.content_type
@@ -869,7 +869,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/foos.json", nil, @headers
             else
-              get "/foos.json", params: nil, headers: @headers
+              get "/foos.json", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/json', response.content_type
@@ -879,7 +879,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/foos.json", nil, @headers
             else
-              get "/foos.json", params: nil, headers: @headers
+              get "/foos.json", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/json', response.content_type
@@ -889,7 +889,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/foos.json", nil, @headers
             else
-              get "/foos.json", params: nil, headers: @headers
+              get "/foos.json", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/json', response.content_type
@@ -901,7 +901,7 @@ describe Versionist::Routing do
             if older_than_rails_5?
               get "/foos.json", nil, @headers
             else
-              get "/foos.json", params: nil, headers: @headers
+              get "/foos.json", :params => nil, :headers => @headers
             end
             assert_response 200
             assert_equal 'application/json', response.content_type
@@ -935,7 +935,7 @@ describe Versionist::Routing do
         if older_than_rails_5?
           get "/foos.json", nil, @headers
         else
-          get "/foos.json", params: nil, headers: @headers
+          get "/foos.json", :params => nil, :headers => @headers
         end
         assert_response 200
         assert_equal 'application/json', response.content_type
@@ -945,7 +945,7 @@ describe Versionist::Routing do
         if older_than_rails_5?
           get "/foos.json", nil, @headers
         else
-          get "/foos.json", params: nil, headers: @headers
+          get "/foos.json", :params => nil, :headers => @headers
         end
         assert_response 200
         assert_equal 'application/json', response.content_type
@@ -967,7 +967,7 @@ describe Versionist::Routing do
         if older_than_rails_5?
           get "/foos_no_format", nil, @headers
         else
-          get "/foos_no_format", params: nil, headers: @headers
+          get "/foos_no_format", :params => nil, :headers => @headers
         end
         assert_response 200
         assert_equal 'application/json', response.content_type
@@ -977,7 +977,7 @@ describe Versionist::Routing do
         if older_than_rails_5?
           get "/foos_no_format", nil, @headers
         else
-          get "/foos_no_format", params: nil, headers: @headers
+          get "/foos_no_format", :params => nil, :headers => @headers
         end
         assert_response 200
         assert_equal 'application/xml', response.content_type
@@ -987,7 +987,7 @@ describe Versionist::Routing do
         if older_than_rails_5?
           get "/foos_no_format", nil, @headers
         else
-          get "/foos_no_format", params: nil, headers: @headers
+          get "/foos_no_format", :params => nil, :headers => @headers
         end
         assert_response 200
         assert_equal 'application/xml', response.content_type
@@ -997,7 +997,7 @@ describe Versionist::Routing do
         if older_than_rails_5?
           get "/foos_no_format", nil, @headers
         else
-          get "/foos_no_format", params: nil, headers: @headers
+          get "/foos_no_format", :params => nil, :headers => @headers
         end
         assert_response 200
         assert_equal 'application/json', response.content_type
@@ -1007,7 +1007,7 @@ describe Versionist::Routing do
         if older_than_rails_5?
           get "/foos_no_format", nil, @headers
         else
-          get "/foos_no_format", params: nil, headers: @headers
+          get "/foos_no_format", :params => nil, :headers => @headers
         end
         assert_response 200
         assert_equal 'application/xml', response.content_type
@@ -1017,7 +1017,7 @@ describe Versionist::Routing do
         if older_than_rails_5?
           get "/foos_no_format", nil, @headers
         else
-          get "/foos_no_format", params: nil, headers: @headers
+          get "/foos_no_format", :params => nil, :headers => @headers
         end
         assert_response 200
         assert_equal 'application/xml', response.content_type
