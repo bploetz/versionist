@@ -955,7 +955,7 @@ describe Versionist::Routing do
         if older_than_rails_5?
           get "/foos.json", nil, {}
         else
-          get "/foos.json", params: nil, headers: {}
+          get "/foos.json", :params => nil, :headers => {}
         end
         assert_response 200
         assert_equal 'application/json', response.content_type
