@@ -1,5 +1,9 @@
 class V2_1::BarsController < ApplicationController
   def index
-    render :text => "v2.1"
+    respond_to do |format|
+      format.text { render text: "v2.1" }
+      format.json { render json: "v2.1" }
+      format.xml { render xml: "v2.1" }
+    end
   end
 end

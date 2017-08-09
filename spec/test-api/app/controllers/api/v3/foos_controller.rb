@@ -1,5 +1,9 @@
 class Api::V3::FoosController < ApplicationController
   def index
-    render :text => "v3"
+    respond_to do |format|
+      format.text { render text: "v3" }
+      format.json { render json: "v3" }
+      format.xml { render xml: "v3" }
+    end
   end
 end
