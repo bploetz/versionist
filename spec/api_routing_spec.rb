@@ -78,9 +78,8 @@ describe Versionist::Routing do
       TestApi::Application.config.middleware.should include(Versionist::Middleware)
     end
 
-    # TODO
     # {"v1" => "v1", "v1" => "V1", "v2" => "v2", "v2" => "V2", "v2.1" => "v2__1", "v2.1" => "V2__1", "v3" => "Api::V3", "v3" => "api/v3"}.each do |ver, mod|
-    {"v1" => "v1"}.each do |ver, mod|
+      {"v1" => "v1"}.each do |ver, mod|
       # Skip module names with underscores in Rails 3.2+
       # https://github.com/rails/rails/issues/5849
       next if ((Rails::VERSION::MAJOR == 3 && Rails::VERSION::MINOR == 2) || (Rails::VERSION::MAJOR >= 4)) && mod.include?('_')
@@ -98,32 +97,29 @@ describe Versionist::Routing do
                   match '/foos_no_format' => 'foos#index', :via => :get
                   resources :bars
                 end
-                match '/foos(:format)' => 'foos#index', :via => :get
                 match '*a', :to => 'application#not_found', :via => :get
               end
             end
 
             it "should not route when header isn't present" do
-              require 'pry'
-              binding.pry
               get "/foos.json", params: nil, headers: @headers
               assert_response 404
             end
 
             it "should not route when header doesn't match" do
               @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-v4"
-              get "/foos.json", nil, @headers
+              get "/foos.json", params: nil, headers: @headers
               assert_response 404
             end
 
             it "should route to the correct controller when header matches" do
               @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-#{ver}"
-              get "/foos.json", nil, @headers
+              get "/foos.json", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
               assert_equal ver, response.body
 
-              get "/foos.xml", nil, @headers
+              get "/foos.xml", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/xml', response.content_type
               assert_equal ver, response.body
@@ -131,19 +127,19 @@ describe Versionist::Routing do
 
             it "should route to the correct controller when format specified via accept header" do
               @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-#{ver},application/json"
-              get "/foos_no_format", nil, @headers
+              get "/foos_no_format", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
               assert_equal ver, response.body
 
               @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com-#{ver}"
-              get "/foos_no_format", nil, @headers
+              get "/foos_no_format", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/xml', response.content_type
               assert_equal ver, response.body
 
               @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com-#{ver}, application/json"
-              get "/foos_no_format", nil, @headers
+              get "/foos_no_format", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/xml', response.content_type
               assert_equal ver, response.body
@@ -162,19 +158,19 @@ describe Versionist::Routing do
               end
 
               it "should route to the default when no version given" do
-                get "/foos.json", nil, @headers
+                get "/foos.json", params: nil, headers: @headers
                 assert_response 200
                 assert_equal 'application/json', response.content_type
                 assert_equal ver, response.body
 
                 @headers["HTTP_ACCEPT"] = ""
-                get "/foos.json", nil, @headers
+                get "/foos.json", params: nil, headers: @headers
                 assert_response 200
                 assert_equal 'application/json', response.content_type
                 assert_equal ver, response.body
 
                 @headers["HTTP_ACCEPT"] = "   "
-                get "/foos.json", nil, @headers
+                get "/foos.json", params: nil, headers: @headers
                 assert_response 200
                 assert_equal 'application/json', response.content_type
                 assert_equal ver, response.body
@@ -182,7 +178,7 @@ describe Versionist::Routing do
 
               it "should not route to the default when another configured version is given" do
                 @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-not_default"
-                get "/foos.json", nil, @headers
+                get "/foos.json", params: nil, headers: @headers
                 assert_response 200
                 assert_equal 'application/json', response.content_type
                 assert_equal "not_default", response.body
@@ -217,24 +213,24 @@ describe Versionist::Routing do
             end
 
             it "should not route when header isn't present" do
-              get "/foos.json", nil, @headers
+              get "/foos.json", params: nil, headers: @headers
               assert_response 404
             end
 
             it "should not route when header doesn't match" do
               @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com; version=v4"
-              get "/foos.json", nil, @headers
+              get "/foos.json", params: nil, headers: @headers
               assert_response 404
             end
 
             it "should route to the correct controller when header matches" do
               @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com; version=#{ver}"
-              get "/foos.json", nil, @headers
+              get "/foos.json", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
               assert_equal ver, response.body
 
-              get "/foos.xml", nil, @headers
+              get "/foos.xml", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/xml', response.content_type
               assert_equal ver, response.body
@@ -242,19 +238,19 @@ describe Versionist::Routing do
 
             it "should route to the correct controller when format specified via accept header" do
               @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com; version=#{ver},application/json"
-              get "/foos_no_format", nil, @headers
+              get "/foos_no_format", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
               assert_equal ver, response.body
 
               @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com; version=#{ver}"
-              get "/foos_no_format", nil, @headers
+              get "/foos_no_format", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/xml', response.content_type
               assert_equal ver, response.body
 
               @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com; version=#{ver}, application/json"
-              get "/foos_no_format", nil, @headers
+              get "/foos_no_format", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/xml', response.content_type
               assert_equal ver, response.body
@@ -273,19 +269,19 @@ describe Versionist::Routing do
               end
 
               it "should route to the default when no version given" do
-                get "/foos.json", nil, @headers
+                get "/foos.json", params: nil, headers: @headers
                 assert_response 200
                 assert_equal 'application/json', response.content_type
                 assert_equal ver, response.body
 
                 @headers["HTTP_ACCEPT"] = ""
-                get "/foos.json", nil, @headers
+                get "/foos.json", params: nil, headers: @headers
                 assert_response 200
                 assert_equal 'application/json', response.content_type
                 assert_equal ver, response.body
 
                 @headers["HTTP_ACCEPT"] = "   "
-                get "/foos.json", nil, @headers
+                get "/foos.json", params: nil, headers: @headers
                 assert_response 200
                 assert_equal 'application/json', response.content_type
                 assert_equal ver, response.body
@@ -293,7 +289,7 @@ describe Versionist::Routing do
 
               it "should not route to the default when another configured version is given" do
                 @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com; version=not_default"
-                get "/foos.json", nil, @headers
+                get "/foos.json", params: nil, headers: @headers
                 assert_response 200
                 assert_equal 'application/json', response.content_type
                 assert_equal "not_default", response.body
@@ -328,24 +324,24 @@ describe Versionist::Routing do
             end
 
             it "should not route when header isn't present" do
-              get "/foos.json", nil, @headers
+              get "/foos.json", params: nil, headers: @headers
               assert_response 404
             end
 
             it "should not route when header doesn't match" do
               @headers["API_VERSION"] = "v3"
-              get "/foos.json", nil, @headers
+              get "/foos.json", params: nil, headers: @headers
               assert_response 404
             end
 
             it "should route to the correct controller when header matches" do
               @headers["HTTP_API_VERSION"] = ver
-              get "/foos.json", nil, @headers
+              get "/foos.json", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
               assert_equal ver, response.body
 
-              get "/foos.xml", nil, @headers
+              get "/foos.xml", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/xml', response.content_type
               assert_equal ver, response.body
@@ -354,14 +350,14 @@ describe Versionist::Routing do
             it "should route to the correct controller when format specified via accept header" do
               @headers["HTTP_ACCEPT"] = "application/json,application/xml"
               @headers["HTTP_API_VERSION"] = ver
-              get "/foos_no_format", nil, @headers
+              get "/foos_no_format", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
               assert_equal ver, response.body
 
               @headers["HTTP_ACCEPT"] = "application/xml,application/json"
               @headers["HTTP_API_VERSION"] = ver
-              get "/foos_no_format", nil, @headers
+              get "/foos_no_format", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/xml', response.content_type
               assert_equal ver, response.body
@@ -380,19 +376,19 @@ describe Versionist::Routing do
               end
 
               it "should route to the default when no version given" do
-                get "/foos.json", nil, @headers
+                get "/foos.json", params: nil, headers: @headers
                 assert_response 200
                 assert_equal 'application/json', response.content_type
                 assert_equal ver, response.body
 
                 @headers["HTTP_API_VERSION"] = ""
-                get "/foos.json", nil, @headers
+                get "/foos.json", params: nil, headers: @headers
                 assert_response 200
                 assert_equal 'application/json', response.content_type
                 assert_equal ver, response.body
 
                 @headers["HTTP_API_VERSION"] = "    "
-                get "/foos.xml", nil, @headers
+                get "/foos.xml", params: nil, headers: @headers
                 assert_response 200
                 assert_equal 'application/xml', response.content_type
                 assert_equal ver, response.body
@@ -400,7 +396,7 @@ describe Versionist::Routing do
 
               it "should not route to the default when another configured version is given" do
                 @headers["HTTP_API_VERSION"] = "not_default"
-                get "/foos.json", nil, @headers
+                get "/foos.json", params: nil, headers: @headers
                 assert_response 200
                 assert_equal 'application/json', response.content_type
                 assert_equal "not_default", response.body
@@ -436,32 +432,32 @@ describe Versionist::Routing do
           end
 
           it "should not route when path isn't present" do
-            get "/foos.json", nil, @headers
+            get "/foos.json", params: nil, headers: @headers
             assert_response 404
           end
 
           it "should not route when path doesn't match" do
-            get "/bogus/foos.json", nil, @headers
+            get "/bogus/foos.json", params: nil, headers: @headers
             assert_response 404
           end
 
           it "should route to the correct controller when path matches" do
-            get "/#{ver}/foos.json", nil, @headers
+            get "/#{ver}/foos.json", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/json', response.content_type
             assert_equal ver, response.body
 
-            get "/#{ver}/bars.json", nil, @headers
+            get "/#{ver}/bars.json", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/json', response.content_type
             assert_equal ver, response.body
 
-            get "/#{ver}/foos.xml", nil, @headers
+            get "/#{ver}/foos.xml", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/xml', response.content_type
             assert_equal ver, response.body
 
-            get "/#{ver}/bars.xml", nil, @headers
+            get "/#{ver}/bars.xml", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/xml', response.content_type
             assert_equal ver, response.body
@@ -469,13 +465,13 @@ describe Versionist::Routing do
 
           it "should route to the correct controller when path matches and format specified via accept header" do
             @headers["HTTP_ACCEPT"] = "application/json,application/xml"
-            get "/#{ver}/foos_no_format", nil, @headers
+            get "/#{ver}/foos_no_format", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/json', response.content_type
             assert_equal ver, response.body
 
             @headers["HTTP_ACCEPT"] = "application/xml,application/json"
-            get "/#{ver}/foos_no_format", nil, @headers
+            get "/#{ver}/foos_no_format", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/xml', response.content_type
             assert_equal ver, response.body
@@ -496,29 +492,29 @@ describe Versionist::Routing do
             end
 
             it "should route to the default when no version given" do
-              get "/foos.json", nil, @headers
+              get "/foos.json", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
               assert_equal ver, response.body
 
-              get "/#{ver}/bars.json", nil, @headers
+              get "/#{ver}/bars.json", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
               assert_equal ver, response.body
 
-              get "/foos.xml", nil, @headers
+              get "/foos.xml", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/xml', response.content_type
               assert_equal ver, response.body
 
-              get "/#{ver}/bars.xml", nil, @headers
+              get "/#{ver}/bars.xml", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/xml', response.content_type
               assert_equal ver, response.body
             end
 
             it "should not route to the default when another configured version is given" do
-              get "/not_default/foos.json", nil, @headers
+              get "/not_default/foos.json", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
               assert_equal "not_default", response.body
@@ -565,22 +561,22 @@ describe Versionist::Routing do
           end
 
           it "should not route when parameter isn't present" do
-            get "/foos.json", nil, @headers
+            get "/foos.json", params: nil, headers: @headers
             assert_response 404
           end
 
           it "should not route when parameter doesn't match" do
-            get "/foos.json?version=3", nil, @headers
+            get "/foos.json?version=3", params: nil, headers: @headers
             assert_response 404
           end
 
           it "should route to the correct controller when parameter matches" do
-            get "/foos.json?version=#{ver}", nil, @headers
+            get "/foos.json?version=#{ver}", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/json', response.content_type
             assert_equal ver, response.body
 
-            get "/foos.xml?version=#{ver}", nil, @headers
+            get "/foos.xml?version=#{ver}", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/xml', response.content_type
             assert_equal ver, response.body
@@ -588,13 +584,13 @@ describe Versionist::Routing do
 
           it "should route to the correct controller when parameter matches and format specified via accept header" do
             @headers["HTTP_ACCEPT"] = "application/json,application/xml"
-            get "/foos_no_format?version=#{ver}", nil, @headers
+            get "/foos_no_format?version=#{ver}", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/json', response.content_type
             assert_equal ver, response.body
 
             @headers["HTTP_ACCEPT"] = "application/xml,application/json"
-            get "/foos_no_format?version=#{ver}", nil, @headers
+            get "/foos_no_format?version=#{ver}", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/xml', response.content_type
             assert_equal ver, response.body
@@ -613,19 +609,19 @@ describe Versionist::Routing do
             end
 
             it "should route to the default when no version given" do
-              get "/foos.json", nil, @headers
+              get "/foos.json", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
               assert_equal ver, response.body
 
-              get "/foos.json?version=", nil, @headers
+              get "/foos.json?version=", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
               assert_equal ver, response.body
             end
 
             it "should not route to the default when another configured version is given" do
-              get "/foos.json?version=not_default", nil, @headers
+              get "/foos.json?version=not_default", params: nil, headers: @headers
               assert_response 200
               assert_equal 'application/json', response.content_type
               assert_equal "not_default", response.body
@@ -659,19 +655,19 @@ describe Versionist::Routing do
           end
 
           it "should route to the default when no version given" do
-            get "/foos.json", nil, @headers
+            get "/foos.json", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/json', response.content_type
             assert_equal ver, response.body
 
             @headers["HTTP_ACCEPT"] = ""
-            get "/foos.json", nil, @headers
+            get "/foos.json", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/json', response.content_type
             assert_equal ver, response.body
 
             @headers["HTTP_ACCEPT"] = "   "
-            get "/foos.json", nil, @headers
+            get "/foos.json", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/json', response.content_type
             assert_equal ver, response.body
@@ -679,7 +675,7 @@ describe Versionist::Routing do
 
           it "should not route to the default when another configured version is given" do
             @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-not_default"
-            get "/foos.json", nil, @headers
+            get "/foos.json", params: nil, headers: @headers
             assert_response 200
             assert_equal 'application/json', response.content_type
             assert_equal "not_default", response.body
@@ -709,13 +705,13 @@ describe Versionist::Routing do
 
       it "should route to the correct controller" do
         @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-v1"
-        get "/foos.json", nil, @headers
+        get "/foos.json", params: nil, headers: @headers
         assert_response 200
         assert_equal 'application/json', response.content_type
         assert_equal "v1", response.body
 
         @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-v1"
-        get "/foos.json", nil, @headers
+        get "/foos.json", params: nil, headers: @headers
         assert_response 200
         assert_equal 'application/json', response.content_type
         assert_equal "v1", response.body
@@ -729,37 +725,37 @@ describe Versionist::Routing do
 
       it "should route to the correct controller when format specified via accept header" do
         @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-v1,application/json"
-        get "/foos_no_format", nil, @headers
+        get "/foos_no_format", params: nil, headers: @headers
         assert_response 200
         assert_equal 'application/json', response.content_type
         assert_equal "v1", response.body
 
         @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com-v1"
-        get "/foos_no_format", nil, @headers
+        get "/foos_no_format", params: nil, headers: @headers
         assert_response 200
         assert_equal 'application/xml', response.content_type
         assert_equal "v1", response.body
 
         @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com-v1, application/json"
-        get "/foos_no_format", nil, @headers
+        get "/foos_no_format", params: nil, headers: @headers
         assert_response 200
         assert_equal 'application/xml', response.content_type
         assert_equal "v1", response.body
 
         @headers["HTTP_ACCEPT"] = "application/vnd.mycompany.com-v11,application/json"
-        get "/foos_no_format", nil, @headers
+        get "/foos_no_format", params: nil, headers: @headers
         assert_response 200
         assert_equal 'application/json', response.content_type
         assert_equal "v11", response.body
 
         @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com-v11"
-        get "/foos_no_format", nil, @headers
+        get "/foos_no_format", params: nil, headers: @headers
         assert_response 200
         assert_equal 'application/xml', response.content_type
         assert_equal "v11", response.body
 
         @headers["HTTP_ACCEPT"] = "application/xml, application/vnd.mycompany.com-v11, application/json"
-        get "/foos_no_format", nil, @headers
+        get "/foos_no_format", params: nil, headers: @headers
         assert_response 200
         assert_equal 'application/xml', response.content_type
         assert_equal "v11", response.body
