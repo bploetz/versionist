@@ -4,6 +4,7 @@ rvm:
   - 1.9.2
   - 1.9.3
   - 2.0.0
+  - 2.2.2
   - jruby-18mode
   - jruby-19mode
   - ree
@@ -19,11 +20,37 @@ matrix:
       jdk: oraclejdk7
     - rvm: ree
       jdk: oraclejdk7
-gemfile:
-  - gemfiles/Rails-3.0
-  - gemfiles/Rails-3.1
-  - gemfiles/Rails-3.2
-  - gemfiles/Rails-4.0
-  - gemfiles/Rails-5.0
-  - gemfiles/Rails-5.1
-  - gemfiles/RailsAPI-0.0
+  include:
+    - rvm: 1.8.7
+      gemfile:
+        - gemfiles/Rails-3.0
+        - gemfiles/Rails-3.1
+        - gemfiles/Rails-3.2
+        - gemfiles/Rails-4.0
+    - rvm: 1.9.2
+      gemfile:
+        - gemfiles/Rails-3.0
+        - gemfiles/Rails-3.1
+        - gemfiles/Rails-3.2
+        - gemfiles/Rails-4.0
+    - rvm: 1.9.3
+      gemfile:
+        - gemfiles/Rails-3.0
+        - gemfiles/Rails-3.1
+        - gemfiles/Rails-3.2
+        - gemfiles/Rails-4.0
+    - rvm: 2.0.0
+      gemfile:
+        - gemfiles/Rails-3.0
+        - gemfiles/Rails-3.1
+        - gemfiles/Rails-3.2
+        - gemfiles/Rails-4.0
+    - rvm: 2.2.2
+      gemfile:
+        - gemfiles/Rails-3.0
+        - gemfiles/Rails-3.1
+        - gemfiles/Rails-3.2
+        - gemfiles/Rails-4.0
+        - gemfiles/Rails-5.0
+        - gemfiles/Rails-5.1
+        - gemfiles/RailsAPI-0.0
