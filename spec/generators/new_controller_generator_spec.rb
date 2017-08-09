@@ -75,8 +75,9 @@ describe Versionist::NewControllerGenerator do
               assert_directory "test/#{test_path}/#{module_name_for_path(mod)}"
             end
 
-            it "should create a namespaced controller test" do
-              assert_file "test/#{test_path}/#{module_name_for_path(mod)}/#{name.underscore}_controller_test.rb", <<-CONTENTS
+            if older_than_rails_5?
+              it "should create a namespaced controller test" do
+                assert_file "test/#{test_path}/#{module_name_for_path(mod)}/#{name.underscore}_controller_test.rb", <<-CONTENTS
 require 'test_helper'
 
 class #{mod}::#{name.camelize}ControllerTest < ActionController::TestCase
@@ -86,7 +87,22 @@ class #{mod}::#{name.camelize}ControllerTest < ActionController::TestCase
     assert true
   end
 end
-              CONTENTS
+                CONTENTS
+              end
+            else
+              it "should create a namespaced controller test" do
+                assert_file "test/#{test_path}/#{module_name_for_path(mod)}/#{name.underscore}_controller_test_rails_5.rb", <<-CONTENTS
+require 'test_helper'
+
+class #{mod}::#{name.camelize}ControllerTest < ActionDispatch::IntegrationTest
+
+  # Replace this with your real tests.
+  test "the truth" do
+    assert true
+  end
+end
+                CONTENTS
+              end
             end
 
             if older_than_rails_5?

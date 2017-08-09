@@ -19,7 +19,11 @@ module Versionist
       in_root do
         case Versionist.configuration.configured_test_framework
         when :test_unit
-          template 'new_presenter_test.rb', File.join("test", "presenters", "#{module_name_for_path(module_name)}", "#{file_name}_presenter_test.rb")
+          if older_than_rails_5?
+            template 'new_presenter_test.rb', File.join("test", "presenters", "#{module_name_for_path(module_name)}", "#{file_name}_presenter_test.rb")
+          else
+            template 'new_presenter_test_rails_5.rb', File.join("test", "presenters", "#{module_name_for_path(module_name)}", "#{file_name}_presenter_test_rails_5.rb")
+          end
         when :rspec
           @rspec_require_file = rspec_helper_filename
           template 'new_presenter_spec.rb', File.join("spec", "presenters", "#{module_name_for_path(module_name)}", "#{file_name}_presenter_spec.rb"), :assigns => { :rspec_require_file => @rspec_require_file }

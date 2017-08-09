@@ -22,7 +22,7 @@ RSpec.configure do |config|
 end
 
 def older_than_rails_5?
-  Rails.version.to_i < 5
+  defined?(Rails) && Rails.version.to_i < 5
 end
 
 def test_path

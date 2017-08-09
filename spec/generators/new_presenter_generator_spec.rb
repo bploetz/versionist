@@ -66,8 +66,9 @@ end
             assert_directory "test/presenters/#{module_name_for_path(mod)}"
           end
 
-          it "should create a namespaced presenter test" do
-            assert_file "test/presenters/#{module_name_for_path(mod)}/#{name.underscore}_presenter_test.rb", <<-CONTENTS
+          if older_than_rails_5?
+            it "should create a namespaced presenter test" do
+              assert_file "test/presenters/#{module_name_for_path(mod)}/#{name.underscore}_presenter_test.rb", <<-CONTENTS
 require 'test_helper'
 
 class #{mod}::#{name.camelize}PresenterTest < Test::Unit::TestCase
@@ -77,6 +78,20 @@ class #{mod}::#{name.camelize}PresenterTest < Test::Unit::TestCase
   end
 end
               CONTENTS
+            end
+          else
+            it "should create a namespaced presenter test" do
+              assert_file "test/presenters/#{module_name_for_path(mod)}/#{name.underscore}_presenter_test_rails_5.rb", <<-CONTENTS
+require 'test_helper'
+
+class #{mod}::#{name.camelize}PresenterTest < ActiveSupport::TestCase
+  # Replace this with your real tests.
+  test "the truth" do
+    assert true
+  end
+end
+              CONTENTS
+            end
           end
         end
 
