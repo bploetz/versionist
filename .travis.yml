@@ -9,6 +9,9 @@ rvm:
   - jruby-19mode
   - jruby-head
   - ree
+before_install: # https://github.com/travis-ci/travis-ci/issues/5861
+  - gem install bundler
+  - gem update bundler
 jdk:
   - oraclejdk7
 matrix:
