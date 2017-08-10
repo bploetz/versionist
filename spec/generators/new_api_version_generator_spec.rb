@@ -283,12 +283,13 @@ end
             run_generator %W(#{ver} #{mod} --header=name:Accept value:application/vnd.mycompany.com-#{ver})
           end
 
-          it "should create a namespaced test/functional directory" do
-            assert_directory "test/functional/#{module_name_for_path(mod)}"
+          it "should create a namespaced test directory" do
+            assert_directory "test/#{test_path}/#{module_name_for_path(mod)}"
           end
 
-          it "should create a namespaced base controller functional test" do
-            assert_file "test/functional/#{module_name_for_path(mod)}/base_controller_test.rb", <<-CONTENTS
+          if older_than_rails_5?
+            it "should create a namespaced base controller test" do
+              assert_file "test/#{test_path}/#{module_name_for_path(mod)}/base_controller_test.rb", <<-CONTENTS
 require 'test_helper'
 
 class #{mod}::BaseControllerTest < ActionController::TestCase
@@ -297,11 +298,11 @@ class #{mod}::BaseControllerTest < ActionController::TestCase
     assert true
   end
 end
-            CONTENTS
-          end
-
-          it "should create a namespaced base controller integration test" do
-            assert_file "test/integration/#{module_name_for_path(mod)}/base_controller_test.rb", <<-CONTENTS
+              CONTENTS
+            end
+          else
+            it "should create a namespaced base controller test" do
+              assert_file "test/#{test_path}/#{module_name_for_path(mod)}/base_controller_test_rails_5.rb", <<-CONTENTS
 require 'test_helper'
 
 class #{mod}::BaseControllerTest < ActionDispatch::IntegrationTest
@@ -310,15 +311,32 @@ class #{mod}::BaseControllerTest < ActionDispatch::IntegrationTest
     assert true
   end
 end
-            CONTENTS
+              CONTENTS
+            end
+          end
+
+          if older_than_rails_5?
+            it "should create a namespaced base controller integration test" do
+              assert_file "test/integration/#{module_name_for_path(mod)}/base_controller_test.rb", <<-CONTENTS
+require 'test_helper'
+
+class #{mod}::BaseControllerTest < ActionDispatch::IntegrationTest
+  # Replace this with your real tests.
+  test "the truth" do
+    assert true
+  end
+end
+              CONTENTS
+            end
           end
 
           it "should create a namespaced test/presenters directory" do
             assert_directory "test/presenters/#{module_name_for_path(mod)}"
           end
 
-          it "should create a namespaced base presenter test" do
-            assert_file "test/presenters/#{module_name_for_path(mod)}/base_presenter_test.rb", <<-CONTENTS
+          if older_than_rails_5?
+            it "should create a namespaced base presenter test" do
+              assert_file "test/presenters/#{module_name_for_path(mod)}/base_presenter_test.rb", <<-CONTENTS
 require 'test_helper'
 
 class #{mod}::BasePresenterTest < Test::Unit::TestCase
@@ -327,7 +345,21 @@ class #{mod}::BasePresenterTest < Test::Unit::TestCase
     assert true
   end
 end
-            CONTENTS
+              CONTENTS
+            end
+          else
+            it "should create a namespaced base presenter test" do
+              assert_file "test/presenters/#{module_name_for_path(mod)}/base_presenter_test_rails_5.rb", <<-CONTENTS
+require 'test_helper'
+
+class #{mod}::BasePresenterTest < ActiveSupport::TestCase
+  # Replace this with your real tests.
+  test "the truth" do
+    assert true
+  end
+end
+              CONTENTS
+            end
           end
 
           it "should create a namespaced test/helpers directory" do

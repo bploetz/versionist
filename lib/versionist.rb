@@ -17,6 +17,15 @@ module Versionist
   def self.configuration
     @@configuration ||= Configuration.new
   end
+
+  def self.older_than_rails_5?
+    defined?(Rails) && Rails.version.to_i < 5
+  end
+
+  def self.test_path
+    return "test/functional" if older_than_rails_5?
+    "test/controllers"
+  end
 end
 
 require 'versionist/railtie' if defined?(Rails) && Rails::VERSION::MAJOR >= 3

@@ -23,13 +23,15 @@ describe Versionist::CopyApiVersionGenerator do
         end
 
         after :each do
+          if older_than_rails_5?
+            ::FileUtils.rm_rf(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}", __FILE__))
+          end
           ::FileUtils.rm(::File.expand_path("../../tmp/config/routes.rb", __FILE__))
           ::FileUtils.touch(::File.expand_path("../../tmp/config/routes.rb", __FILE__))
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/app/presenters/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/app/helpers/#{module_name_for_path(mod)}", __FILE__))
-          ::FileUtils.rm_rf(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}", __FILE__))
-          ::FileUtils.rm_rf(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}", __FILE__))
+          ::FileUtils.rm_rf(::File.expand_path("../../tmp/#{test_path}/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/spec/controllers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.rm_rf(::File.expand_path("../../tmp/spec/requests/#{module_name_for_path(mod)}", __FILE__))
           Versionist.configuration.configured_test_framework = nil
@@ -48,7 +50,7 @@ describe Versionist::CopyApiVersionGenerator do
           }.should_not raise_error
         end
 
-        it "should not raise an error if old version module not found in test/functional when Test::Unit is the test framework" do
+        it "should not raise an error if old version module not found in test path when Test::Unit is the test framework" do
           ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-#{ver}\") do\n  end\nend"}
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/presenters/#{module_name_for_path(mod)}", __FILE__))
@@ -101,7 +103,7 @@ describe Versionist::CopyApiVersionGenerator do
         it "should not raise an error if old version module not found in test/presenters when Test::Unit is the test framework" do
           ::File.open(::File.expand_path("../../tmp/config/routes.rb", __FILE__), "w") {|f| f.write "Test::Application.routes.draw do\n  api_version(:module => \"#{module_name_for_route(mod)}\", :header => \"Accept\", :value => \"application/vnd.mycompany.com-#{ver}\") do\n  end\nend"}
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/controllers/#{module_name_for_path(mod)}", __FILE__))
-          ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}", __FILE__))
+          ::FileUtils.mkdir_p(::File.expand_path("../../tmp/#{test_path}/#{module_name_for_path(mod)}", __FILE__))
           ::FileUtils.mkdir_p(::File.expand_path("../../tmp/app/presenters/#{module_name_for_path(mod)}", __FILE__))
           Versionist.configuration.configured_test_framework = :test_unit
           lambda {
@@ -252,14 +254,16 @@ end
 
         context "test_framework: test_unit" do
           before :each do
-            ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}", __FILE__))
-            ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}", __FILE__))
+            if older_than_rails_5?
+              ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}", __FILE__))
+              ::File.open(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}/base_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::BaseControllerTest < ActionDispatch::IntegrationTest\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
+              ::File.open(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}/foos_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::FoosControllerTest < ActionDispatch::IntegrationTest\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
+            end
+            ::FileUtils.mkdir_p(::File.expand_path("../../tmp/#{test_path}/#{module_name_for_path(mod)}", __FILE__))
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/presenters/#{module_name_for_path(mod)}", __FILE__))
             ::FileUtils.mkdir_p(::File.expand_path("../../tmp/test/helpers/#{module_name_for_path(mod)}", __FILE__))
-            ::File.open(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}/base_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::BaseControllerTest < ActionController::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
-            ::File.open(::File.expand_path("../../tmp/test/functional/#{module_name_for_path(mod)}/foos_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::FoosControllerTest < ActionController::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
-            ::File.open(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}/base_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::BaseControllerTest < ActionDispatch::IntegrationTest\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
-            ::File.open(::File.expand_path("../../tmp/test/integration/#{module_name_for_path(mod)}/foos_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::FoosControllerTest < ActionDispatch::IntegrationTest\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
+            ::File.open(::File.expand_path("../../tmp/#{test_path}/#{module_name_for_path(mod)}/base_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::BaseControllerTest < ActionController::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
+            ::File.open(::File.expand_path("../../tmp/#{test_path}/#{module_name_for_path(mod)}/foos_controller_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::FoosControllerTest < ActionController::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
             ::File.open(::File.expand_path("../../tmp/test/presenters/#{module_name_for_path(mod)}/base_presenter_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::BasePresenterTest < Test::Unit::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
             ::File.open(::File.expand_path("../../tmp/test/presenters/#{module_name_for_path(mod)}/foo_presenter_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::FooPresenterTest < Test::Unit::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
             ::File.open(::File.expand_path("../../tmp/test/helpers/#{module_name_for_path(mod)}/foos_helper_test.rb", __FILE__), "w") {|f| f.write "require 'test_helper'\n\nclass #{mod}::FoosHelperTest < Test::Unit::TestCase\n  # Replace this with your real tests.\n  test \"the truth\" do\n    assert true\n  end\nend"}
@@ -279,7 +283,8 @@ class X::BaseControllerTest < ActionController::TestCase
 end
             BASE
 
-            expected_base_controller_integration_test = <<-BASE
+            if older_than_rails_5?
+              expected_base_controller_integration_test = <<-BASE
 require 'test_helper'
 
 class X::BaseControllerTest < ActionDispatch::IntegrationTest
@@ -288,7 +293,8 @@ class X::BaseControllerTest < ActionDispatch::IntegrationTest
     assert true
   end
 end
-            BASE
+              BASE
+            end
 
             expected_foos_controller_functional_test = <<-FOOS
 require 'test_helper'
@@ -301,7 +307,8 @@ class X::FoosControllerTest < ActionController::TestCase
 end
             FOOS
 
-            expected_foos_controller_integration_test = <<-FOOS
+            if older_than_rails_5?
+              expected_foos_controller_integration_test = <<-FOOS
 require 'test_helper'
 
 class X::FoosControllerTest < ActionDispatch::IntegrationTest
@@ -310,13 +317,16 @@ class X::FoosControllerTest < ActionDispatch::IntegrationTest
     assert true
   end
 end
-            FOOS
+              FOOS
+            end
 
 
-            assert_file "test/functional/#{module_name_for_path("X")}/base_controller_test.rb", expected_base_controller_functional_test.chop
-            assert_file "test/integration/#{module_name_for_path("X")}/base_controller_test.rb", expected_base_controller_integration_test.chop
-            assert_file "test/functional/#{module_name_for_path("X")}/foos_controller_test.rb", expected_foos_controller_functional_test.chop
-            assert_file "test/integration/#{module_name_for_path("X")}/foos_controller_test.rb", expected_foos_controller_integration_test.chop
+            assert_file "#{test_path}/#{module_name_for_path("X")}/base_controller_test.rb", expected_base_controller_functional_test.chop
+            assert_file "#{test_path}/#{module_name_for_path("X")}/foos_controller_test.rb", expected_foos_controller_functional_test.chop
+            if older_than_rails_5?
+              assert_file "test/integration/#{module_name_for_path("X")}/base_controller_test.rb", expected_base_controller_integration_test.chop
+              assert_file "test/integration/#{module_name_for_path("X")}/foos_controller_test.rb", expected_foos_controller_integration_test.chop
+            end
           end
 
           it "should copy old presenter tests to new presenter tests" do
@@ -330,7 +340,7 @@ class X::BasePresenterTest < Test::Unit::TestCase
   end
 end
             BASE
-  
+
             expected_foo_presenter_test = <<-FOOS
 require 'test_helper'
 
@@ -341,7 +351,7 @@ class X::FooPresenterTest < Test::Unit::TestCase
   end
 end
             FOOS
-  
+
             assert_file "test/presenters/#{module_name_for_path("X")}/base_presenter_test.rb", expected_base_presenter_test.chop
             assert_file "test/presenters/#{module_name_for_path("X")}/foo_presenter_test.rb", expected_foo_presenter_test.chop
           end
@@ -357,7 +367,7 @@ class X::FoosHelperTest < Test::Unit::TestCase
   end
 end
             DOC
-  
+
             assert_file "test/helpers/#{module_name_for_path("X")}/foos_helper_test.rb", expected_foos_helper_test.chop
           end
         end
