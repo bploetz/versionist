@@ -64,14 +64,14 @@ module Versionist
       in_root do
         case Versionist.configuration.configured_test_framework
         when :test_unit
-          empty_directory "test/#{test_path}/#{module_name_for_path(module_name)}"
+          empty_directory "test/#{Versionist.test_path}/#{module_name_for_path(module_name)}"
           empty_directory "test/integration/#{module_name_for_path(module_name)}"
 
-          if older_than_rails_5?
+          if Versionist.older_than_rails_5?
             template 'base_controller_integration_test.rb', File.join("test", "integration", "#{module_name_for_path(module_name)}", "base_controller_test.rb")
-            template 'base_controller_functional_test.rb', File.join("test", "#{test_path}", "#{module_name_for_path(module_name)}", "base_controller_test.rb")
+            template 'base_controller_functional_test.rb', File.join("test", "#{Versionist.test_path}", "#{module_name_for_path(module_name)}", "base_controller_test.rb")
           else
-            template 'base_controller_functional_test_rails_5.rb', File.join("test", "#{test_path}", "#{module_name_for_path(module_name)}", "base_controller_test_rails_5.rb")
+            template 'base_controller_functional_test_rails_5.rb', File.join("test", "#{Versionist.test_path}", "#{module_name_for_path(module_name)}", "base_controller_test_rails_5.rb")
           end
         when :rspec
           @rspec_require_file = rspec_helper_filename
@@ -98,7 +98,7 @@ module Versionist
         when :test_unit
           empty_directory "test/presenters/#{module_name_for_path(module_name)}"
 
-          if older_than_rails_5?
+          if Versionist.older_than_rails_5?
             template 'base_presenter_test.rb', File.join("test", "presenters", "#{module_name_for_path(module_name)}", "base_presenter_test.rb")
           else
             template 'base_presenter_test_rails_5.rb', File.join("test", "presenters", "#{module_name_for_path(module_name)}", "base_presenter_test_rails_5.rb")

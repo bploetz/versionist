@@ -56,18 +56,18 @@ module Versionist
       in_root do
         case Versionist.configuration.configured_test_framework
         when :test_unit
-          if File.exists? "#{test_path}/#{module_name_for_path(old_module_name)}"
-            log "Copying all files from #{test_path}/#{module_name_for_path(old_module_name)} to #{test_path}/#{module_name_for_path(new_module_name)}"
-            FileUtils.cp_r "#{test_path}/#{module_name_for_path(old_module_name)}", "#{test_path}/#{module_name_for_path(new_module_name)}"
-            Dir.glob("#{test_path}/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
+          if File.exists? "#{Versionist.test_path}/#{module_name_for_path(old_module_name)}"
+            log "Copying all files from #{Versionist.test_path}/#{module_name_for_path(old_module_name)} to #{Versionist.test_path}/#{module_name_for_path(new_module_name)}"
+            FileUtils.cp_r "#{Versionist.test_path}/#{module_name_for_path(old_module_name)}", "#{Versionist.test_path}/#{module_name_for_path(new_module_name)}"
+            Dir.glob("#{Versionist.test_path}/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
               text = File.read(f)
               File.open(f, 'w') {|f| f << text.gsub(/#{old_module_name}/, new_module_name)}
             end
           else
-            say "No tests found in #{test_path} for #{old_version}"
+            say "No tests found in #{Versionist.test_path} for #{old_version}"
           end
 
-          if older_than_rails_5?
+          if Versionist.older_than_rails_5?
             if File.exists? "test/integration/#{module_name_for_path(old_module_name)}"
               log "Copying all files from test/integration/#{module_name_for_path(old_module_name)} to test/integration/#{module_name_for_path(new_module_name)}"
               FileUtils.cp_r "test/integration/#{module_name_for_path(old_module_name)}", "test/integration/#{module_name_for_path(new_module_name)}"
