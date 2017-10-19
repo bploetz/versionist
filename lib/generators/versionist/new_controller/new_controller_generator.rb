@@ -32,11 +32,11 @@ module Versionist
       in_root do
         case Versionist.configuration.configured_test_framework
         when :test_unit
-          if older_than_rails_5?
+          if Versionist.older_than_rails_5?
             template 'new_controller_integration_test.rb', File.join("test", "integration", "#{module_name_for_path(module_name)}", "#{file_name}_controller_test.rb")
-            template 'new_controller_functional_test.rb', File.join("test", "#{test_path}", "#{module_name_for_path(module_name)}", "#{file_name}_controller_test.rb")
+            template 'new_controller_functional_test.rb', File.join("test", "#{Versionist.test_path}", "#{module_name_for_path(module_name)}", "#{file_name}_controller_test.rb")
           else
-            template 'new_controller_functional_test_rails_5.rb', File.join("test", "#{test_path}", "#{module_name_for_path(module_name)}", "#{file_name}_controller_test_rails_5.rb")
+            template 'new_controller_functional_test_rails_5.rb', File.join("test", "#{Versionist.test_path}", "#{module_name_for_path(module_name)}", "#{file_name}_controller_test_rails_5.rb")
           end
         when :rspec
           @rspec_require_file = rspec_helper_filename

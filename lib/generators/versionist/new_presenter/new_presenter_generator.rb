@@ -19,7 +19,7 @@ module Versionist
       in_root do
         case Versionist.configuration.configured_test_framework
         when :test_unit
-          if older_than_rails_5?
+          if Versionist.older_than_rails_5?
             template 'new_presenter_test.rb', File.join("test", "presenters", "#{module_name_for_path(module_name)}", "#{file_name}_presenter_test.rb")
           else
             template 'new_presenter_test_rails_5.rb', File.join("test", "presenters", "#{module_name_for_path(module_name)}", "#{file_name}_presenter_test_rails_5.rb")
