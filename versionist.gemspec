@@ -22,5 +22,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'railties', '>= 3'
   s.add_dependency 'activesupport', '>= 3'
 
-  s.add_dependency('yard', "~> 0.7")
+  s.add_dependency('yard', "~> 0.9.11")
 end
