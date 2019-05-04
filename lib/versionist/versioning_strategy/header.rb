@@ -9,6 +9,7 @@ module Versionist
         super
         raise ArgumentError, "you must specify :name in the :header configuration Hash" if !config[:header].has_key?(:name)
         raise ArgumentError, "you must specify :value in the :header configuration Hash" if !config[:header].has_key?(:value)
+        raise ArgumentError, "a header :name of 'version' will clash with the built in rack header \"HTTP_VERSION\". You must use a different header name" if config[:header][:name].downcase == "version"
         Versionist.configuration.header_versions << self if !Versionist.configuration.header_versions.include?(self)
       end
 
@@ -35,7 +36,7 @@ module Versionist
       def ==(other)
         super
         return false if !other.is_a?(Versionist::VersioningStrategy::Header)
-        return config[:header][:name] == other.config[:header][:name] && self.config[:header][:value] == other.config[:header][:value]
+        return self.config[:header][:name] == other.config[:header][:name] && self.config[:header][:value] == other.config[:header][:value]
       end
     end
   end

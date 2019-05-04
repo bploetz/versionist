@@ -57,7 +57,7 @@ module Versionist
 
     def configure_parameter(config, &block)
       parameter = Versionist::VersioningStrategy::Parameter.new(config)
-      route_hash = {:module => config[:module], :constraints => parameter}
+      route_hash = {:module => config[:module], :constraints => parameter, :as => config[:parameter][:value].gsub(/\W/, '_')}
       route_hash.merge!({:defaults => config[:defaults]}) if config.has_key?(:defaults)
       scope(route_hash, &block)
     end

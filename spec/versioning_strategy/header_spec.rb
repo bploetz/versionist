@@ -21,6 +21,12 @@ describe Versionist::VersioningStrategy::Header do
     }.should raise_error(ArgumentError, /you must specify :value in the :header configuration Hash/)
   end
 
+  it "should raise an ArgumentError if :name is version" do
+    lambda {
+      Versionist::VersioningStrategy::Header.new({:header => {:name => "version", :value => "1"}})
+    }.should raise_error(ArgumentError, /a header :name of 'version' will clash with the built in rack header "HTTP_VERSION". You must use a different header name/)
+  end
+
   it "should add the version to Versionist::Configuration.header_versions" do
     Versionist.configuration.header_versions.should be_empty
     header_version = Versionist::VersioningStrategy::Header.new({:header => {:name => "Accept", :value => "application/vnd.mycompany.com-v2"}})

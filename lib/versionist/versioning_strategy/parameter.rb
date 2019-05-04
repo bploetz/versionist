@@ -20,7 +20,7 @@ module Versionist
       def ==(other)
         super
         return false if !other.is_a?(Versionist::VersioningStrategy::Parameter)
-        return config[:parameter][:name] == other.config[:parameter][:name] && self.config[:parameter][:value] == other.config[:parameter][:value]
+        return self.config[:parameter][:name] == other.config[:parameter][:name] && self.config[:parameter][:value] == other.config[:parameter][:value]
       end
     end
   end

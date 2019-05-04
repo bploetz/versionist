@@ -15,7 +15,7 @@ module Versionist
       def ==(other)
         super
         return false if !other.is_a?(Versionist::VersioningStrategy::Path)
-        return config[:path][:value] == other.config[:path][:value]
+        return self.config[:path][:value] == other.config[:path][:value]
       end
     end
   end
