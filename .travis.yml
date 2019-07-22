@@ -9,9 +9,9 @@ rvm:
   - jruby-19mode
   - jruby-head
 dist: precise
-before_install: # https://github.com/travis-ci/travis-ci/issues/5861
-  - gem install bundler
-  - gem update bundler
+before_install: 
+  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
+  - gem install bundler -v '< 2'
 jdk:
   - oraclejdk7
 matrix:
