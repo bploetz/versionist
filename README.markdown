@@ -98,7 +98,7 @@ Rails' format resolution logic. This is the only case where Versionist will alte
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V20120317", :header => {:name => "API-VERSION", :value => "v20120317"}) do
+  api_version(:module => "V20120317", :header => {:name => "Api-Version", :value => "v20120317"}) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -156,7 +156,7 @@ Example.
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V20120317", :header => {:name => "API-VERSION", :value => "v20120317"}, :default => true) do
+  api_version(:module => "V20120317", :header => {:name => "Api-Version", :value => "v20120317"}, :default => true) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
@@ -179,7 +179,7 @@ Example.
 
 ```ruby
 MyApi::Application.routes.draw do
-  api_version(:module => "V20120317", :header => {:name => "API-VERSION", :value => "v20120317"}, :defaults => {:format => :json}, :default => true) do
+  api_version(:module => "V20120317", :header => {:name => "Api-Version", :value => "v20120317"}, :defaults => {:format => :json}, :default => true) do
     match '/foos.(:format)' => 'foos#index', :via => :get
     match '/foos_no_format' => 'foos#index', :via => :get
     resources :bars
