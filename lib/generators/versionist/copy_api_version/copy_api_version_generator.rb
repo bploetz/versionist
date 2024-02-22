@@ -38,7 +38,7 @@ module Versionist
 
     def copy_controllers
       in_root do
-        if File.exists? "app/controllers/#{module_name_for_path(old_module_name)}"
+        if File.exist? "app/controllers/#{module_name_for_path(old_module_name)}"
           log "Copying all files from app/controllers/#{module_name_for_path(old_module_name)} to app/controllers/#{module_name_for_path(new_module_name)}"
           FileUtils.cp_r "app/controllers/#{module_name_for_path(old_module_name)}", "app/controllers/#{module_name_for_path(new_module_name)}"
           Dir.glob("app/controllers/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
@@ -56,7 +56,7 @@ module Versionist
       in_root do
         case Versionist.configuration.configured_test_framework
         when :test_unit
-          if File.exists? "#{Versionist.test_path}/#{module_name_for_path(old_module_name)}"
+          if File.exist? "#{Versionist.test_path}/#{module_name_for_path(old_module_name)}"
             log "Copying all files from #{Versionist.test_path}/#{module_name_for_path(old_module_name)} to #{Versionist.test_path}/#{module_name_for_path(new_module_name)}"
             FileUtils.cp_r "#{Versionist.test_path}/#{module_name_for_path(old_module_name)}", "#{Versionist.test_path}/#{module_name_for_path(new_module_name)}"
             Dir.glob("#{Versionist.test_path}/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
@@ -68,7 +68,7 @@ module Versionist
           end
 
           if Versionist.older_than_rails_5?
-            if File.exists? "test/integration/#{module_name_for_path(old_module_name)}"
+            if File.exist? "test/integration/#{module_name_for_path(old_module_name)}"
               log "Copying all files from test/integration/#{module_name_for_path(old_module_name)} to test/integration/#{module_name_for_path(new_module_name)}"
               FileUtils.cp_r "test/integration/#{module_name_for_path(old_module_name)}", "test/integration/#{module_name_for_path(new_module_name)}"
               Dir.glob("test/integration/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
@@ -80,7 +80,7 @@ module Versionist
             end
           end
         when :rspec
-          if File.exists? "spec/controllers/#{module_name_for_path(old_module_name)}"
+          if File.exist? "spec/controllers/#{module_name_for_path(old_module_name)}"
             log "Copying all files from spec/controllers/#{module_name_for_path(old_module_name)} to spec/controllers/#{module_name_for_path(new_module_name)}"
             FileUtils.cp_r "spec/controllers/#{module_name_for_path(old_module_name)}", "spec/controllers/#{module_name_for_path(new_module_name)}"
             Dir.glob("spec/controllers/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
@@ -91,7 +91,7 @@ module Versionist
             say "No controller specs found in spec/controllers for #{old_version}"
           end
 
-          if File.exists? "spec/requests/#{module_name_for_path(old_module_name)}"
+          if File.exist? "spec/requests/#{module_name_for_path(old_module_name)}"
             log "Copying all files from spec/requests/#{module_name_for_path(old_module_name)} to spec/requests/#{module_name_for_path(new_module_name)}"
             FileUtils.cp_r "spec/requests/#{module_name_for_path(old_module_name)}", "spec/requests/#{module_name_for_path(new_module_name)}"
             Dir.glob("spec/requests/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
@@ -109,7 +109,7 @@ module Versionist
 
     def copy_presenters
       in_root do
-        if File.exists? "app/presenters/#{module_name_for_path(old_module_name)}"
+        if File.exist? "app/presenters/#{module_name_for_path(old_module_name)}"
           log "Copying all files from app/presenters/#{module_name_for_path(old_module_name)} to app/presenters/#{module_name_for_path(new_module_name)}"
           FileUtils.cp_r "app/presenters/#{module_name_for_path(old_module_name)}", "app/presenters/#{module_name_for_path(new_module_name)}"
           Dir.glob("app/presenters/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
@@ -126,7 +126,7 @@ module Versionist
       in_root do
         case Versionist.configuration.configured_test_framework
         when :test_unit
-          if File.exists? "test/presenters/#{module_name_for_path(old_module_name)}"
+          if File.exist? "test/presenters/#{module_name_for_path(old_module_name)}"
             log "Copying all files from test/presenters/#{module_name_for_path(old_module_name)} to test/presenters/#{module_name_for_path(new_module_name)}"
             FileUtils.cp_r "test/presenters/#{module_name_for_path(old_module_name)}", "test/presenters/#{module_name_for_path(new_module_name)}"
             Dir.glob("test/presenters/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
@@ -137,7 +137,7 @@ module Versionist
             say "No presenter tests found in test/presenters for #{old_version}"
           end
         when :rspec
-          if File.exists? "spec/presenters/#{module_name_for_path(old_module_name)}"
+          if File.exist? "spec/presenters/#{module_name_for_path(old_module_name)}"
             log "Copying all files from spec/presenters/#{module_name_for_path(old_module_name)} to spec/presenters/#{module_name_for_path(new_module_name)}"
             FileUtils.cp_r "spec/presenters/#{module_name_for_path(old_module_name)}", "spec/presenters/#{module_name_for_path(new_module_name)}"
             Dir.glob("spec/presenters/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
@@ -155,7 +155,7 @@ module Versionist
 
     def copy_helpers
       in_root do
-        if File.exists? "app/helpers/#{module_name_for_path(old_module_name)}"
+        if File.exist? "app/helpers/#{module_name_for_path(old_module_name)}"
           log "Copying all files from app/helpers/#{module_name_for_path(old_module_name)} to app/helpers/#{module_name_for_path(new_module_name)}"
           FileUtils.cp_r "app/helpers/#{module_name_for_path(old_module_name)}", "app/helpers/#{module_name_for_path(new_module_name)}"
           Dir.glob("app/helpers/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
@@ -172,7 +172,7 @@ module Versionist
       in_root do
         case Versionist.configuration.configured_test_framework
         when :test_unit
-          if File.exists? "test/helpers/#{module_name_for_path(old_module_name)}"
+          if File.exist? "test/helpers/#{module_name_for_path(old_module_name)}"
             log "Copying all files from test/helpers/#{module_name_for_path(old_module_name)} to test/helpers/#{module_name_for_path(new_module_name)}"
             FileUtils.cp_r "test/helpers/#{module_name_for_path(old_module_name)}", "test/helpers/#{module_name_for_path(new_module_name)}"
             Dir.glob("test/helpers/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
@@ -183,7 +183,7 @@ module Versionist
             say "No helper tests found in test/helpers for #{old_version}"
           end
         when :rspec
-          if File.exists? "spec/helpers/#{module_name_for_path(old_module_name)}"
+          if File.exist? "spec/helpers/#{module_name_for_path(old_module_name)}"
             log "Copying all files from spec/helpers/#{module_name_for_path(old_module_name)} to spec/helpers/#{module_name_for_path(new_module_name)}"
             FileUtils.cp_r "spec/helpers/#{module_name_for_path(old_module_name)}", "spec/helpers/#{module_name_for_path(new_module_name)}"
             Dir.glob("spec/helpers/#{module_name_for_path(new_module_name)}/*.rb").each do |f|
@@ -201,7 +201,7 @@ module Versionist
 
     def copy_documentation
       in_root do
-        if File.exists? "public/docs/#{old_version}"
+        if File.exist? "public/docs/#{old_version}"
           log "Copying all files from public/docs/#{old_version} to public/docs/#{new_version}"
           FileUtils.cp_r "public/docs/#{old_version}/.", "public/docs/#{new_version}"
         else

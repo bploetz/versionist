@@ -10,7 +10,7 @@ module Versionist
 
     def new_presenter
       in_root do
-        raise "API module namespace #{module_name} doesn't exist. Please run \'rails generate versionist:new_api_version\' generator first" if !File.exists?("app/presenters/#{module_name_for_path(module_name)}")
+        raise "API module namespace #{module_name} doesn't exist. Please run \'rails generate versionist:new_api_version\' generator first" if !File.exist?("app/presenters/#{module_name_for_path(module_name)}")
         template 'new_presenter.rb', File.join("app", "presenters", "#{module_name_for_path(module_name)}", "#{file_name}_presenter.rb")
       end
     end
